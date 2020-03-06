@@ -3,144 +3,165 @@ using System.IO.Ports;
 
 namespace graph1
 {
+	/// <summary>
+	/// Класс для общения по последовательному порту.
+	/// </summary>
 	public class SP_talker : IDisposable
 	{
-		/// <summary>
-		/// Класс для общения по последовательному порту.
-		/// </summary>
-		bool _continue;
-		SerialPort _serialPort = new SerialPort();
+		public SerialPort _serialPort = new SerialPort();
 
-		string message;
-		StringComparer stringComparer = StringComparer.OrdinalIgnoreCase;
-
-		//For rescive handler
+		//буферы для 2х байтогого приема
 		byte[] bmsg = new byte[2];
 		int imsg;
+		public bool Receive = false;
 
-		public SP_talker()
+		int _baudrate = 76800;
+		int count = 1;
+
+		/// <summary>
+		/// Открывает порт с указанным именем и соростью.
+		/// Устанавливает дефолтные таймауты и очищает буферы.
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="speed"></param>
+		/// <returns></returns>
+		public int open(string name, int speed)
 		{
-			Console.WriteLine("*****************");
-			_serialPort.PortName = "COM5"; //SetPortName(_serialPort.PortName);
-			_serialPort.BaudRate = 9600; //SetPortBaudRate(_serialPort.BaudRate);
-			_serialPort.DataReceived += serialPort_DataReceived;
-			Console.WriteLine("PortName: COM5");
-			Console.WriteLine("BaudRate: 9600");
-			Console.WriteLine("Type QUIT to exit");
-			Console.WriteLine("*****************");
+			if (name != null)
+				_serialPort.PortName = name;
+			else
+			{
+				SP_Log.Debug("Choose name of port");
+				return -1;
+			}
+			_serialPort.BaudRate = speed;
 
-			// Set the read/write timeouts
-			_serialPort.ReadTimeout = 500;
-			_serialPort.WriteTimeout = 500;
-		}
+			_serialPort.ReadTimeout = 1000;
+			_serialPort.WriteTimeout = 1000;
 
-		//Opens port
-		public void open()
-		{
 			try { _serialPort.Open(); }
 			catch(Exception ex)
 			{
-				Console.WriteLine("ERROR in <<open()>> {0}", ex);
-				return;
+				SP_Log.Debug($"ERROR in <<open()>> {ex}");
+				return -1;
 			}
 
 			_serialPort.DiscardInBuffer();
 			_serialPort.DiscardOutBuffer();
 
-			_continue = true;
+			return 0;
 		}
 
-		//Send bytes
+		/// <summary>
+		/// Отправляет в последовательный порт количество байт count
+		/// из массива msg с отступом offset.
+		/// </summary>
+		/// <param name="msg"></param>
+		/// <param name="offset"></param>
+		/// <param name="count"></param>
 		public void send(byte[] msg, int offset, int count)
 		{
 			try { _serialPort.Write(msg, offset, count); }
 			catch(Exception ex)
 			{
-				Console.WriteLine("ERROR in <<send()>> function\n**{0}**", ex);
-				_continue = false;
+				SP_Log.Debug($"ERROR in <<send()>> function\n**{ex}**");
 			}
 		}
 
-		//rescive handler
-		void serialPort_DataReceived(object s, SerialDataReceivedEventArgs e)
+		/// <summary>
+		/// Отправляет в последовательный порт 2 байта из
+		/// массива buf.
+		/// </summary>
+		/// <param name="buf"></param>
+		public void send2bytes(int buf)
 		{
-			try
+			bmsg[0] = (byte)buf;
+			bmsg[1] = (byte)(buf >> 8);
+			send(bmsg, 0, 2);
+		}
+
+		/// <summary>
+		/// Читает из последовательного порта количество байт count
+		/// в массив msg с отступом offset.
+		/// </summary>
+		/// <param name="msg"></param>
+		/// <param name="offset"></param>
+		/// <param name="count"></param>
+		public void read(byte[] msg, int offset, int count)
+		{
+			try { _serialPort.Read(msg, offset, count); }
+			catch (Exception ex)
 			{
-				//Console.WriteLine("//{0}\\\\", _serialPort.BytesToRead);
-				_serialPort.Read(bmsg, 0, 2);
-				imsg = bmsg[0] + ((bmsg[1] & ~12)<<8); //убираем лишнее, сцепляем 2 байта
-				SP_contaner.add(imsg);
-				Console.WriteLine(imsg);
-			}
-			catch(Exception ex)
-			{
-				Console.WriteLine("Error in <<serialPort_DataReceived>> function\n{0}", ex);
-				_continue = false;
+				SP_Log.Debug($"Error in <<on_receive()>> function\n{ex}");
 			}
 		}
 
+		/// <summary>
+		/// Читает строку из последовательного порта и
+		/// выводит в консоль.
+		/// </summary>
+		/// <returns></returns>
+		public int read_line()
+		{
+			try { SP_Log.Debug(_serialPort.ReadLine()); }
+			catch (Exception ex)
+			{
+				SP_Log.Debug($"ERROR in <<read_line()>> function\n **{ex}**");
+				return -1;
+			}
+
+			return 0;
+		}
+
+		/// <summary>
+		/// Функция запускающаяся в отдельном потоке.
+		/// В бесконечном цикле следит за флагом Receive.
+		/// При поднятии флага начинает читать по 2 байта из
+		/// буфера и записывать в контейнер.
+		/// Флаг опускается при получении команды остановки от сервера.
+		/// </summary>
 		public void go_online()
 		{
-			open();
-
-			while (_continue)
+			while(true)
 			{
-				message = Console.ReadLine();
-
-				if (stringComparer.Equals("quit", message))
+				while (Receive)
 				{
-					_continue = false;
-				}
-				else
-				{
-					try
+					if (_serialPort.BytesToRead >= 2)
 					{
-						_serialPort.Write(message);
-					}
-					catch
-					{
-						Console.WriteLine("Error in <<go_online>> function, with sending");
-						_continue = false;
+						read(bmsg, 0, 2);
+						imsg = bmsg[0] + (bmsg[1] << 8);
+						if (imsg == 28019)
+						{
+							Console.WriteLine();
+							SP_Flags.buttons_enable_flag = true;
+							count = 1;
+							break;
+						}
+						SP_Log.Status(
+							String.Format($"Step: {count} Value: {imsg} Bytes to read: {_serialPort.BytesToRead}"));
+						SP_contaner.Add(imsg);
+						//Console.WriteLine(imsg);
+						count++;
 					}
 				}
 			}
 		}
 
-		// Display Port values and prompt user to enter a port.
-		string SetPortName(string defaultPortName)
+		public void FlushReadBuf()
 		{
-			string portName;
-
-			Console.WriteLine("Available Ports:");
-			foreach (string s in SerialPort.GetPortNames())
-			{
-				Console.WriteLine("    {0}", s);
-			}
-
-			Console.Write("Enter COM port value (Default: {0}): ", defaultPortName);
-			portName = Console.ReadLine();
-
-			if (portName == "" || !(portName.ToLower()).StartsWith("com"))
-			{
-				portName = defaultPortName;
-			}
-			return portName;
+			_serialPort.DiscardInBuffer();
+			string dummy = _serialPort.ReadExisting();
+			SP_Log.Debug($"Trash: {dummy}");
 		}
 
-		// Display BaudRate values and prompt user to enter a value.
-		int SetPortBaudRate(int defaultPortBaudRate)
+		public string[] GetPortNames()
 		{
-			string baudRate;
+			return SerialPort.GetPortNames();
+		}
 
-			Console.Write("Baud Rate(default:{0}): ", defaultPortBaudRate);
-			baudRate = Console.ReadLine();
-
-			if (baudRate == "")
-			{
-				baudRate = defaultPortBaudRate.ToString();
-			}
-
-			return int.Parse(baudRate);
+		public int GetBaudRate()
+		{
+			return _baudrate;
 		}
 
 		public void Dispose()

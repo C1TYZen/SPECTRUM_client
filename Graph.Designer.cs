@@ -318,7 +318,7 @@
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "Graph";
-			this.Text = "Graph_v0.3a";
+			this.Text = "Graph_v0.4a";
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.Draw);
 			this.tabControl1.ResumeLayout(false);
 			this.menuStrip1.ResumeLayout(false);

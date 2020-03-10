@@ -32,24 +32,6 @@ namespace graph1
 		{
 			InitializeComponent();
 
-			SP_Flags.buttons_enable_flag = false;
-			SP_Flags.external_message_flag = false;
-			SP_Flags.mesure_status_flag = false;
-			SP_Log.console = Text_console;
-
-			NumOfSteps.Text = "100";
-			ResolutionSet.Text = "1";
-			RangeSet0.Text = "0";
-			RangeSet1.Text = "100";
-			MesuresCountSet.Text = "1";
-
-
-			/*Receiver = new Thread(new ThreadStart(talker.go_online));
-			Receiver.Start();*/
-
-			Receiver = new Thread(new ThreadStart(connect));
-			Receiver.Start();
-
 			//настройка интерфейса
 			Begin_Button.Enabled = false;
 			Save_Button.Enabled = false;
@@ -66,7 +48,21 @@ namespace graph1
 			grafx = context.Allocate(CreateGraphics(), canvas);
 			tabgrfx = tabPage1.CreateGraphics();
 
-			//ПОДКЛЮЧЕНИЕ
+			//установка дефолтных значений
+			NumOfSteps.Text = "100";
+			ResolutionSet.Text = "1";
+			RangeSet0.Text = "0";
+			RangeSet1.Text = "100";
+			MesuresCountSet.Text = "1";
+
+			/* Установка флагов в опущенное положение
+			 * Установка объекта консоль для вывода сообщений */
+			SP_Flags.buttons_enable_flag = false;
+			SP_Flags.external_message_flag = false;
+			SP_Flags.mesure_status_flag = false;
+			SP_Log.console = Text_console;
+
+			//установка имени и скорости порта
 			Console.WriteLine("Talker here!\nAvailable Ports:");
 			foreach (string s in talker.GetPortNames())
 			{
@@ -74,11 +70,15 @@ namespace graph1
 				portName = s;
 				menustrip_COM.DropDownItems.Add(s).Click += on_port_select;
 			}
-
 			portSpeed = talker.GetBaudRate();
 			menustrip_BaudRate.DropDownItems.Add(portSpeed.ToString()).Click += on_speed_select;
+
+			//запуск параллельного потока
+			Receiver = new Thread(new ThreadStart(connect));
+			Receiver.Start();
 		}
 
+		//отрисовка графика в буфер
 		void DrawToBuffer(Graphics g)
 		{
 			g.FillRectangle(SystemBrushes.Highlight, canvas);
@@ -94,6 +94,7 @@ namespace graph1
 			}
 		}
 
+		//постоянно тикающий таймер
 		void TimerUpdate(object sender, EventArgs e)
 		{
 			if (SP_Flags.buttons_enable_flag)
@@ -111,18 +112,23 @@ namespace graph1
 			Invalidate(canvas);
 		}
 
+		/* вызывается при запросе "перерисовать" (Ivalidate)
+		   в функции таймера*/
 		void Draw(object sender, PaintEventArgs e)
 		{
 			grafx.Render(tabgrfx);
 		}
 
+		//Вызывается при нажатии кнопки "Начать"
 		void Begin_Click(object sender, EventArgs e)
 		{
+			//отключение кнопок, не нужных на момент измерения
 			Save_Button.Enabled = false;
 			Begin_Button.Enabled = false;
 			Begin_Button.Text = "Mesuring";
 
 			//mr SET////////////////////////////////////////////////////
+			//отправка команды, прием подтверждающей строки
 			Thread.Sleep(50);
 			talker.send2bytes(29548);   //mr
 
@@ -158,7 +164,7 @@ namespace graph1
 			talker.send2bytes(buf);
 			talker.read_line();
 
-			//информэйшен
+			//установка разрешения графика
 			Console.WriteLine($"Scale: {SP_contaner.scale}");
 			try { resolution = Convert.ToInt32(ResolutionSet.Text); }
 			catch
@@ -173,7 +179,7 @@ namespace graph1
 			talker.FlushReadBuf();
 			SP_Log.Debug($"Receiver STATUS: {Receiver.ThreadState}");
 			SP_Log.Log($"MESURING!");
-			talker.Receive = true;
+			talker.Receive = true; // поднятие флага рессивера
 			talker.send2bytes(28002);	//bm
 		}
 
@@ -189,6 +195,7 @@ namespace graph1
 			Close();
 		}
 
+		// Вызывается для включения кнопок интерфейса
 		void enable_buttons()
 		{
 			talker.Receive = false;
@@ -216,12 +223,14 @@ namespace graph1
 			return 0;
 		}
 
+		// Запускается в паралелльном потоке
 		void connect()
 		{
 			Thread.Sleep(1000);
 			int attempt = 1;
 			SP_Log.External_message("Connecting...");
 
+			//попытка открыть порт
 			if (talker.open(portName, portSpeed) == -1)
 			{
 				SP_Log.External_message("**ERROR** Plug in and restart!");
@@ -230,7 +239,7 @@ namespace graph1
 
 			while (attempt <= 3)
 			{
-				//read hello
+				//прочитать строку проверки связи
 				Thread.Sleep(1000);
 				talker.send2bytes(25443);   //cc
 				if (talker.read_line() == 0)

@@ -124,12 +124,16 @@ namespace graph1
 		{
 			while(true)
 			{
+				// пока поднят флаг рессивера, поток получает данные от сервера
 				while (Receive)
 				{
 					if (_serialPort.BytesToRead >= 2)
 					{
+						//прочитать 2 байта из буфера
 						read(bmsg, 0, 2);
+						//соеденить 2 байта и сохранить в переменную
 						imsg = bmsg[0] + (bmsg[1] << 8);
+						//если данные равны значению выхода - закончить прием измерений
 						if (imsg == 28019)
 						{
 							Console.WriteLine();
@@ -137,10 +141,11 @@ namespace graph1
 							count = 1;
 							break;
 						}
+						//вывод статуса измерения в строку в интерфейсе
 						SP_Log.Status(
-							String.Format($"Step: {count} Value: {imsg} Bytes to read: {_serialPort.BytesToRead}"));
+							String.Format(
+								$"Step: {count} Value: {imsg} Bytes to read: {_serialPort.BytesToRead}"));
 						SP_contaner.Add(imsg);
-						//Console.WriteLine(imsg);
 						count++;
 					}
 				}

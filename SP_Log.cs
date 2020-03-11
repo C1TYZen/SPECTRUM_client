@@ -7,10 +7,9 @@ namespace graph1
 	/// Класс Log для записи логов в консоль системы,
 	/// консоль приложения и файлы
 	/// </summary>
-	public static class SP_Log
+	static class SP_Log
 	{
 		public static string external;
-		public static string mesure_status;
 		public static string status;
 		// Элемент типа Control для вывода сообщений
 		public static TextBox console;

@@ -6,7 +6,7 @@ namespace graph1
 	/// <summary>
 	/// Класс для общения по последовательному порту.
 	/// </summary>
-	public class SP_talker : IDisposable
+	class SP_talker : IDisposable
 	{
 		public SerialPort _serialPort = new SerialPort();
 
@@ -137,7 +137,7 @@ namespace graph1
 						if (imsg == 28019)
 						{
 							Console.WriteLine();
-							SP_Flags.buttons_enable_flag = true;
+							SP_Flags.get_ready_flag = true;
 							count = 1;
 							break;
 						}

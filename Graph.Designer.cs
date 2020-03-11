@@ -54,6 +54,8 @@
 			this.menustrip_COM = new System.Windows.Forms.ToolStripMenuItem();
 			this.menustrip_BaudRate = new System.Windows.Forms.ToolStripMenuItem();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.New_button = new System.Windows.Forms.Button();
+			this.Delete_button = new System.Windows.Forms.Button();
 			this.tabControl1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -65,7 +67,7 @@
 			this.Begin_Button.Name = "Begin_Button";
 			this.Begin_Button.Size = new System.Drawing.Size(75, 23);
 			this.Begin_Button.TabIndex = 1;
-			this.Begin_Button.Text = "Begin";
+			this.Begin_Button.Text = "Начать";
 			this.Begin_Button.UseVisualStyleBackColor = true;
 			this.Begin_Button.Click += new System.EventHandler(this.Begin_Click);
 			// 
@@ -75,7 +77,7 @@
 			this.Save_Button.Name = "Save_Button";
 			this.Save_Button.Size = new System.Drawing.Size(75, 23);
 			this.Save_Button.TabIndex = 2;
-			this.Save_Button.Text = "Save";
+			this.Save_Button.Text = "Сохранить";
 			this.Save_Button.UseVisualStyleBackColor = true;
 			this.Save_Button.Click += new System.EventHandler(this.Save_Click);
 			// 
@@ -85,7 +87,7 @@
 			this.Close_Button.Name = "Close_Button";
 			this.Close_Button.Size = new System.Drawing.Size(75, 23);
 			this.Close_Button.TabIndex = 3;
-			this.Close_Button.Text = "Close";
+			this.Close_Button.Text = "Закрыть";
 			this.Close_Button.UseVisualStyleBackColor = true;
 			this.Close_Button.Click += new System.EventHandler(this.Close_Click);
 			// 
@@ -97,6 +99,7 @@
 			this.tabControl1.SelectedIndex = 0;
 			this.tabControl1.Size = new System.Drawing.Size(517, 295);
 			this.tabControl1.TabIndex = 8;
+			this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
 			// 
 			// tabPage1
 			// 
@@ -142,7 +145,7 @@
 			// 
 			// ResolutionSet
 			// 
-			this.ResolutionSet.Location = new System.Drawing.Point(9, 71);
+			this.ResolutionSet.Location = new System.Drawing.Point(9, 227);
 			this.ResolutionSet.Name = "ResolutionSet";
 			this.ResolutionSet.Size = new System.Drawing.Size(121, 20);
 			this.ResolutionSet.TabIndex = 13;
@@ -150,7 +153,7 @@
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(8, 55);
+			this.label4.Location = new System.Drawing.Point(8, 211);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(70, 13);
 			this.label4.TabIndex = 12;
@@ -158,7 +161,7 @@
 			// 
 			// RangeSet0
 			// 
-			this.RangeSet0.Location = new System.Drawing.Point(9, 110);
+			this.RangeSet0.Location = new System.Drawing.Point(9, 71);
 			this.RangeSet0.Name = "RangeSet0";
 			this.RangeSet0.Size = new System.Drawing.Size(121, 20);
 			this.RangeSet0.TabIndex = 15;
@@ -166,7 +169,7 @@
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(8, 94);
+			this.label5.Location = new System.Drawing.Point(8, 55);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(18, 13);
 			this.label5.TabIndex = 14;
@@ -174,7 +177,7 @@
 			// 
 			// FilterSet
 			// 
-			this.FilterSet.Location = new System.Drawing.Point(9, 227);
+			this.FilterSet.Location = new System.Drawing.Point(9, 188);
 			this.FilterSet.Name = "FilterSet";
 			this.FilterSet.Size = new System.Drawing.Size(121, 20);
 			this.FilterSet.TabIndex = 17;
@@ -182,7 +185,7 @@
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(8, 211);
+			this.label6.Location = new System.Drawing.Point(8, 172);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(47, 13);
 			this.label6.TabIndex = 16;
@@ -190,7 +193,7 @@
 			// 
 			// MesuresCountSet
 			// 
-			this.MesuresCountSet.Location = new System.Drawing.Point(9, 188);
+			this.MesuresCountSet.Location = new System.Drawing.Point(9, 149);
 			this.MesuresCountSet.Name = "MesuresCountSet";
 			this.MesuresCountSet.Size = new System.Drawing.Size(121, 20);
 			this.MesuresCountSet.TabIndex = 19;
@@ -198,7 +201,7 @@
 			// label7
 			// 
 			this.label7.AutoSize = true;
-			this.label7.Location = new System.Drawing.Point(8, 172);
+			this.label7.Location = new System.Drawing.Point(8, 133);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(89, 13);
 			this.label7.TabIndex = 18;
@@ -206,7 +209,7 @@
 			// 
 			// RangeSet1
 			// 
-			this.RangeSet1.Location = new System.Drawing.Point(9, 149);
+			this.RangeSet1.Location = new System.Drawing.Point(9, 110);
 			this.RangeSet1.Name = "RangeSet1";
 			this.RangeSet1.Size = new System.Drawing.Size(121, 20);
 			this.RangeSet1.TabIndex = 21;
@@ -214,7 +217,7 @@
 			// label8
 			// 
 			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(8, 133);
+			this.label8.Location = new System.Drawing.Point(6, 94);
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(18, 13);
 			this.label8.TabIndex = 20;
@@ -223,7 +226,7 @@
 			// Mesure_stat_label
 			// 
 			this.Mesure_stat_label.AutoSize = true;
-			this.Mesure_stat_label.Location = new System.Drawing.Point(535, 448);
+			this.Mesure_stat_label.Location = new System.Drawing.Point(544, 448);
 			this.Mesure_stat_label.Name = "Mesure_stat_label";
 			this.Mesure_stat_label.Size = new System.Drawing.Size(75, 13);
 			this.Mesure_stat_label.TabIndex = 22;
@@ -232,7 +235,7 @@
 			// label9
 			// 
 			this.label9.AutoSize = true;
-			this.label9.Location = new System.Drawing.Point(535, 430);
+			this.label9.Location = new System.Drawing.Point(544, 430);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(75, 13);
 			this.label9.TabIndex = 23;
@@ -299,12 +302,34 @@
 			this.groupBox1.TabIndex = 25;
 			this.groupBox1.TabStop = false;
 			// 
+			// New_button
+			// 
+			this.New_button.Location = new System.Drawing.Point(547, 337);
+			this.New_button.Name = "New_button";
+			this.New_button.Size = new System.Drawing.Size(75, 23);
+			this.New_button.TabIndex = 26;
+			this.New_button.Text = "Новый";
+			this.New_button.UseVisualStyleBackColor = true;
+			this.New_button.Click += new System.EventHandler(this.New_button_Click);
+			// 
+			// Delete_button
+			// 
+			this.Delete_button.Location = new System.Drawing.Point(547, 366);
+			this.Delete_button.Name = "Delete_button";
+			this.Delete_button.Size = new System.Drawing.Size(75, 23);
+			this.Delete_button.TabIndex = 27;
+			this.Delete_button.Text = "Удалить";
+			this.Delete_button.UseVisualStyleBackColor = true;
+			this.Delete_button.Click += new System.EventHandler(this.Delete_button_Click);
+			// 
 			// Graph
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.Control;
 			this.ClientSize = new System.Drawing.Size(792, 473);
+			this.Controls.Add(this.Delete_button);
+			this.Controls.Add(this.New_button);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.label9);
 			this.Controls.Add(this.Mesure_stat_label);
@@ -318,7 +343,8 @@
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "Graph";
-			this.Text = "Graph_v0.4a";
+			this.Text = "Graph_v0.5a";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Graph_FormClosing);
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.Draw);
 			this.tabControl1.ResumeLayout(false);
 			this.menuStrip1.ResumeLayout(false);
@@ -357,6 +383,8 @@
 		private System.Windows.Forms.ToolStripMenuItem menustrip_COM;
 		private System.Windows.Forms.ToolStripMenuItem menustrip_BaudRate;
 		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.Button New_button;
+		private System.Windows.Forms.Button Delete_button;
 	}
 }
 

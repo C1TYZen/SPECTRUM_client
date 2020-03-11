@@ -25,9 +25,6 @@ namespace graph1
 
 		int resolution = 1;
 
-		//буфер для передаваемых параметров параметров
-		int buf = 0;
-
 		public Graph()
 		{
 			InitializeComponent();
@@ -35,6 +32,8 @@ namespace graph1
 			//настройка интерфейса
 			Begin_Button.Enabled = false;
 			Save_Button.Enabled = false;
+			New_button.Enabled = false;
+			Delete_button.Enabled = false;
 			StartPosition = FormStartPosition.CenterScreen;
 
 			//настройка таймера
@@ -57,7 +56,7 @@ namespace graph1
 
 			/* Установка флагов в опущенное положение
 			 * Установка объекта консоль для вывода сообщений */
-			SP_Flags.buttons_enable_flag = false;
+			SP_Flags.get_ready_flag = false;
 			SP_Flags.external_message_flag = false;
 			SP_Flags.mesure_status_flag = false;
 			SP_Log.console = Text_console;
@@ -78,157 +77,12 @@ namespace graph1
 			Receiver.Start();
 		}
 
-		//отрисовка графика в буфер
-		void DrawToBuffer(Graphics g)
-		{
-			g.FillRectangle(SystemBrushes.Highlight, canvas);
-			for (int i = 0; i <= SP_contaner.cur; i += resolution)
-			{
-				if (SP_contaner.points[i + resolution].X  != 0)
-				{
-					g.DrawLine(pen, SP_contaner.points[i].X, 
-						canvas.Height - (SP_contaner.points[i].Y >> 2),
-						SP_contaner.points[i + resolution].X, 
-						canvas.Height - (SP_contaner.points[i + resolution].Y >> 2));
-				}
-			}
-		}
-
-		//постоянно тикающий таймер
-		void TimerUpdate(object sender, EventArgs e)
-		{
-			if (SP_Flags.buttons_enable_flag)
-				enable_buttons();
-
-			Mesure_stat_label.Text = SP_Log.status;
-			if (SP_Flags.external_message_flag)
-			{
-				SP_Log.Log(SP_Log.external);
-				SP_Flags.external_message_flag = false;
-			}
-
-
-			DrawToBuffer(grafx.Graphics);
-			Invalidate(canvas);
-		}
-
-		/* вызывается при запросе "перерисовать" (Ivalidate)
-		   в функции таймера*/
-		void Draw(object sender, PaintEventArgs e)
-		{
-			grafx.Render(tabgrfx);
-		}
-
-		//Вызывается при нажатии кнопки "Начать"
-		void Begin_Click(object sender, EventArgs e)
-		{
-			//отключение кнопок, не нужных на момент измерения
-			Save_Button.Enabled = false;
-			Begin_Button.Enabled = false;
-			Begin_Button.Text = "Mesuring";
-
-			//mr SET////////////////////////////////////////////////////
-			//отправка команды, прием подтверждающей строки
-			Thread.Sleep(50);
-			talker.send2bytes(29548);   //mr
-
-			if (check_value(RangeSet0.Text) == -1)
-				SP_Log.Log("**ERROR** Incorrect RANGE_0!!!");
-
-			talker.send2bytes(buf);
-
-			if (check_value(RangeSet1.Text) == -1)
-				SP_Log.Log("**ERROR** Incorrect RANGE_1!!!");
-
-			talker.send2bytes(buf);
-			talker.read_line();
-
-			//mc SET////////////////////////////////////////////////////
-			Thread.Sleep(50);
-			talker.send2bytes(25453);   //mc
-
-			if (check_value(MesuresCountSet.Text) == -1)
-				SP_Log.Log("**ERROR** Incorrect MesuresCount!!!");
-
-			talker.send2bytes(buf);
-			talker.read_line();
-
-			//st SET////////////////////////////////////////////////////
-			Thread.Sleep(50);
-			talker.send2bytes(29811);   //st
-
-			if (check_value(NumOfSteps.Text) == -1)
-				SP_Log.Log("**ERROR** Incorrect Num of Steps!!!");
-
-			SP_contaner.scale = (float)canvas.Width / (float)buf;
-			talker.send2bytes(buf);
-			talker.read_line();
-
-			//установка разрешения графика
-			Console.WriteLine($"Scale: {SP_contaner.scale}");
-			try { resolution = Convert.ToInt32(ResolutionSet.Text); }
-			catch
-			{
-				resolution = 1;
-				SP_Log.Log($"**ERROR** Incorrect resolution!!!");
-			}
-			
-			//очистка и отправка команды начать
-			Thread.Sleep(200);
-			SP_contaner.Clear();
-			talker.FlushReadBuf();
-			SP_Log.Debug($"Receiver STATUS: {Receiver.ThreadState}");
-			SP_Log.Log($"MESURING!");
-			talker.Receive = true; // поднятие флага рессивера
-			talker.send2bytes(28002);	//bm
-		}
-
-		void Save_Click(object sender, EventArgs e)
-		{
-			SP_contaner.Save();
-		}
-
-		void Close_Click(object sender, EventArgs e)
-		{
-			Receiver.Abort();
-			talker.Dispose();
-			Close();
-		}
-
-		// Вызывается для включения кнопок интерфейса
-		void enable_buttons()
-		{
-			talker.Receive = false;
-			Begin_Button.Text = "Begin";
-			Begin_Button.Enabled = true;
-			Save_Button.Enabled = true;
-			SP_Flags.buttons_enable_flag = false;
-			SP_Log.Log("Ready");
-			SP_Log.Debug("*****");
-		}
-
-		/* ИСПОЛЬЗОВАТЬ ТОЛЬКО ПРИ УСТАНОВКЕ ЗНАЧЕНИЙ!!!
-		 * ФУНКЦИЯ ИСПОЛЬЗУЕТ ГЛОБАЛЬНУЮ ПЕРЕМЕННУЮ БУФЕРА
-		 * ДЛЯ ЗАПИСИ ЗНАЧЕНИЯ ПЕРЕДАННОЙ СТРОКИ
-		 */
-		int check_value(string str)
-		{
-			try { buf = Convert.ToInt32(str); }
-			catch
-			{
-				buf = 100;
-				return -1;
-			}
-
-			return 0;
-		}
-
 		// Запускается в паралелльном потоке
 		void connect()
 		{
 			Thread.Sleep(1000);
 			int attempt = 1;
-			SP_Log.External_message("Connecting...");
+			SP_Log.External_message("Соединение");
 
 			//попытка открыть порт
 			if (talker.open(portName, portSpeed) == -1)
@@ -262,9 +116,179 @@ namespace graph1
 			Console.WriteLine($"SPEED: {portSpeed}");
 			Console.WriteLine("************");
 
-			SP_Flags.buttons_enable_flag = true;
+			SP_Flags.get_ready_flag = true;
 
 			talker.go_online();
+		}
+
+		//отрисовка графика в буфер
+		void DrawToBuffer(Graphics g)
+		{
+			g.FillRectangle(SystemBrushes.Highlight, canvas);
+			for (int i = 0; i <= SP_contaner.cur; i += resolution)
+			{
+				if (SP_contaner.points[i + resolution].X  != 0)
+				{
+					g.DrawLine(pen, SP_contaner.points[i].X, 
+						canvas.Height - (SP_contaner.points[i].Y >> 2),
+						SP_contaner.points[i + resolution].X, 
+						canvas.Height - (SP_contaner.points[i + resolution].Y >> 2));
+				}
+			}
+		}
+
+		//постоянно тикающий таймер
+		void TimerUpdate(object sender, EventArgs e)
+		{
+			if (SP_Flags.get_ready_flag)
+				get_ready();
+
+			Mesure_stat_label.Text = SP_Log.status;
+			if (SP_Flags.external_message_flag)
+			{
+				SP_Log.Log(SP_Log.external);
+				SP_Flags.external_message_flag = false;
+			}
+
+
+			DrawToBuffer(grafx.Graphics);
+			Invalidate(canvas);
+		}
+
+		/* вызывается при запросе "перерисовать" (Ivalidate)
+		   в функции таймера*/
+		void Draw(object sender, PaintEventArgs e)
+		{
+			grafx.Render(tabgrfx);
+		}
+
+		//Вызывается при нажатии кнопки "Начать"
+		void Begin_Click(object sender, EventArgs e)
+		{
+			//буфер для передаваемых параметров параметров
+			int buf;
+
+			//отключение кнопок, не нужных на момент измерения
+			Save_Button.Enabled = false;
+			Begin_Button.Enabled = false;
+			New_button.Enabled = false;
+			Delete_button.Enabled = false;
+			Begin_Button.Text = "Измерение";
+
+			//mr SET////////////////////////////////////////////////////
+			//отправка команды, прием подтверждающей строки
+			Thread.Sleep(50);
+			talker.send2bytes(29548);   //mr
+
+			if ((buf = check_value(RangeSet0.Text)) == -1)
+			{
+				SP_Log.Log("**ERROR** Incorrect RANGE_0!!!");
+				buf = 0;
+			}
+
+			talker.send2bytes(buf);
+
+			if ((buf = check_value(RangeSet1.Text)) == -1)
+			{
+				SP_Log.Log("**ERROR** Incorrect RANGE_1!!!");
+				buf = 100;
+			}
+
+			talker.send2bytes(buf);
+			talker.read_line();
+
+			//mc SET////////////////////////////////////////////////////
+			Thread.Sleep(50);
+			talker.send2bytes(25453);   //mc
+
+			if ((buf = check_value(MesuresCountSet.Text)) == -1)
+			{
+				SP_Log.Log("**ERROR** Incorrect MesuresCount!!!");
+				buf = 100;
+			}
+
+			talker.send2bytes(buf);
+			talker.read_line();
+
+			//st SET////////////////////////////////////////////////////
+			Thread.Sleep(50);
+			talker.send2bytes(29811);   //st
+
+			if ((buf = check_value(NumOfSteps.Text)) == -1)
+			{
+				SP_Log.Log("**ERROR** Incorrect Num of Steps!!!");
+				buf = 100;
+			}
+				
+			SP_contaner.scale = (float)canvas.Width / (float)buf;
+			talker.send2bytes(buf);
+			talker.read_line();
+
+			//установка разрешения графика
+			Console.WriteLine($"Scale: {SP_contaner.scale}");
+			try { resolution = Convert.ToInt32(ResolutionSet.Text); }
+			catch
+			{
+				resolution = 1;
+				SP_Log.Log($"**ERROR** Incorrect resolution!!!");
+			}
+			
+			//очистка и отправка команды начать
+			Thread.Sleep(200);
+			SP_contaner.Clear();
+			talker.FlushReadBuf();
+			SP_Log.Debug($"Receiver STATUS: {Receiver.ThreadState}");
+			SP_Log.Log($"ИЗМЕРЕНИЕ!");
+			talker.Receive = true; // поднятие флага рессивера
+			talker.send2bytes(28002);	//bm
+		}
+
+		void Save_Click(object sender, EventArgs e)
+		{
+			SP_contaner.Save_on_disk();
+		}
+
+		void Close_Click(object sender, EventArgs e)
+		{
+			Close();
+		}
+
+		void Graph_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			Receiver.Abort();
+			talker.Dispose();
+		}
+
+		// Вызывается для подготовки интерфейса и программы к вводу пользователя
+		void get_ready()
+		{
+			talker.Receive = false;
+			Begin_Button.Text = "Начать";
+
+			Begin_Button.Enabled = true;
+			Save_Button.Enabled = true;
+			New_button.Enabled = true;
+			if (tabControl1.TabCount == 1)
+				Delete_button.Enabled = false;
+			else
+				Delete_button.Enabled = true;
+
+			SP_contaner.Save_on_RAM(tabControl1.SelectedIndex);
+			SP_Flags.get_ready_flag = false;
+			SP_Log.Log("Готов");
+			SP_Log.Debug("*****");
+		}
+
+		//проверяет значение
+		int check_value(string str)
+		{
+			try { Convert.ToInt32(str); }
+			catch
+			{
+				return -1;
+			}
+
+			return Convert.ToInt32(str);
 		}
 
 		void on_port_select(object sender, EventArgs e)
@@ -275,6 +299,33 @@ namespace graph1
 		void on_speed_select(object sender, EventArgs e)
 		{
 			portSpeed = Convert.ToInt32(sender);
+		}
+
+		void New_button_Click(object sender, EventArgs e)
+		{
+			TabPage newTabPage = new TabPage("Спектр " + (tabControl1.TabCount + 1).ToString());
+			tabControl1.TabPages.Add(newTabPage);
+			tabControl1.SelectedIndex = tabControl1.TabPages.IndexOf(newTabPage);
+			SP_Log.Log($"Спектр{tabControl1.TabPages.IndexOf(newTabPage) + 1} создан");
+		}
+
+		void Delete_button_Click(object sender, EventArgs e)
+		{
+
+			SP_contaner.Delete_from_RAM(tabControl1.SelectedIndex);
+			tabControl1.TabPages.Remove(tabControl1.SelectedTab);
+			SP_Log.Log($"Спектр{tabControl1.SelectedIndex + 1} удален");
+		}
+
+		void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
+		{
+			tabgrfx = e.TabPage.CreateGraphics();
+			SP_contaner.Load_from_RAM(e.TabPageIndex);
+
+			if (tabControl1.TabCount == 1)
+				Delete_button.Enabled = false;
+			else
+				Delete_button.Enabled = true;
 		}
 	}
 }

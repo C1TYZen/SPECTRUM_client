@@ -7,11 +7,16 @@ namespace graph1
 	/// <summary>
 	/// Класс - контейнер для данных.
 	/// </summary>
-	public static class SP_contaner
+	static class SP_contaner
 	{
+		const int points_count = 50000;
+		const int plots_count = 50;
+
 		public static int cur = 0;
-		public static Point[] points = new Point[50000];
+		public static Point[] points = new Point[points_count];
 		public static float scale;
+
+		static Point[][] saved_points = new Point[plots_count][];
 
 		/// <summary>
 		/// Добавление элемента таблицы.
@@ -27,7 +32,7 @@ namespace graph1
 		/// <summary>
 		/// Сохранение графика в файл в виде таблицы.
 		/// </summary>
-		public static void Save()
+		public static void Save_on_disk()
 		{
 			string time = String.Format("{0}_{1}_{2} {3}_{4}_{5}",
 				DateTime.Now.Day, DateTime.Now.Month,
@@ -46,6 +51,32 @@ namespace graph1
 				}
 				SP_Log.Log($"Saved, {time}.txt");
 			}
+		}
+
+		public static void Save_on_RAM(int c)
+		{
+			saved_points[c] = points;
+			Console.WriteLine($"Спектр{c + 1} сохранен");
+		}
+
+		public static void Load_from_RAM(int c)
+		{
+			if (saved_points[c] != null)
+			{
+				points = saved_points[c];
+				Console.WriteLine($"Спектр{c + 1} загружен");
+			}
+			else
+			{
+				points = new Point[points_count];
+				Console.WriteLine($"Создан Спектр{c + 1}");
+				Save_on_RAM(c);
+			}
+		}
+
+		public static void Delete_from_RAM(int c)
+		{
+			saved_points[c] = null;
 		}
 
 		public static void Reset()

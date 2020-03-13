@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO.Ports;
+using System.Threading;
 
 namespace graph1
 {
 	/// <summary>
-	/// Класс для общения по последовательному порту.
+	/// Общение по последовательному порту.
 	/// </summary>
 	class SP_talker : IDisposable
 	{
@@ -15,7 +16,8 @@ namespace graph1
 		int imsg;
 		public bool Receive = false;
 
-		int _baudrate = 76800;
+		public int _baudrate = 76800;
+		public string _portname;
 		int count = 1;
 
 		/// <summary>
@@ -114,13 +116,59 @@ namespace graph1
 		}
 
 		/// <summary>
+		/// Функция подключения к серверу
+		/// </summary>
+		public void connect()
+		{
+			Thread.Sleep(1000);
+			int attempt = 1;
+			SP_Log.External_message("Соединение");
+
+			//попытка открыть порт
+			if (open(_portname, _baudrate) == -1)
+			{
+				SP_Log.External_message("**ERROR** Plug in and restart!");
+				return;
+			}
+
+			while (attempt <= 3)
+			{
+				//прочитать строку проверки связи
+				Thread.Sleep(1000);
+				send2bytes(25443);   //cc
+				if (read_line() == 0)
+				{
+					Console.WriteLine("Connected with {0} attempts", attempt);
+					break;
+				}
+				attempt++;
+			}
+
+			if (attempt > 3)
+			{
+				SP_Log.External_message("**ERROR** Can't connect");
+				return;
+			}
+
+			Console.WriteLine("************");
+			Console.WriteLine("CONNECTED");
+			Console.WriteLine($"PORT: {_portname}");
+			Console.WriteLine($"SPEED: {_baudrate}");
+			Console.WriteLine("************");
+
+			SP_Flags.get_ready_flag = true;
+
+			go_online();
+		}
+
+		/// <summary>
 		/// Функция запускающаяся в отдельном потоке.
 		/// В бесконечном цикле следит за флагом Receive.
 		/// При поднятии флага начинает читать по 2 байта из
 		/// буфера и записывать в контейнер.
 		/// Флаг опускается при получении команды остановки от сервера.
 		/// </summary>
-		public void go_online()
+		void go_online()
 		{
 			while(true)
 			{
@@ -144,7 +192,7 @@ namespace graph1
 						//вывод статуса измерения в строку в интерфейсе
 						SP_Log.Status(
 							String.Format(
-								$"Step: {count} Value: {imsg} Bytes to read: {_serialPort.BytesToRead}"));
+								$"Шаг: {count} Значение: {imsg} Байт для чтения: {_serialPort.BytesToRead}"));
 						SP_contaner.Add(imsg);
 						count++;
 					}

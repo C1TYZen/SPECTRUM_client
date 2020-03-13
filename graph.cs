@@ -7,47 +7,44 @@ namespace graph1
 {
 	public partial class Graph : Form
 	{
-		//настройка связи
+		//Настройка связи
 		SP_talker talker = new SP_talker();
 		Thread Receiver;
-		string portName;
-		int portSpeed;
 
 		System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 		int FPS = 30;
 
-		//graphics
+		//Настройка графики
 		Rectangle canvas;
 		Pen pen = new Pen(SystemColors.HighlightText);
 		BufferedGraphicsContext context = BufferedGraphicsManager.Current;
 		BufferedGraphics grafx;
 		Graphics tabgrfx;
-
 		int resolution = 1;
 
 		public Graph()
 		{
 			InitializeComponent();
 
-			//настройка интерфейса
+			//Настройка интерфейса
 			Begin_Button.Enabled = false;
 			Save_Button.Enabled = false;
 			New_button.Enabled = false;
 			Delete_button.Enabled = false;
 			StartPosition = FormStartPosition.CenterScreen;
 
-			//настройка таймера
+			//Настройка таймера
 			timer.Enabled = true;
 			timer.Interval = 1000 / FPS;
-			timer.Tick += new EventHandler(TimerUpdate);
+			timer.Tick += new EventHandler(timer_update);
 
-			//настройка графики
+			//Настройка графики
 			canvas = new Rectangle(0, 0, tabPage1.Width, tabPage1.Height);
 			context.MaximumBuffer = new Size(canvas.Width + 1, canvas.Height + 1);
 			grafx = context.Allocate(CreateGraphics(), canvas);
 			tabgrfx = tabPage1.CreateGraphics();
 
-			//установка дефолтных значений
+			//Установка дефолтных значений
 			NumOfSteps.Text = "100";
 			ResolutionSet.Text = "1";
 			RangeSet0.Text = "0";
@@ -58,71 +55,29 @@ namespace graph1
 			 * Установка объекта консоль для вывода сообщений */
 			SP_Flags.get_ready_flag = false;
 			SP_Flags.external_message_flag = false;
-			SP_Flags.mesure_status_flag = false;
 			SP_Log.console = Text_console;
 
-			//установка имени и скорости порта
+			//Установка имени и скорости порта
 			Console.WriteLine("Talker here!\nAvailable Ports:");
 			foreach (string s in talker.GetPortNames())
 			{
 				Console.WriteLine($"    {s}");
-				portName = s;
-				menustrip_COM.DropDownItems.Add(s).Click += on_port_select;
+				talker._portname = s;
+				menustrip_COM.DropDownItems.Add(s).Click += On_Port_Select;
 			}
-			portSpeed = talker.GetBaudRate();
-			menustrip_BaudRate.DropDownItems.Add(portSpeed.ToString()).Click += on_speed_select;
+			talker._baudrate = talker.GetBaudRate();
+			menustrip_BaudRate.DropDownItems.Add(talker._baudrate.ToString()).Click += On_Speed_Select;
 
-			//запуск параллельного потока
-			Receiver = new Thread(new ThreadStart(connect));
+			//Запуск параллельного потока
+			Receiver = new Thread(new ThreadStart(talker.connect));
 			Receiver.Start();
 		}
 
-		// Запускается в паралелльном потоке
-		void connect()
-		{
-			Thread.Sleep(1000);
-			int attempt = 1;
-			SP_Log.External_message("Соединение");
-
-			//попытка открыть порт
-			if (talker.open(portName, portSpeed) == -1)
-			{
-				SP_Log.External_message("**ERROR** Plug in and restart!");
-				return;
-			}
-
-			while (attempt <= 3)
-			{
-				//прочитать строку проверки связи
-				Thread.Sleep(1000);
-				talker.send2bytes(25443);   //cc
-				if (talker.read_line() == 0)
-				{
-					Console.WriteLine("Connected with {0} attempts", attempt);
-					break;
-				}
-				attempt++;
-			}
-
-			if (attempt > 3)
-			{
-				SP_Log.External_message("**ERROR** Can't connect");
-				return;
-			}
-
-			Console.WriteLine("************");
-			Console.WriteLine("CONNECTED");
-			Console.WriteLine($"PORT: {portName}");
-			Console.WriteLine($"SPEED: {portSpeed}");
-			Console.WriteLine("************");
-
-			SP_Flags.get_ready_flag = true;
-
-			talker.go_online();
-		}
-
-		//отрисовка графика в буфер
-		void DrawToBuffer(Graphics g)
+		/// <summary>
+		/// Отрисовка спектра в буфер
+		/// </summary>
+		/// <param name="g"></param>
+		void draw_to_buffer(Graphics g)
 		{
 			g.FillRectangle(SystemBrushes.Highlight, canvas);
 			for (int i = 0; i <= SP_contaner.cur; i += resolution)
@@ -137,32 +92,75 @@ namespace graph1
 			}
 		}
 
-		//постоянно тикающий таймер
-		void TimerUpdate(object sender, EventArgs e)
+		/// <summary>
+		/// Тикалка
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void timer_update(object sender, EventArgs e)
 		{
+			Mesure_stat_label.Text = SP_Log.status;
+
 			if (SP_Flags.get_ready_flag)
 				get_ready();
 
-			Mesure_stat_label.Text = SP_Log.status;
 			if (SP_Flags.external_message_flag)
 			{
 				SP_Log.Log(SP_Log.external);
 				SP_Flags.external_message_flag = false;
 			}
 
-
-			DrawToBuffer(grafx.Graphics);
+			draw_to_buffer(grafx.Graphics);
 			Invalidate(canvas);
 		}
 
 		/* вызывается при запросе "перерисовать" (Ivalidate)
 		   в функции таймера*/
-		void Draw(object sender, PaintEventArgs e)
+		void draw(object sender, PaintEventArgs e)
 		{
 			grafx.Render(tabgrfx);
 		}
 
-		//Вызывается при нажатии кнопки "Начать"
+		/// <summary>
+		/// Возвращение интерфейса в активное состояние
+		/// </summary>
+		void get_ready()
+		{
+			talker.Receive = false;
+			Begin_Button.Text = "Начать";
+
+			Begin_Button.Enabled = true;
+			Save_Button.Enabled = true;
+			New_button.Enabled = true;
+			if (TabControl1.TabCount == 1)
+				Delete_button.Enabled = false;
+			else
+				Delete_button.Enabled = true;
+
+			SP_contaner.Save_on_RAM(TabControl1.SelectedIndex);
+			SP_Flags.get_ready_flag = false;
+			SP_Log.Log("Готов");
+			SP_Log.Debug("*****");
+		}
+
+		/// <summary>
+		/// Проверка значения из строки
+		/// </summary>
+		/// <param name="str"></param>
+		/// <returns></returns>
+		int check_value(string str)
+		{
+			try { Convert.ToInt32(str); }
+			catch
+			{
+				return -1;
+			}
+
+			return Convert.ToInt32(str);
+		}
+
+		#region События   
+		
 		void Begin_Click(object sender, EventArgs e)
 		{
 			//буфер для передаваемых параметров параметров
@@ -185,7 +183,7 @@ namespace graph1
 				SP_Log.Log("**ERROR** Incorrect RANGE_0!!!");
 				buf = 0;
 			}
-
+			SP_contaner.range[0] = buf;
 			talker.send2bytes(buf);
 
 			if ((buf = check_value(RangeSet1.Text)) == -1)
@@ -193,7 +191,7 @@ namespace graph1
 				SP_Log.Log("**ERROR** Incorrect RANGE_1!!!");
 				buf = 100;
 			}
-
+			SP_contaner.range[1] = buf;
 			talker.send2bytes(buf);
 			talker.read_line();
 
@@ -206,7 +204,7 @@ namespace graph1
 				SP_Log.Log("**ERROR** Incorrect MesuresCount!!!");
 				buf = 100;
 			}
-
+			SP_contaner.mps = buf;
 			talker.send2bytes(buf);
 			talker.read_line();
 
@@ -219,7 +217,6 @@ namespace graph1
 				SP_Log.Log("**ERROR** Incorrect Num of Steps!!!");
 				buf = 100;
 			}
-				
 			SP_contaner.scale = (float)canvas.Width / (float)buf;
 			talker.send2bytes(buf);
 			talker.read_line();
@@ -232,7 +229,7 @@ namespace graph1
 				resolution = 1;
 				SP_Log.Log($"**ERROR** Incorrect resolution!!!");
 			}
-			
+
 			//очистка и отправка команды начать
 			Thread.Sleep(200);
 			SP_contaner.Clear();
@@ -240,7 +237,7 @@ namespace graph1
 			SP_Log.Debug($"Receiver STATUS: {Receiver.ThreadState}");
 			SP_Log.Log($"ИЗМЕРЕНИЕ!");
 			talker.Receive = true; // поднятие флага рессивера
-			talker.send2bytes(28002);	//bm
+			talker.send2bytes(28002);   //bm
 		}
 
 		void Save_Click(object sender, EventArgs e)
@@ -253,79 +250,52 @@ namespace graph1
 			Close();
 		}
 
+		void New_button_Click(object sender, EventArgs e)
+		{
+			TabPage newTabPage = new TabPage("Спектр " + (TabControl1.TabCount + 1).ToString());
+			TabControl1.TabPages.Add(newTabPage);
+			TabControl1.SelectedIndex = TabControl1.TabPages.IndexOf(newTabPage);
+			SP_Log.Log($"Спектр создан");
+		}
+
+		void Delete_button_Click(object sender, EventArgs e)
+		{
+			SP_contaner.Delete_from_RAM(TabControl1.SelectedIndex, TabControl1.TabCount);
+			TabControl1.TabPages.Remove(TabControl1.SelectedTab);
+			SP_Log.Log($"Спектр удален");
+		}
+
+		void TabControl1_Selecting(object sender, TabControlCancelEventArgs e)
+		{
+			tabgrfx = e.TabPage.CreateGraphics();
+			SP_contaner.Load_from_RAM(e.TabPageIndex);
+
+			RangeSet0.Text = SP_contaner.range[0].ToString();
+			RangeSet1.Text = SP_contaner.range[1].ToString();
+			MesuresCountSet.Text = SP_contaner.mps.ToString();
+
+			if (TabControl1.TabCount == 1)
+				Delete_button.Enabled = false;
+			else
+				Delete_button.Enabled = true;
+		}
+
+		void On_Port_Select(object sender, EventArgs e)
+		{
+			talker._portname = sender.ToString();
+		}
+
+		void On_Speed_Select(object sender, EventArgs e)
+		{
+			talker._baudrate = Convert.ToInt32(sender);
+		}
+
 		void Graph_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			Receiver.Abort();
 			talker.Dispose();
 		}
 
-		// Вызывается для подготовки интерфейса и программы к вводу пользователя
-		void get_ready()
-		{
-			talker.Receive = false;
-			Begin_Button.Text = "Начать";
-
-			Begin_Button.Enabled = true;
-			Save_Button.Enabled = true;
-			New_button.Enabled = true;
-			if (tabControl1.TabCount == 1)
-				Delete_button.Enabled = false;
-			else
-				Delete_button.Enabled = true;
-
-			SP_contaner.Save_on_RAM(tabControl1.SelectedIndex);
-			SP_Flags.get_ready_flag = false;
-			SP_Log.Log("Готов");
-			SP_Log.Debug("*****");
-		}
-
-		//проверяет значение
-		int check_value(string str)
-		{
-			try { Convert.ToInt32(str); }
-			catch
-			{
-				return -1;
-			}
-
-			return Convert.ToInt32(str);
-		}
-
-		void on_port_select(object sender, EventArgs e)
-		{
-			portName = sender.ToString();
-		}
-
-		void on_speed_select(object sender, EventArgs e)
-		{
-			portSpeed = Convert.ToInt32(sender);
-		}
-
-		void New_button_Click(object sender, EventArgs e)
-		{
-			TabPage newTabPage = new TabPage("Спектр " + (tabControl1.TabCount + 1).ToString());
-			tabControl1.TabPages.Add(newTabPage);
-			tabControl1.SelectedIndex = tabControl1.TabPages.IndexOf(newTabPage);
-			SP_Log.Log($"Спектр{tabControl1.TabPages.IndexOf(newTabPage) + 1} создан");
-		}
-
-		void Delete_button_Click(object sender, EventArgs e)
-		{
-
-			SP_contaner.Delete_from_RAM(tabControl1.SelectedIndex);
-			tabControl1.TabPages.Remove(tabControl1.SelectedTab);
-			SP_Log.Log($"Спектр{tabControl1.SelectedIndex + 1} удален");
-		}
-
-		void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
-		{
-			tabgrfx = e.TabPage.CreateGraphics();
-			SP_contaner.Load_from_RAM(e.TabPageIndex);
-
-			if (tabControl1.TabCount == 1)
-				Delete_button.Enabled = false;
-			else
-				Delete_button.Enabled = true;
-		}
+		#endregion
 	}
 }

@@ -11,30 +11,44 @@ namespace graph1
 	{
 		public static string external;
 		public static string status;
-		// Элемент типа Control для вывода сообщений
+		/// <summary>
+		/// Элемент типа Control для вывода сообщений
+		/// </summary>
 		public static TextBox console;
 
-		//вывод сообщений в системную консоль и консоль приложения
+		/// <summary>
+		/// Вывод сообщений в системную консоль и консоль приложения
+		/// </summary>
+		/// <param name="str"></param>
 		public static void Log(string str)
 		{
 			console.AppendText(str + "\r\n");
 			Console.Write(str + "\n");
 		}
 
-		//вывод сообщений только в системную консоль
+		/// <summary>
+		/// Вывод сообщений только в системную консоль
+		/// </summary>
+		/// <param name="str"></param>
 		public static void Debug(string str)
 		{
 			Console.Write(str + "\n");
 		}
 
-		//вывод статуса измерения
+		/// <summary>
+		/// Вывод статуса измерения
+		/// </summary>
+		/// <param name="str"></param>
 		public static void Status(string str)
 		{
 			status = str;
 			Console.Write(str + "\r");
 		}
 
-		//вывод сообщения из паралельного потока
+		/// <summary>
+		/// Вывод сообщения из паралельного потока
+		/// </summary>
+		/// <param name="str"></param>
 		public static void External_message(string str)
 		{
 			external = str;

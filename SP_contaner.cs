@@ -5,7 +5,7 @@ using System.Drawing;
 namespace graph1
 {
 	/// <summary>
-	/// Класс - контейнер для данных.
+	/// Контейнер для данных.
 	/// </summary>
 	static class SP_contaner
 	{
@@ -13,10 +13,15 @@ namespace graph1
 		const int plots_count = 50;
 
 		public static int cur = 0;
-		public static Point[] points = new Point[points_count];
 		public static float scale;
+		public static Point[] points = new Point[points_count];
+		public static int[] range = new int[2];
+		public static int mps;
+		public static int filter;
 
 		static Point[][] saved_points = new Point[plots_count][];
+		static int[][] saved_range = new int[plots_count][];
+		static int[] saved_mps = new int[plots_count];
 
 		/// <summary>
 		/// Добавление элемента таблицы.
@@ -53,15 +58,25 @@ namespace graph1
 			}
 		}
 
+		/// <summary>
+		/// Сохраниение спектра в буфер
+		/// </summary>
+		/// <param name="c"></param>
 		public static void Save_on_RAM(int c)
 		{
 			saved_points[c] = points;
+			saved_range[c] = range;
+			saved_mps[c] = mps;
 			Console.WriteLine($"Спектр{c + 1} сохранен");
 		}
 
+		/// <summary>
+		/// Загрузка спектра из буфера
+		/// </summary>
+		/// <param name="c"></param>
 		public static void Load_from_RAM(int c)
 		{
-			if (saved_points[c] != null)
+			if(saved_points[c] != null)
 			{
 				points = saved_points[c];
 				Console.WriteLine($"Спектр{c + 1} загружен");
@@ -74,9 +89,22 @@ namespace graph1
 			}
 		}
 
-		public static void Delete_from_RAM(int c)
+		/// <summary>
+		/// Удаление спектра из буфера
+		/// </summary>
+		/// <param name="c"></param>
+		/// <param name="max"></param>
+		public static void Delete_from_RAM(int c, int max)
 		{
 			saved_points[c] = null;
+			if(max > c)
+			{
+				while(c < max)
+				{
+					saved_points[c] = saved_points[c + 1];
+					c++;
+				}
+			}
 		}
 
 		public static void Reset()

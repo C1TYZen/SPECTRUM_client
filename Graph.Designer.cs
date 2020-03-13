@@ -31,7 +31,7 @@
 			this.Begin_Button = new System.Windows.Forms.Button();
 			this.Save_Button = new System.Windows.Forms.Button();
 			this.Close_Button = new System.Windows.Forms.Button();
-			this.tabControl1 = new System.Windows.Forms.TabControl();
+			this.TabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.label3 = new System.Windows.Forms.Label();
 			this.NumOfSteps = new System.Windows.Forms.TextBox();
@@ -56,7 +56,7 @@
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.New_button = new System.Windows.Forms.Button();
 			this.Delete_button = new System.Windows.Forms.Button();
-			this.tabControl1.SuspendLayout();
+			this.TabControl1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -91,15 +91,15 @@
 			this.Close_Button.UseVisualStyleBackColor = true;
 			this.Close_Button.Click += new System.EventHandler(this.Close_Click);
 			// 
-			// tabControl1
+			// TabControl1
 			// 
-			this.tabControl1.Controls.Add(this.tabPage1);
-			this.tabControl1.Location = new System.Drawing.Point(12, 36);
-			this.tabControl1.Name = "tabControl1";
-			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(517, 295);
-			this.tabControl1.TabIndex = 8;
-			this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
+			this.TabControl1.Controls.Add(this.tabPage1);
+			this.TabControl1.Location = new System.Drawing.Point(12, 36);
+			this.TabControl1.Name = "TabControl1";
+			this.TabControl1.SelectedIndex = 0;
+			this.TabControl1.Size = new System.Drawing.Size(517, 295);
+			this.TabControl1.TabIndex = 8;
+			this.TabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.TabControl1_Selecting);
 			// 
 			// tabPage1
 			// 
@@ -237,9 +237,9 @@
 			this.label9.AutoSize = true;
 			this.label9.Location = new System.Drawing.Point(544, 430);
 			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(75, 13);
+			this.label9.Size = new System.Drawing.Size(100, 13);
 			this.label9.TabIndex = 23;
-			this.label9.Text = "Mesure Status";
+			this.label9.Text = "Статус измерения";
 			// 
 			// menuStrip1
 			// 
@@ -334,7 +334,7 @@
 			this.Controls.Add(this.label9);
 			this.Controls.Add(this.Mesure_stat_label);
 			this.Controls.Add(this.Text_console);
-			this.Controls.Add(this.tabControl1);
+			this.Controls.Add(this.TabControl1);
 			this.Controls.Add(this.menuStrip1);
 			this.DoubleBuffered = true;
 			this.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -345,8 +345,8 @@
 			this.Name = "Graph";
 			this.Text = "Graph_v0.5a";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Graph_FormClosing);
-			this.Paint += new System.Windows.Forms.PaintEventHandler(this.Draw);
-			this.tabControl1.ResumeLayout(false);
+			this.Paint += new System.Windows.Forms.PaintEventHandler(this.draw);
+			this.TabControl1.ResumeLayout(false);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.groupBox1.ResumeLayout(false);
@@ -360,7 +360,7 @@
         private System.Windows.Forms.Button Begin_Button;
         private System.Windows.Forms.Button Save_Button;
         private System.Windows.Forms.Button Close_Button;
-		private System.Windows.Forms.TabControl tabControl1;
+		private System.Windows.Forms.TabControl TabControl1;
 		private System.Windows.Forms.TabPage tabPage1;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.TextBox NumOfSteps;

@@ -33,8 +33,6 @@
 			this.Close_Button = new System.Windows.Forms.Button();
 			this.TabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
-			this.label3 = new System.Windows.Forms.Label();
-			this.NumOfSteps = new System.Windows.Forms.TextBox();
 			this.Text_console = new System.Windows.Forms.TextBox();
 			this.ResolutionSet = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
@@ -53,12 +51,16 @@
 			this.menustrip_Tools = new System.Windows.Forms.ToolStripMenuItem();
 			this.menustrip_COM = new System.Windows.Forms.ToolStripMenuItem();
 			this.menustrip_BaudRate = new System.Windows.Forms.ToolStripMenuItem();
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.New_button = new System.Windows.Forms.Button();
 			this.Delete_button = new System.Windows.Forms.Button();
+			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.TabControl1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
+			this.tableLayoutPanel1.SuspendLayout();
+			this.groupBox2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// Begin_Button
@@ -94,7 +96,7 @@
 			// TabControl1
 			// 
 			this.TabControl1.Controls.Add(this.tabPage1);
-			this.TabControl1.Location = new System.Drawing.Point(12, 36);
+			this.TabControl1.Location = new System.Drawing.Point(3, 3);
 			this.TabControl1.Name = "TabControl1";
 			this.TabControl1.SelectedIndex = 0;
 			this.TabControl1.Size = new System.Drawing.Size(517, 295);
@@ -111,22 +113,6 @@
 			this.tabPage1.Text = "Спектр1";
 			this.tabPage1.UseVisualStyleBackColor = true;
 			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(8, 16);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(39, 13);
-			this.label3.TabIndex = 9;
-			this.label3.Text = "Шагов";
-			// 
-			// NumOfSteps
-			// 
-			this.NumOfSteps.Location = new System.Drawing.Point(9, 32);
-			this.NumOfSteps.Name = "NumOfSteps";
-			this.NumOfSteps.Size = new System.Drawing.Size(121, 20);
-			this.NumOfSteps.TabIndex = 10;
-			// 
 			// Text_console
 			// 
 			this.Text_console.AcceptsReturn = true;
@@ -135,17 +121,17 @@
 			this.Text_console.BackColor = System.Drawing.Color.Black;
 			this.Text_console.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.Text_console.ForeColor = System.Drawing.SystemColors.Window;
-			this.Text_console.Location = new System.Drawing.Point(12, 337);
+			this.Text_console.Location = new System.Drawing.Point(3, 304);
 			this.Text_console.Multiline = true;
 			this.Text_console.Name = "Text_console";
 			this.Text_console.ReadOnly = true;
 			this.Text_console.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.Text_console.Size = new System.Drawing.Size(517, 124);
+			this.Text_console.Size = new System.Drawing.Size(517, 127);
 			this.Text_console.TabIndex = 11;
 			// 
 			// ResolutionSet
 			// 
-			this.ResolutionSet.Location = new System.Drawing.Point(9, 227);
+			this.ResolutionSet.Location = new System.Drawing.Point(7, 188);
 			this.ResolutionSet.Name = "ResolutionSet";
 			this.ResolutionSet.Size = new System.Drawing.Size(121, 20);
 			this.ResolutionSet.TabIndex = 13;
@@ -153,7 +139,7 @@
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(8, 211);
+			this.label4.Location = new System.Drawing.Point(6, 172);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(70, 13);
 			this.label4.TabIndex = 12;
@@ -161,7 +147,7 @@
 			// 
 			// RangeSet0
 			// 
-			this.RangeSet0.Location = new System.Drawing.Point(9, 71);
+			this.RangeSet0.Location = new System.Drawing.Point(7, 32);
 			this.RangeSet0.Name = "RangeSet0";
 			this.RangeSet0.Size = new System.Drawing.Size(121, 20);
 			this.RangeSet0.TabIndex = 15;
@@ -169,7 +155,7 @@
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(8, 55);
+			this.label5.Location = new System.Drawing.Point(6, 16);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(18, 13);
 			this.label5.TabIndex = 14;
@@ -177,7 +163,7 @@
 			// 
 			// FilterSet
 			// 
-			this.FilterSet.Location = new System.Drawing.Point(9, 188);
+			this.FilterSet.Location = new System.Drawing.Point(7, 149);
 			this.FilterSet.Name = "FilterSet";
 			this.FilterSet.Size = new System.Drawing.Size(121, 20);
 			this.FilterSet.TabIndex = 17;
@@ -185,7 +171,7 @@
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(8, 172);
+			this.label6.Location = new System.Drawing.Point(6, 133);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(47, 13);
 			this.label6.TabIndex = 16;
@@ -193,7 +179,7 @@
 			// 
 			// MesuresCountSet
 			// 
-			this.MesuresCountSet.Location = new System.Drawing.Point(9, 149);
+			this.MesuresCountSet.Location = new System.Drawing.Point(7, 110);
 			this.MesuresCountSet.Name = "MesuresCountSet";
 			this.MesuresCountSet.Size = new System.Drawing.Size(121, 20);
 			this.MesuresCountSet.TabIndex = 19;
@@ -201,7 +187,7 @@
 			// label7
 			// 
 			this.label7.AutoSize = true;
-			this.label7.Location = new System.Drawing.Point(8, 133);
+			this.label7.Location = new System.Drawing.Point(6, 94);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(89, 13);
 			this.label7.TabIndex = 18;
@@ -209,7 +195,7 @@
 			// 
 			// RangeSet1
 			// 
-			this.RangeSet1.Location = new System.Drawing.Point(9, 110);
+			this.RangeSet1.Location = new System.Drawing.Point(7, 71);
 			this.RangeSet1.Name = "RangeSet1";
 			this.RangeSet1.Size = new System.Drawing.Size(121, 20);
 			this.RangeSet1.TabIndex = 21;
@@ -217,7 +203,7 @@
 			// label8
 			// 
 			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(6, 94);
+			this.label8.Location = new System.Drawing.Point(4, 55);
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(18, 13);
 			this.label8.TabIndex = 20;
@@ -226,7 +212,7 @@
 			// Mesure_stat_label
 			// 
 			this.Mesure_stat_label.AutoSize = true;
-			this.Mesure_stat_label.Location = new System.Drawing.Point(544, 448);
+			this.Mesure_stat_label.Location = new System.Drawing.Point(4, 106);
 			this.Mesure_stat_label.Name = "Mesure_stat_label";
 			this.Mesure_stat_label.Size = new System.Drawing.Size(75, 13);
 			this.Mesure_stat_label.TabIndex = 22;
@@ -235,7 +221,7 @@
 			// label9
 			// 
 			this.label9.AutoSize = true;
-			this.label9.Location = new System.Drawing.Point(544, 430);
+			this.label9.Location = new System.Drawing.Point(4, 88);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(100, 13);
 			this.label9.TabIndex = 23;
@@ -279,32 +265,9 @@
 			this.menustrip_BaudRate.Size = new System.Drawing.Size(121, 22);
 			this.menustrip_BaudRate.Text = "BaudRate";
 			// 
-			// groupBox1
-			// 
-			this.groupBox1.Controls.Add(this.label3);
-			this.groupBox1.Controls.Add(this.Begin_Button);
-			this.groupBox1.Controls.Add(this.Save_Button);
-			this.groupBox1.Controls.Add(this.RangeSet1);
-			this.groupBox1.Controls.Add(this.Close_Button);
-			this.groupBox1.Controls.Add(this.label8);
-			this.groupBox1.Controls.Add(this.NumOfSteps);
-			this.groupBox1.Controls.Add(this.MesuresCountSet);
-			this.groupBox1.Controls.Add(this.label4);
-			this.groupBox1.Controls.Add(this.label7);
-			this.groupBox1.Controls.Add(this.ResolutionSet);
-			this.groupBox1.Controls.Add(this.FilterSet);
-			this.groupBox1.Controls.Add(this.label5);
-			this.groupBox1.Controls.Add(this.label6);
-			this.groupBox1.Controls.Add(this.RangeSet0);
-			this.groupBox1.Location = new System.Drawing.Point(538, 58);
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(254, 269);
-			this.groupBox1.TabIndex = 25;
-			this.groupBox1.TabStop = false;
-			// 
 			// New_button
 			// 
-			this.New_button.Location = new System.Drawing.Point(547, 337);
+			this.New_button.Location = new System.Drawing.Point(6, 19);
 			this.New_button.Name = "New_button";
 			this.New_button.Size = new System.Drawing.Size(75, 23);
 			this.New_button.TabIndex = 26;
@@ -314,7 +277,7 @@
 			// 
 			// Delete_button
 			// 
-			this.Delete_button.Location = new System.Drawing.Point(547, 366);
+			this.Delete_button.Location = new System.Drawing.Point(6, 48);
 			this.Delete_button.Name = "Delete_button";
 			this.Delete_button.Size = new System.Drawing.Size(75, 23);
 			this.Delete_button.TabIndex = 27;
@@ -322,19 +285,70 @@
 			this.Delete_button.UseVisualStyleBackColor = true;
 			this.Delete_button.Click += new System.EventHandler(this.Delete_button_Click);
 			// 
+			// groupBox1
+			// 
+			this.groupBox1.Controls.Add(this.Begin_Button);
+			this.groupBox1.Controls.Add(this.Save_Button);
+			this.groupBox1.Controls.Add(this.RangeSet1);
+			this.groupBox1.Controls.Add(this.Close_Button);
+			this.groupBox1.Controls.Add(this.label8);
+			this.groupBox1.Controls.Add(this.MesuresCountSet);
+			this.groupBox1.Controls.Add(this.label4);
+			this.groupBox1.Controls.Add(this.label7);
+			this.groupBox1.Controls.Add(this.ResolutionSet);
+			this.groupBox1.Controls.Add(this.FilterSet);
+			this.groupBox1.Controls.Add(this.label5);
+			this.groupBox1.Controls.Add(this.label6);
+			this.groupBox1.Controls.Add(this.RangeSet0);
+			this.groupBox1.Location = new System.Drawing.Point(527, 3);
+			this.groupBox1.Name = "groupBox1";
+			this.groupBox1.Size = new System.Drawing.Size(249, 291);
+			this.groupBox1.TabIndex = 25;
+			this.groupBox1.TabStop = false;
+			this.groupBox1.Text = "Параметры";
+			// 
+			// tableLayoutPanel1
+			// 
+			this.tableLayoutPanel1.ColumnCount = 2;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 67.30038F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 32.69962F));
+			this.tableLayoutPanel1.Controls.Add(this.groupBox2, 1, 1);
+			this.tableLayoutPanel1.Controls.Add(this.Text_console, 0, 1);
+			this.tableLayoutPanel1.Controls.Add(this.groupBox1, 1, 0);
+			this.tableLayoutPanel1.Controls.Add(this.TabControl1, 0, 0);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 27);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.RowCount = 2;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 69.58525F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30.41475F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(780, 434);
+			this.tableLayoutPanel1.TabIndex = 28;
+			// 
+			// groupBox2
+			// 
+			this.groupBox2.Controls.Add(this.New_button);
+			this.groupBox2.Controls.Add(this.Mesure_stat_label);
+			this.groupBox2.Controls.Add(this.Delete_button);
+			this.groupBox2.Controls.Add(this.label9);
+			this.groupBox2.Location = new System.Drawing.Point(527, 304);
+			this.groupBox2.Name = "groupBox2";
+			this.groupBox2.Size = new System.Drawing.Size(249, 127);
+			this.groupBox2.TabIndex = 29;
+			this.groupBox2.TabStop = false;
+			this.groupBox2.Text = "Спектр";
+			// 
 			// Graph
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.Control;
 			this.ClientSize = new System.Drawing.Size(792, 473);
-			this.Controls.Add(this.Delete_button);
-			this.Controls.Add(this.New_button);
-			this.Controls.Add(this.groupBox1);
-			this.Controls.Add(this.label9);
-			this.Controls.Add(this.Mesure_stat_label);
-			this.Controls.Add(this.Text_console);
-			this.Controls.Add(this.TabControl1);
+			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.menuStrip1);
 			this.DoubleBuffered = true;
 			this.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -344,13 +358,17 @@
 			this.MinimizeBox = false;
 			this.Name = "Graph";
 			this.Text = "Graph_v0.5a";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Graph_FormClosing);
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Graph_Form_Closing);
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.draw);
 			this.TabControl1.ResumeLayout(false);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
+			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel1.PerformLayout();
+			this.groupBox2.ResumeLayout(false);
+			this.groupBox2.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -362,8 +380,6 @@
         private System.Windows.Forms.Button Close_Button;
 		private System.Windows.Forms.TabControl TabControl1;
 		private System.Windows.Forms.TabPage tabPage1;
-		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.TextBox NumOfSteps;
 		private System.Windows.Forms.TextBox Text_console;
 		private System.Windows.Forms.TextBox ResolutionSet;
 		private System.Windows.Forms.Label label4;
@@ -382,9 +398,11 @@
 		private System.Windows.Forms.ToolStripMenuItem menustrip_Tools;
 		private System.Windows.Forms.ToolStripMenuItem menustrip_COM;
 		private System.Windows.Forms.ToolStripMenuItem menustrip_BaudRate;
-		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.Button New_button;
 		private System.Windows.Forms.Button Delete_button;
+		private System.Windows.Forms.GroupBox groupBox1;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+		private System.Windows.Forms.GroupBox groupBox2;
 	}
 }
 

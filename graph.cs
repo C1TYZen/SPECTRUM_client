@@ -45,7 +45,7 @@ namespace graph1
 			tabgrfx = tabPage1.CreateGraphics();
 
 			//Установка дефолтных значений
-			NumOfSteps.Text = "100";
+			//NumOfSteps.Text = "100";
 			ResolutionSet.Text = "1";
 			RangeSet0.Text = "0";
 			RangeSet1.Text = "100";
@@ -74,25 +74,6 @@ namespace graph1
 		}
 
 		/// <summary>
-		/// Отрисовка спектра в буфер
-		/// </summary>
-		/// <param name="g"></param>
-		void draw_to_buffer(Graphics g)
-		{
-			g.FillRectangle(SystemBrushes.Highlight, canvas);
-			for (int i = 0; i <= SP_contaner.cur; i += resolution)
-			{
-				if (SP_contaner.points[i + resolution].X  != 0)
-				{
-					g.DrawLine(pen, SP_contaner.points[i].X, 
-						canvas.Height - (SP_contaner.points[i].Y >> 2),
-						SP_contaner.points[i + resolution].X, 
-						canvas.Height - (SP_contaner.points[i + resolution].Y >> 2));
-				}
-			}
-		}
-
-		/// <summary>
 		/// Тикалка
 		/// </summary>
 		/// <param name="sender"></param>
@@ -112,6 +93,25 @@ namespace graph1
 
 			draw_to_buffer(grafx.Graphics);
 			Invalidate(canvas);
+		}
+
+		/// <summary>
+		/// Отрисовка спектра в буфер
+		/// </summary>
+		/// <param name="g"></param>
+		void draw_to_buffer(Graphics g)
+		{
+			g.FillRectangle(SystemBrushes.Highlight, canvas);
+			for (int i = 0; i <= SP_contaner.cur; i += resolution)
+			{
+				if (SP_contaner.points[i + resolution].X != 0)
+				{
+					g.DrawLine(pen, SP_contaner.points[i].X,
+						canvas.Height - (SP_contaner.points[i].Y >> 2),
+						SP_contaner.points[i + resolution].X,
+						canvas.Height - (SP_contaner.points[i + resolution].Y >> 2));
+				}
+			}
 		}
 
 		/* вызывается при запросе "перерисовать" (Ivalidate)
@@ -211,12 +211,12 @@ namespace graph1
 			//st SET////////////////////////////////////////////////////
 			Thread.Sleep(50);
 			talker.send2bytes(29811);   //st
-
-			if ((buf = check_value(NumOfSteps.Text)) == -1)
+			buf = SP_contaner.range[1] - SP_contaner.range[0];
+			/*if ((buf = check_value(NumOfSteps.Text)) == -1)
 			{
 				SP_Log.Log("**ERROR** Incorrect Num of Steps!!!");
 				buf = 100;
-			}
+			}*/
 			SP_contaner.scale = (float)canvas.Width / (float)buf;
 			talker.send2bytes(buf);
 			talker.read_line();
@@ -290,7 +290,7 @@ namespace graph1
 			talker._baudrate = Convert.ToInt32(sender);
 		}
 
-		void Graph_FormClosing(object sender, FormClosingEventArgs e)
+		void Graph_Form_Closing(object sender, FormClosingEventArgs e)
 		{
 			Receiver.Abort();
 			talker.Dispose();

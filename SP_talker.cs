@@ -10,15 +10,14 @@ namespace graph1
 	class SP_talker : IDisposable
 	{
 		public SerialPort _serialPort = new SerialPort();
-
-		//буферы для 2х байтогого приема
-		byte[] bmsg = new byte[2];
-		int imsg;
 		public bool Receive = false;
 
 		public int _baudrate = 76800;
 		public string _portname;
-		int count = 1;
+
+		//буферы для 2х байтогого приема
+		byte[] bmsg = new byte[2];
+		int imsg;
 
 		/// <summary>
 		/// Открывает порт с указанным именем и соростью.
@@ -170,7 +169,8 @@ namespace graph1
 		/// </summary>
 		void go_online()
 		{
-			while(true)
+			int count = 1;
+			while (true)
 			{
 				// пока поднят флаг рессивера, поток получает данные от сервера
 				while (Receive)

@@ -79,6 +79,8 @@ namespace graph1
 			if(saved_points[c] != null)
 			{
 				points = saved_points[c];
+				range = saved_range[c];
+				mps = saved_mps[c];
 				Console.WriteLine($"Спектр{c + 1} загружен");
 			}
 			else

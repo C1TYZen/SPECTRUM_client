@@ -22,6 +22,9 @@ namespace graph1
 		Graphics tabgrfx;
 		int resolution = 1;
 
+		/// <summary>
+		/// Констркуктор
+		/// </summary>
 		public Graph()
 		{
 			InitializeComponent();
@@ -65,7 +68,6 @@ namespace graph1
 				talker._portname = s;
 				menustrip_COM.DropDownItems.Add(s).Click += On_Port_Select;
 			}
-			talker._baudrate = talker.GetBaudRate();
 			menustrip_BaudRate.DropDownItems.Add(talker._baudrate.ToString()).Click += On_Speed_Select;
 
 			//Запуск параллельного потока
@@ -147,16 +149,22 @@ namespace graph1
 		/// Проверка значения из строки
 		/// </summary>
 		/// <param name="str"></param>
+		/// <param name="errmsg"></param>
 		/// <returns></returns>
-		int check_value(string str)
+		int check_value(string str, string errmsg)
 		{
-			try { Convert.ToInt32(str); }
+			int temp;
+			try { temp = Convert.ToInt32(str); }
 			catch
 			{
+				SP_Log.Log(errmsg);
 				return -1;
 			}
 
-			return Convert.ToInt32(str);
+			if (temp < 0)
+				return 0;
+
+			return temp;
 		}
 
 		#region События   
@@ -178,20 +186,16 @@ namespace graph1
 			Thread.Sleep(50);
 			talker.send2bytes(29548);   //mr
 
-			if ((buf = check_value(RangeSet0.Text)) == -1)
-			{
-				SP_Log.Log("**ERROR** Incorrect RANGE_0!!!");
+			if((buf = check_value(RangeSet0.Text, "**ERROR** Incorrect RANGE_0!!!")) == -1)
 				buf = 0;
-			}
-			SP_contaner.range[0] = buf;
+
+			SP_contaner.range0 = buf;
 			talker.send2bytes(buf);
 
-			if ((buf = check_value(RangeSet1.Text)) == -1)
-			{
-				SP_Log.Log("**ERROR** Incorrect RANGE_1!!!");
+			if((buf = check_value(RangeSet1.Text, "**ERROR** Incorrect RANGE_1!!!")) == -1)
 				buf = 100;
-			}
-			SP_contaner.range[1] = buf;
+			
+			SP_contaner.range1 = buf;
 			talker.send2bytes(buf);
 			talker.read_line();
 
@@ -199,11 +203,9 @@ namespace graph1
 			Thread.Sleep(50);
 			talker.send2bytes(25453);   //mc
 
-			if ((buf = check_value(MesuresCountSet.Text)) == -1)
-			{
-				SP_Log.Log("**ERROR** Incorrect MesuresCount!!!");
+			if((buf = check_value(MesuresCountSet.Text, "**ERROR** Incorrect MesuresCount!!!")) == -1)
 				buf = 100;
-			}
+
 			SP_contaner.mps = buf;
 			talker.send2bytes(buf);
 			talker.read_line();
@@ -211,17 +213,12 @@ namespace graph1
 			//st SET////////////////////////////////////////////////////
 			Thread.Sleep(50);
 			talker.send2bytes(29811);   //st
-			buf = SP_contaner.range[1] - SP_contaner.range[0];
-			/*if ((buf = check_value(NumOfSteps.Text)) == -1)
-			{
-				SP_Log.Log("**ERROR** Incorrect Num of Steps!!!");
-				buf = 100;
-			}*/
+			buf = SP_contaner.range1 - SP_contaner.range0;
 			SP_contaner.scale = (float)canvas.Width / (float)buf;
 			talker.send2bytes(buf);
 			talker.read_line();
 
-			//установка разрешения графика
+			//установка разрешения спектра
 			Console.WriteLine($"Scale: {SP_contaner.scale}");
 			try { resolution = Convert.ToInt32(ResolutionSet.Text); }
 			catch
@@ -270,8 +267,8 @@ namespace graph1
 			tabgrfx = e.TabPage.CreateGraphics();
 			SP_contaner.Load_from_RAM(e.TabPageIndex);
 
-			RangeSet0.Text = SP_contaner.range[0].ToString();
-			RangeSet1.Text = SP_contaner.range[1].ToString();
+			RangeSet0.Text = SP_contaner.range0.ToString();
+			RangeSet1.Text = SP_contaner.range1.ToString();
 			MesuresCountSet.Text = SP_contaner.mps.ToString();
 
 			if (TabControl1.TabCount == 1)

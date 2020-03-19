@@ -5,9 +5,9 @@ using System.Threading;
 namespace graph1
 {
 	/// <summary>
-	/// Общение по последовательному порту.
+	/// Класс для общения с ардуино по последовательному порту.
 	/// </summary>
-	class SP_talker : IDisposable
+	class SP_talker
 	{
 		public SerialPort _serialPort = new SerialPort();
 		public bool Receive = false;
@@ -15,7 +15,6 @@ namespace graph1
 		public int _baudrate = 76800;
 		public string _portname;
 
-		//буферы для 2х байтогого приема
 		byte[] bmsg = new byte[2];
 		int imsg;
 
@@ -115,7 +114,7 @@ namespace graph1
 		}
 
 		/// <summary>
-		/// Функция подключения к серверу
+		/// Функция осуществляет подключение к серверу ардуино, по порту _portname.
 		/// </summary>
 		public void connect()
 		{
@@ -161,27 +160,32 @@ namespace graph1
 		}
 
 		/// <summary>
-		/// Функция запускающаяся в отдельном потоке.
 		/// В бесконечном цикле следит за флагом Receive.
 		/// При поднятии флага начинает читать по 2 байта из
 		/// буфера и записывать в контейнер.
 		/// Флаг опускается при получении команды остановки от сервера.
 		/// </summary>
+
+		/// <remarks>
+		/// Основной цикл приема данных:
+		/// 1. Прочитать 2 байта из буфера;
+		///	2. Соеденить 2 байта и сохранить в переменную;
+		///	3. Если данные равны значению выхода - закончить прием измерений;
+		///	4. Вывод статуса измерения в строку в интерфейсе;
+		///	5. Добавить значение в контейнер.
+		/// </remarks>
 		void go_online()
 		{
 			int count = 1;
 			while (true)
 			{
-				// пока поднят флаг рессивера, поток получает данные от сервера
 				while (Receive)
 				{
 					if (_serialPort.BytesToRead >= 2)
 					{
-						//прочитать 2 байта из буфера
+						
 						read(bmsg, 0, 2);
-						//соеденить 2 байта и сохранить в переменную
 						imsg = bmsg[0] + (bmsg[1] << 8);
-						//если данные равны значению выхода - закончить прием измерений
 						if (imsg == 28019)
 						{
 							Console.WriteLine();
@@ -189,7 +193,6 @@ namespace graph1
 							count = 1;
 							break;
 						}
-						//вывод статуса измерения в строку в интерфейсе
 						SP_Log.Status(
 							String.Format(
 								$"Шаг: {count} Значение: {imsg} Байт для чтения: {_serialPort.BytesToRead}"));
@@ -200,6 +203,9 @@ namespace graph1
 			}
 		}
 
+		/// <summary>
+		/// Очистка входного порта.
+		/// </summary>
 		public void FlushReadBuf()
 		{
 			_serialPort.DiscardInBuffer();
@@ -207,14 +213,12 @@ namespace graph1
 			SP_Log.Debug($"Trash: {dummy}");
 		}
 
+		/// <summary>
+		/// Получить имена портов.
+		/// </summary>
 		public string[] GetPortNames()
 		{
 			return SerialPort.GetPortNames();
-		}
-
-		public int GetBaudRate()
-		{
-			return _baudrate;
 		}
 
 		public void Dispose()

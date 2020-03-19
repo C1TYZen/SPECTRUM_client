@@ -65,7 +65,7 @@
 			// 
 			// Begin_Button
 			// 
-			this.Begin_Button.Location = new System.Drawing.Point(167, 19);
+			this.Begin_Button.Location = new System.Drawing.Point(182, 19);
 			this.Begin_Button.Name = "Begin_Button";
 			this.Begin_Button.Size = new System.Drawing.Size(75, 23);
 			this.Begin_Button.TabIndex = 1;
@@ -75,7 +75,7 @@
 			// 
 			// Save_Button
 			// 
-			this.Save_Button.Location = new System.Drawing.Point(167, 48);
+			this.Save_Button.Location = new System.Drawing.Point(182, 48);
 			this.Save_Button.Name = "Save_Button";
 			this.Save_Button.Size = new System.Drawing.Size(75, 23);
 			this.Save_Button.TabIndex = 2;
@@ -85,7 +85,7 @@
 			// 
 			// Close_Button
 			// 
-			this.Close_Button.Location = new System.Drawing.Point(167, 77);
+			this.Close_Button.Location = new System.Drawing.Point(182, 77);
 			this.Close_Button.Name = "Close_Button";
 			this.Close_Button.Size = new System.Drawing.Size(75, 23);
 			this.Close_Button.TabIndex = 3;
@@ -131,7 +131,7 @@
 			// 
 			// ResolutionSet
 			// 
-			this.ResolutionSet.Location = new System.Drawing.Point(7, 188);
+			this.ResolutionSet.Location = new System.Drawing.Point(6, 265);
 			this.ResolutionSet.Name = "ResolutionSet";
 			this.ResolutionSet.Size = new System.Drawing.Size(121, 20);
 			this.ResolutionSet.TabIndex = 13;
@@ -139,7 +139,7 @@
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(6, 172);
+			this.label4.Location = new System.Drawing.Point(5, 249);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(70, 13);
 			this.label4.TabIndex = 12;
@@ -291,18 +291,18 @@
 			this.groupBox1.Controls.Add(this.Save_Button);
 			this.groupBox1.Controls.Add(this.RangeSet1);
 			this.groupBox1.Controls.Add(this.Close_Button);
-			this.groupBox1.Controls.Add(this.label8);
-			this.groupBox1.Controls.Add(this.MesuresCountSet);
 			this.groupBox1.Controls.Add(this.label4);
-			this.groupBox1.Controls.Add(this.label7);
+			this.groupBox1.Controls.Add(this.label8);
 			this.groupBox1.Controls.Add(this.ResolutionSet);
+			this.groupBox1.Controls.Add(this.MesuresCountSet);
+			this.groupBox1.Controls.Add(this.label7);
 			this.groupBox1.Controls.Add(this.FilterSet);
 			this.groupBox1.Controls.Add(this.label5);
 			this.groupBox1.Controls.Add(this.label6);
 			this.groupBox1.Controls.Add(this.RangeSet0);
 			this.groupBox1.Location = new System.Drawing.Point(527, 3);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(249, 291);
+			this.groupBox1.Size = new System.Drawing.Size(262, 291);
 			this.groupBox1.TabIndex = 25;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Параметры";
@@ -310,8 +310,8 @@
 			// tableLayoutPanel1
 			// 
 			this.tableLayoutPanel1.ColumnCount = 2;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 67.30038F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 32.69962F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 66.16161F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.83838F));
 			this.tableLayoutPanel1.Controls.Add(this.groupBox2, 1, 1);
 			this.tableLayoutPanel1.Controls.Add(this.Text_console, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this.groupBox1, 1, 0);
@@ -326,7 +326,7 @@
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(780, 434);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(792, 434);
 			this.tableLayoutPanel1.TabIndex = 28;
 			// 
 			// groupBox2
@@ -337,7 +337,7 @@
 			this.groupBox2.Controls.Add(this.label9);
 			this.groupBox2.Location = new System.Drawing.Point(527, 304);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(249, 127);
+			this.groupBox2.Size = new System.Drawing.Size(262, 127);
 			this.groupBox2.TabIndex = 29;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Спектр";

@@ -5,7 +5,7 @@ using System.Drawing;
 namespace graph1
 {
 	/// <summary>
-	/// Контейнер для данных.
+	/// Класс - контейнер для данных.
 	/// </summary>
 	static class SP_contaner
 	{
@@ -14,14 +14,19 @@ namespace graph1
 
 		public static int cur = 0;
 		public static float scale;
+
 		public static Point[] points = new Point[points_count];
-		public static int[] range = new int[2];
+		public static int range0;
+		public static int range1;
 		public static int mps;
 		public static int filter;
 
 		static Point[][] saved_points = new Point[plots_count][];
-		static int[][] saved_range = new int[plots_count][];
+		static int[] saved_cur = new int[plots_count];
+		static int[] saved_range0 = new int[plots_count];
+		static int[] saved_range1 = new int[plots_count];
 		static int[] saved_mps = new int[plots_count];
+		static int[] saved_filter = new int[plots_count];
 
 		/// <summary>
 		/// Добавление элемента таблицы.
@@ -35,7 +40,7 @@ namespace graph1
 		}
 
 		/// <summary>
-		/// Сохранение графика в файл в виде таблицы.
+		/// Сохранение спектра в файл в виде таблицы.
 		/// </summary>
 		public static void Save_on_disk()
 		{
@@ -59,19 +64,21 @@ namespace graph1
 		}
 
 		/// <summary>
-		/// Сохраниение спектра в буфер
+		/// Сохраниение спектра в буфер.
 		/// </summary>
 		/// <param name="c"></param>
 		public static void Save_on_RAM(int c)
 		{
 			saved_points[c] = points;
-			saved_range[c] = range;
+			saved_cur[c] = cur;
+			saved_range0[c] = range0;
+			saved_range1[c] = range1;
 			saved_mps[c] = mps;
 			Console.WriteLine($"Спектр{c + 1} сохранен");
 		}
 
 		/// <summary>
-		/// Загрузка спектра из буфера
+		/// Загрузка спектра из буфера.
 		/// </summary>
 		/// <param name="c"></param>
 		public static void Load_from_RAM(int c)
@@ -79,7 +86,9 @@ namespace graph1
 			if(saved_points[c] != null)
 			{
 				points = saved_points[c];
-				range = saved_range[c];
+				cur = saved_cur[c];
+				range0 = saved_range0[c];
+				range1 = saved_range1[c];
 				mps = saved_mps[c];
 				Console.WriteLine($"Спектр{c + 1} загружен");
 			}
@@ -92,7 +101,7 @@ namespace graph1
 		}
 
 		/// <summary>
-		/// Удаление спектра из буфера
+		/// Удаление спектра из буфера.
 		/// </summary>
 		/// <param name="c"></param>
 		/// <param name="max"></param>

@@ -82,6 +82,9 @@ namespace graph1
 		{
 			Mesure_stat_label.Text = SP_Log.status;
 
+			if (SP_Flags.get_ready_flag)
+				get_ready();
+
 			if (talker.Receive)
 				talker.receiver();
 

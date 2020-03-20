@@ -155,10 +155,9 @@ namespace graph1
 		}
 
 		/// <summary>
-		/// В бесконечном цикле следит за флагом Receive.
-		/// При поднятии флага начинает читать по 2 байта из
-		/// буфера и записывать в контейнер.
-		/// Флаг опускается при получении команды остановки от сервера.
+		/// Читает по 2 байта из
+		/// буфера и записывает в контейнер.
+		/// При получении команды стоп - опускается поднимается флаг.
 		/// </summary>
 
 		/// <remarks>
@@ -169,49 +168,27 @@ namespace graph1
 		///	4. Вывод статуса измерения в строку в интерфейсе;
 		///	5. Добавить значение в контейнер.
 		/// </remarks>
-		void go_online()
-		{
-			int count = 1;
-			while (true)
-			{
-				while (Receive)
-				{
-					if (_serialPort.BytesToRead >= 2)
-					{
-						read(bmsg, 0, 2);
-						imsg = bmsg[0] + (bmsg[1] << 8);
-						if (imsg == 28019)
-						{
-							Console.WriteLine();
-							SP_Flags.get_ready_flag = true;
-							count = 1;
-							break;
-						}
-						SP_Log.Status(
-							String.Format(
-								$"Шаг: {count} Значение: {imsg} Байт для чтения: {_serialPort.BytesToRead}"));
-						SP_contaner.Add(imsg);
-						count++;
-					}
-				}
-			}
-		}
 
 		public void receiver()
 		{
-			read(bmsg, 0, 2);
-			imsg = bmsg[0] + (bmsg[1] << 8);
-			if (imsg == 28019)
+			if (_serialPort.BytesToRead >= 2)
 			{
-				Console.WriteLine("Все");
-				Receive = false;
+				read(bmsg, 0, 2);
+				imsg = bmsg[0] + (bmsg[1] << 8);
+				if (imsg != 28019)
+				{
+					SP_Log.Status(
+					String.Format(
+						$"Шаг:  Значение: {imsg} Байт для чтения: {_serialPort.BytesToRead}"));
+					SP_contaner.Add(imsg);
+				}
+				else
+				{
+					Console.WriteLine();
+					SP_Flags.get_ready_flag = true;
+				}
+				
 			}
-
-			SP_Log.Debug(
-				String.Format(
-					$"Шаг:  Значение: {imsg} Байт для чтения: {_serialPort.BytesToRead}"));
-
-			SP_contaner.Add(imsg);
 		}
 
 		/// <summary>

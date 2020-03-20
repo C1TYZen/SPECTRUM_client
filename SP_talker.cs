@@ -92,7 +92,7 @@ namespace graph1
 			try { _serialPort.Read(msg, offset, count); }
 			catch (Exception ex)
 			{
-				SP_Log.Debug($"Error in <<on_receive()>> function\n{ex}");
+				SP_Log.Debug($"Error in <<read()>> function\n{ex}");
 			}
 		}
 
@@ -118,18 +118,17 @@ namespace graph1
 		/// </summary>
 		public void connect()
 		{
-			Thread.Sleep(1000);
 			int attempt = 1;
-			SP_Log.External_message("Соединение");
+			SP_Log.Log("Соединение");
 
 			//попытка открыть порт
 			if (open(_portname, _baudrate) == -1)
 			{
-				SP_Log.External_message("**ERROR** Plug in and restart!");
+				SP_Log.Log("**ERROR** Plug in and restart!");
 				return;
 			}
 
-			while (attempt <= 3)
+			while (attempt <= 5)
 			{
 				//прочитать строку проверки связи
 				Thread.Sleep(1000);
@@ -144,7 +143,7 @@ namespace graph1
 
 			if (attempt > 3)
 			{
-				SP_Log.External_message("**ERROR** Can't connect");
+				SP_Log.Log("**ERROR** Can't connect");
 				return;
 			}
 
@@ -153,10 +152,6 @@ namespace graph1
 			Console.WriteLine($"PORT: {_portname}");
 			Console.WriteLine($"SPEED: {_baudrate}");
 			Console.WriteLine("************");
-
-			SP_Flags.get_ready_flag = true;
-
-			go_online();
 		}
 
 		/// <summary>
@@ -183,7 +178,6 @@ namespace graph1
 				{
 					if (_serialPort.BytesToRead >= 2)
 					{
-						
 						read(bmsg, 0, 2);
 						imsg = bmsg[0] + (bmsg[1] << 8);
 						if (imsg == 28019)
@@ -201,6 +195,23 @@ namespace graph1
 					}
 				}
 			}
+		}
+
+		public void receiver()
+		{
+			read(bmsg, 0, 2);
+			imsg = bmsg[0] + (bmsg[1] << 8);
+			if (imsg == 28019)
+			{
+				Console.WriteLine("Все");
+				Receive = false;
+			}
+
+			SP_Log.Debug(
+				String.Format(
+					$"Шаг:  Значение: {imsg} Байт для чтения: {_serialPort.BytesToRead}"));
+
+			SP_contaner.Add(imsg);
 		}
 
 		/// <summary>

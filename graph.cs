@@ -9,7 +9,6 @@ namespace graph1
 	{
 		//Настройка связи
 		SP_talker talker = new SP_talker();
-		Thread Receiver;
 
 		System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 		int FPS = 30;
@@ -70,9 +69,8 @@ namespace graph1
 			}
 			menustrip_BaudRate.DropDownItems.Add(talker._baudrate.ToString()).Click += On_Speed_Select;
 
-			//Запуск параллельного потока
-			Receiver = new Thread(new ThreadStart(talker.connect));
-			Receiver.Start();
+			talker.connect();
+			get_ready();
 		}
 
 		/// <summary>
@@ -84,14 +82,8 @@ namespace graph1
 		{
 			Mesure_stat_label.Text = SP_Log.status;
 
-			if (SP_Flags.get_ready_flag)
-				get_ready();
-
-			if (SP_Flags.external_message_flag)
-			{
-				SP_Log.Log(SP_Log.external);
-				SP_Flags.external_message_flag = false;
-			}
+			if (talker.Receive)
+				talker.receiver();
 
 			draw_to_buffer(grafx.Graphics);
 			Invalidate(canvas);
@@ -231,7 +223,6 @@ namespace graph1
 			Thread.Sleep(200);
 			SP_contaner.Clear();
 			talker.FlushReadBuf();
-			SP_Log.Debug($"Receiver STATUS: {Receiver.ThreadState}");
 			SP_Log.Log($"ИЗМЕРЕНИЕ!");
 			talker.Receive = true; // поднятие флага рессивера
 			talker.send2bytes(28002);   //bm
@@ -289,7 +280,7 @@ namespace graph1
 
 		void Graph_Form_Closing(object sender, FormClosingEventArgs e)
 		{
-			Receiver.Abort();
+			//Receiver.Abort();
 			talker.Dispose();
 		}
 

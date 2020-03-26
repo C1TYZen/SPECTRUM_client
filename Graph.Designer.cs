@@ -131,15 +131,15 @@
 			// 
 			// ResolutionSet
 			// 
-			this.ResolutionSet.Location = new System.Drawing.Point(6, 265);
+			this.ResolutionSet.Location = new System.Drawing.Point(173, 103);
 			this.ResolutionSet.Name = "ResolutionSet";
-			this.ResolutionSet.Size = new System.Drawing.Size(121, 20);
+			this.ResolutionSet.Size = new System.Drawing.Size(80, 20);
 			this.ResolutionSet.TabIndex = 13;
 			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(5, 249);
+			this.label4.Location = new System.Drawing.Point(183, 87);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(70, 13);
 			this.label4.TabIndex = 12;
@@ -149,7 +149,7 @@
 			// 
 			this.RangeSet0.Location = new System.Drawing.Point(7, 32);
 			this.RangeSet0.Name = "RangeSet0";
-			this.RangeSet0.Size = new System.Drawing.Size(121, 20);
+			this.RangeSet0.Size = new System.Drawing.Size(80, 20);
 			this.RangeSet0.TabIndex = 15;
 			// 
 			// label5
@@ -165,7 +165,7 @@
 			// 
 			this.FilterSet.Location = new System.Drawing.Point(7, 149);
 			this.FilterSet.Name = "FilterSet";
-			this.FilterSet.Size = new System.Drawing.Size(121, 20);
+			this.FilterSet.Size = new System.Drawing.Size(80, 20);
 			this.FilterSet.TabIndex = 17;
 			// 
 			// label6
@@ -173,15 +173,15 @@
 			this.label6.AutoSize = true;
 			this.label6.Location = new System.Drawing.Point(6, 133);
 			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(47, 13);
+			this.label6.Size = new System.Drawing.Size(87, 13);
 			this.label6.TabIndex = 16;
-			this.label6.Text = "Фильтр";
+			this.label6.Text = "Номер фильтра";
 			// 
 			// MesuresCountSet
 			// 
 			this.MesuresCountSet.Location = new System.Drawing.Point(7, 110);
 			this.MesuresCountSet.Name = "MesuresCountSet";
-			this.MesuresCountSet.Size = new System.Drawing.Size(121, 20);
+			this.MesuresCountSet.Size = new System.Drawing.Size(80, 20);
 			this.MesuresCountSet.TabIndex = 19;
 			// 
 			// label7
@@ -197,7 +197,7 @@
 			// 
 			this.RangeSet1.Location = new System.Drawing.Point(7, 71);
 			this.RangeSet1.Name = "RangeSet1";
-			this.RangeSet1.Size = new System.Drawing.Size(121, 20);
+			this.RangeSet1.Size = new System.Drawing.Size(80, 20);
 			this.RangeSet1.TabIndex = 21;
 			// 
 			// label8
@@ -291,9 +291,7 @@
 			this.groupBox1.Controls.Add(this.Save_Button);
 			this.groupBox1.Controls.Add(this.RangeSet1);
 			this.groupBox1.Controls.Add(this.Close_Button);
-			this.groupBox1.Controls.Add(this.label4);
 			this.groupBox1.Controls.Add(this.label8);
-			this.groupBox1.Controls.Add(this.ResolutionSet);
 			this.groupBox1.Controls.Add(this.MesuresCountSet);
 			this.groupBox1.Controls.Add(this.label7);
 			this.groupBox1.Controls.Add(this.FilterSet);
@@ -335,6 +333,8 @@
 			this.groupBox2.Controls.Add(this.Mesure_stat_label);
 			this.groupBox2.Controls.Add(this.Delete_button);
 			this.groupBox2.Controls.Add(this.label9);
+			this.groupBox2.Controls.Add(this.label4);
+			this.groupBox2.Controls.Add(this.ResolutionSet);
 			this.groupBox2.Location = new System.Drawing.Point(527, 304);
 			this.groupBox2.Name = "groupBox2";
 			this.groupBox2.Size = new System.Drawing.Size(262, 127);

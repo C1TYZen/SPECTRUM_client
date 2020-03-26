@@ -9,13 +9,15 @@ namespace graph1
 	/// </summary>
 	class SP_talker
 	{
+		public delegate void ready();
+		public ready get_ready_func;
 		public SerialPort _serialPort = new SerialPort();
 		public bool Receive = false;
 
 		public int _baudrate = 76800;
 		public string _portname;
 
-		byte[] bmsg = new byte[2];
+		byte[] bmsg = new byte[3];
 		int imsg;
 
 		/// <summary>
@@ -70,14 +72,45 @@ namespace graph1
 
 		/// <summary>
 		/// Отправляет в последовательный порт 2 байта из
-		/// массива buf.
+		/// переменной buf.
 		/// </summary>
 		/// <param name="buf"></param>
+
+		/// <remarks>
+		/// 2 байта последовательно отправляются на ардуино,
+		/// где первый записываеся в переменную, а второй сдвигается
+		/// на 8 бит и тоже записывается.
+		/// </remarks>
 		public void send2bytes(int buf)
 		{
 			bmsg[0] = (byte)buf;
 			bmsg[1] = (byte)(buf >> 8);
 			send(bmsg, 0, 2);
+		}
+
+		/// <summary>
+		/// Отправляет в последовательный порт 3 байта из
+		/// переменной buf.
+		/// </summary>
+		/// <param name="buf"></param>
+		 
+		/// <remarks>
+		/// В отличие от функции отправки 2х байт, здесь байты отправляются в обратном порядке.
+		/// Ардуино принимает байты в 8-битный регистр последовательного
+		/// порта, после чего эти данные можно записать в переменную.
+		/// При приеме 2х байт первый байт записывается в переменную,
+		/// а второй сперва сдвигается в регистре приема и только потом записывается.
+		/// При попытке сдвига третьего байта - байт отбрасывается.
+		/// Не понятно почему так происходит, так как регистр 8-битный.
+		/// То есть в регистре при сдвиге должен отбрасываться и второй бит тоже.
+		/// </remarks>
+		public void send3bytes(int buf)
+		{
+			bmsg[0] = (byte)(buf >> 16);
+			bmsg[1] = (byte)(buf >> 8);
+			bmsg[2] = (byte)buf;
+			Console.WriteLine($"BMSG 2:({bmsg[2]}) 1:({bmsg[1]}) 0:({bmsg[0]})");
+			send(bmsg, 0, 3);
 		}
 
 		/// <summary>
@@ -152,6 +185,9 @@ namespace graph1
 			Console.WriteLine($"PORT: {_portname}");
 			Console.WriteLine($"SPEED: {_baudrate}");
 			Console.WriteLine("************");
+
+			if (get_ready_func != null)
+				get_ready_func();
 		}
 
 		/// <summary>
@@ -168,7 +204,6 @@ namespace graph1
 		///	4. Вывод статуса измерения в строку в интерфейсе;
 		///	5. Добавить значение в контейнер.
 		/// </remarks>
-
 		public void receiver()
 		{
 			if (_serialPort.BytesToRead >= 2)
@@ -178,16 +213,14 @@ namespace graph1
 				if (imsg != 28019)
 				{
 					SP_Log.Status(
-					String.Format(
-						$"Шаг:  Значение: {imsg} Байт для чтения: {_serialPort.BytesToRead}"));
+						String.Format($"Значение: {imsg} Шаг: {SP_contaner.cur+1}"));
 					SP_contaner.Add(imsg);
 				}
 				else
 				{
 					Console.WriteLine();
-					SP_Flags.get_ready_flag = true;
+					get_ready_func?.Invoke();
 				}
-				
 			}
 		}
 

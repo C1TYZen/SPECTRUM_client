@@ -9,7 +9,7 @@ namespace graph1
 	/// </summary>
 	static class SP_contaner
 	{
-		const int points_count = 50000;
+		const int points_count = 150000;
 		const int plots_count = 50;
 
 		public static int cur = 0;

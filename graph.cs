@@ -11,7 +11,6 @@ namespace graph1
 		SP_talker talker = new SP_talker();
 
 		System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
-		int FPS = 30;
 
 		//Настройка графики
 		Rectangle canvas;
@@ -37,7 +36,7 @@ namespace graph1
 
 			//Настройка таймера
 			timer.Enabled = true;
-			timer.Interval = 1000 / FPS;
+			timer.Interval = 1;
 			timer.Tick += new EventHandler(timer_update);
 
 			//Настройка графики
@@ -53,10 +52,7 @@ namespace graph1
 			RangeSet1.Text = "100";
 			MesuresCountSet.Text = "1";
 
-			/* Установка флагов в опущенное положение
-			 * Установка объекта консоль для вывода сообщений */
-			SP_Flags.get_ready_flag = false;
-			SP_Flags.external_message_flag = false;
+			//Установка объекта консоль для вывода сообщений.
 			SP_Log.console = Text_console;
 
 			//Установка имени и скорости порта
@@ -69,8 +65,8 @@ namespace graph1
 			}
 			menustrip_BaudRate.DropDownItems.Add(talker._baudrate.ToString()).Click += On_Speed_Select;
 
+			talker.get_ready_func += get_ready;
 			talker.connect();
-			get_ready();
 		}
 
 		/// <summary>
@@ -82,11 +78,11 @@ namespace graph1
 		{
 			Mesure_stat_label.Text = SP_Log.status;
 
-			if (SP_Flags.get_ready_flag)
-				get_ready();
-
 			if (talker.Receive)
-				talker.receiver();
+			{
+				for(int i = 0; i < 1000; i++)
+					talker.receiver();
+			}
 
 			draw_to_buffer(grafx.Graphics);
 			Invalidate(canvas);
@@ -111,8 +107,11 @@ namespace graph1
 			}
 		}
 
-		/* вызывается при запросе "перерисовать" (Ivalidate)
-		   в функции таймера*/
+		/// <summary>
+		/// Вызывается при запросе "перерисовать" (Ivalidate) в функции таймера.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		void draw(object sender, PaintEventArgs e)
 		{
 			grafx.Render(tabgrfx);
@@ -184,15 +183,21 @@ namespace graph1
 			if((buf = check_value(RangeSet0.Text, "**ERROR** Incorrect RANGE_0!!!")) == -1)
 				buf = 0;
 
+			//отправка данных
 			SP_contaner.range0 = buf;
-			talker.send2bytes(buf);
+			talker.send3bytes(buf);
+			Console.WriteLine($"range0 = {buf}");
 
-			if((buf = check_value(RangeSet1.Text, "**ERROR** Incorrect RANGE_1!!!")) == -1)
+			if ((buf = check_value(RangeSet1.Text, "**ERROR** Incorrect RANGE_1!!!")) == -1)
 				buf = 100;
-			
+
 			SP_contaner.range1 = buf;
-			talker.send2bytes(buf);
+			talker.send3bytes(buf);
+			Console.WriteLine($"range1 = {buf}");
 			talker.read_line();
+
+			SP_contaner.scale = (float)canvas.Width /
+				(float)(SP_contaner.range1 - SP_contaner.range0);
 
 			//mc SET////////////////////////////////////////////////////
 			Thread.Sleep(50);
@@ -202,14 +207,6 @@ namespace graph1
 				buf = 100;
 
 			SP_contaner.mps = buf;
-			talker.send2bytes(buf);
-			talker.read_line();
-
-			//st SET////////////////////////////////////////////////////
-			Thread.Sleep(50);
-			talker.send2bytes(29811);   //st
-			buf = SP_contaner.range1 - SP_contaner.range0;
-			SP_contaner.scale = (float)canvas.Width / (float)buf;
 			talker.send2bytes(buf);
 			talker.read_line();
 
@@ -227,7 +224,7 @@ namespace graph1
 			SP_contaner.Clear();
 			talker.FlushReadBuf();
 			SP_Log.Log($"ИЗМЕРЕНИЕ!");
-			talker.Receive = true; // поднятие флага рессивера
+			talker.Receive = true;
 			talker.send2bytes(28002);   //bm
 		}
 

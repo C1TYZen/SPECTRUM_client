@@ -71,6 +71,9 @@ namespace graph1
 
 		/// <summary>
 		/// Тикалка
+		/// Это событие вызывается каждый тик таймера.
+		/// Каждый вызов вызывает функцию приема данных
+		/// 1000 раз для того, что бы не забивался буфер.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
@@ -165,7 +168,7 @@ namespace graph1
 		
 		void Begin_Click(object sender, EventArgs e)
 		{
-			//буфер для передаваемых параметров параметров
+			//буфер для передаваемых параметров
 			int buf;
 
 			//отключение кнопок, не нужных на момент измерения
@@ -178,7 +181,7 @@ namespace graph1
 			//mr SET////////////////////////////////////////////////////
 			//отправка команды, прием подтверждающей строки
 			Thread.Sleep(50);
-			talker.send2bytes(29548);   //mr
+			talker.send2bytes(29293);   //mr
 
 			if((buf = check_value(RangeSet0.Text, "**ERROR** Incorrect RANGE_0!!!")) == -1)
 				buf = 0;

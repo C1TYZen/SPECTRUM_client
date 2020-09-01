@@ -9,7 +9,8 @@ namespace graph1
 	{
 		//Настройка связи
 		SP_talker talker = new SP_talker();
-
+		
+		//Использовал таймер из форм, потому что другой не работает...почему то...
 		System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
 		//Настройка графики
@@ -61,9 +62,9 @@ namespace graph1
 			{
 				Console.WriteLine($"    {s}");
 				talker._portname = s;
-				menustrip_COM.DropDownItems.Add(s).Click += On_Port_Select;
+				menustrip_COM.DropDownItems.Add(s);
 			}
-			menustrip_BaudRate.DropDownItems.Add(talker._baudrate.ToString()).Click += On_Speed_Select;
+			menustrip_BaudRate.DropDownItems.Add(talker._baudrate.ToString());
 
 			talker.get_ready_func += get_ready;
 			talker.connect();
@@ -80,13 +81,11 @@ namespace graph1
 		void timer_update(object sender, EventArgs e)
 		{
 			Mesure_stat_label.Text = SP_Log.status;
-
 			if (talker.Receive)
 			{
 				for(int i = 0; i < 1000; i++)
 					talker.receiver();
 			}
-
 			draw_to_buffer(grafx.Graphics);
 			Invalidate(canvas);
 		}
@@ -178,39 +177,35 @@ namespace graph1
 			Delete_button.Enabled = false;
 			Begin_Button.Text = "Измерение";
 
-			//mr SET////////////////////////////////////////////////////
-			//отправка команды, прием подтверждающей строки
+			//mr SET Диапазон измерений/////////////////////////////////////
 			Thread.Sleep(50);
 			talker.send2bytes(29293);   //mr
-
+			//первое значение
 			if((buf = check_value(RangeSet0.Text, "**ERROR** Incorrect RANGE_0!!!")) == -1)
 				buf = 0;
-
-			//отправка данных
 			SP_contaner.range0 = buf;
 			talker.send3bytes(buf);
 			Console.WriteLine($"range0 = {buf}");
-
+			//второе значение
 			if ((buf = check_value(RangeSet1.Text, "**ERROR** Incorrect RANGE_1!!!")) == -1)
 				buf = 100;
-
 			SP_contaner.range1 = buf;
 			talker.send3bytes(buf);
 			Console.WriteLine($"range1 = {buf}");
+			//подтверждение
 			talker.read_line();
-
 			SP_contaner.scale = (float)canvas.Width /
 				(float)(SP_contaner.range1 - SP_contaner.range0);
 
-			//mc SET////////////////////////////////////////////////////
+			//mc SET Измерений за шаг///////////////////////////////////////
 			Thread.Sleep(50);
 			talker.send2bytes(25453);   //mc
-
+			//значение
 			if((buf = check_value(MesuresCountSet.Text, "**ERROR** Incorrect MesuresCount!!!")) == -1)
 				buf = 100;
-
 			SP_contaner.mps = buf;
 			talker.send2bytes(buf);
+			//подтверждение
 			talker.read_line();
 
 			//установка разрешения спектра
@@ -269,16 +264,6 @@ namespace graph1
 				Delete_button.Enabled = false;
 			else
 				Delete_button.Enabled = true;
-		}
-
-		void On_Port_Select(object sender, EventArgs e)
-		{
-			talker._portname = sender.ToString();
-		}
-
-		void On_Speed_Select(object sender, EventArgs e)
-		{
-			talker._baudrate = Convert.ToInt32(sender);
 		}
 
 		void Graph_Form_Closing(object sender, FormClosingEventArgs e)

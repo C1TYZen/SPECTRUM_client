@@ -75,7 +75,7 @@
 			// 
 			// Save_Button
 			// 
-			this.Save_Button.Location = new System.Drawing.Point(182, 48);
+			this.Save_Button.Location = new System.Drawing.Point(87, 19);
 			this.Save_Button.Name = "Save_Button";
 			this.Save_Button.Size = new System.Drawing.Size(75, 23);
 			this.Save_Button.TabIndex = 2;
@@ -85,7 +85,7 @@
 			// 
 			// Close_Button
 			// 
-			this.Close_Button.Location = new System.Drawing.Point(182, 77);
+			this.Close_Button.Location = new System.Drawing.Point(182, 48);
 			this.Close_Button.Name = "Close_Button";
 			this.Close_Button.Size = new System.Drawing.Size(75, 23);
 			this.Close_Button.TabIndex = 3;
@@ -288,7 +288,6 @@
 			// groupBox1
 			// 
 			this.groupBox1.Controls.Add(this.Begin_Button);
-			this.groupBox1.Controls.Add(this.Save_Button);
 			this.groupBox1.Controls.Add(this.RangeSet1);
 			this.groupBox1.Controls.Add(this.Close_Button);
 			this.groupBox1.Controls.Add(this.label8);
@@ -330,6 +329,7 @@
 			// groupBox2
 			// 
 			this.groupBox2.Controls.Add(this.New_button);
+			this.groupBox2.Controls.Add(this.Save_Button);
 			this.groupBox2.Controls.Add(this.Mesure_stat_label);
 			this.groupBox2.Controls.Add(this.Delete_button);
 			this.groupBox2.Controls.Add(this.label9);

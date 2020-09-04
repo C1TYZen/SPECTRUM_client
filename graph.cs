@@ -5,11 +5,8 @@ using System.Threading;
 
 namespace graph1
 {
-	public partial class Graph : Form
+	partial class Graph : Form
 	{
-		//Настройка связи
-		SP_talker talker = new SP_talker();
-		
 		//Использовал таймер из форм, потому что другой не работает...почему то...
 		System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
@@ -27,6 +24,10 @@ namespace graph1
 		public Graph()
 		{
 			InitializeComponent();
+
+			//Настройка связи
+			Receive = false;
+			_baudrate = 76800;
 
 			//Настройка интерфейса
 			Begin_Button.Enabled = false;
@@ -47,27 +48,14 @@ namespace graph1
 			tabgrfx = tabPage1.CreateGraphics();
 
 			//Установка дефолтных значений
-			//NumOfSteps.Text = "100";
-			ResolutionSet.Text = "1";
 			RangeSet0.Text = "0";
 			RangeSet1.Text = "100";
 			MesuresCountSet.Text = "1";
+			ResolutionSet.Text = "1";
 
-			//Установка объекта консоль для вывода сообщений.
-			SP_Log.console = Text_console;
-
-			//Установка имени и скорости порта
-			Console.WriteLine("Talker here!\nAvailable Ports:");
-			foreach (string s in talker.GetPortNames())
-			{
-				Console.WriteLine($"    {s}");
-				talker._portname = s;
-				menustrip_COM.DropDownItems.Add(s);
-			}
-			menustrip_BaudRate.DropDownItems.Add(talker._baudrate.ToString());
-
-			talker.get_ready_func += get_ready;
-			talker.connect();
+			//Подключение к серверу
+			LOG_Debug("Talker here!\nAvailable Ports:");
+			TALKER_connect();
 		}
 
 		/// <summary>
@@ -80,11 +68,10 @@ namespace graph1
 		/// <param name="e"></param>
 		void timer_update(object sender, EventArgs e)
 		{
-			Mesure_stat_label.Text = SP_Log.status;
-			if (talker.Receive)
+			if (Receive)
 			{
 				for(int i = 0; i < 1000; i++)
-					talker.receiver();
+					TALKER_receiver();
 			}
 			draw_to_buffer(grafx.Graphics);
 			Invalidate(canvas);
@@ -97,14 +84,15 @@ namespace graph1
 		void draw_to_buffer(Graphics g)
 		{
 			g.FillRectangle(SystemBrushes.Highlight, canvas);
-			for (int i = 0; i <= SP_contaner.cur; i += resolution)
+			for (int i = 0; i <= CONTAINER_cur; i += resolution)
 			{
-				if (SP_contaner.points[i + resolution].X != 0)
+				if (dot[i + resolution].X != 0)
 				{
-					g.DrawLine(pen, SP_contaner.points[i].X,
-						canvas.Height - (SP_contaner.points[i].Y >> 2),
-						SP_contaner.points[i + resolution].X,
-						canvas.Height - (SP_contaner.points[i + resolution].Y >> 2));
+					//сложные формулы
+					g.DrawLine(pen, dot[i].X,
+						canvas.Height - (dot[i].Y >> 2),
+						dot[i + resolution].X,
+						canvas.Height - (dot[i + resolution].Y >> 2));
 				}
 			}
 		}
@@ -124,7 +112,7 @@ namespace graph1
 		/// </summary>
 		void get_ready()
 		{
-			talker.Receive = false;
+			Receive = false;
 			Begin_Button.Text = "Начать";
 
 			Begin_Button.Enabled = true;
@@ -135,10 +123,9 @@ namespace graph1
 			else
 				Delete_button.Enabled = true;
 
-			SP_contaner.Save_on_RAM(TabControl1.SelectedIndex);
-			SP_Flags.get_ready_flag = false;
-			SP_Log.Log("Готов");
-			SP_Log.Debug("*****");
+			CONTAINER_Save_on_RAM(TabControl1.SelectedIndex);
+			LOG("Готов");
+			LOG_Debug("*****");
 		}
 
 		/// <summary>
@@ -153,7 +140,7 @@ namespace graph1
 			try { temp = Convert.ToInt32(str); }
 			catch
 			{
-				SP_Log.Log(errmsg);
+				LOG(errmsg);
 				return -1;
 			}
 
@@ -167,9 +154,6 @@ namespace graph1
 		
 		void Begin_Click(object sender, EventArgs e)
 		{
-			//буфер для передаваемых параметров
-			int buf;
-
 			//отключение кнопок, не нужных на момент измерения
 			Save_Button.Enabled = false;
 			Begin_Button.Enabled = false;
@@ -177,63 +161,52 @@ namespace graph1
 			Delete_button.Enabled = false;
 			Begin_Button.Text = "Измерение";
 
+			//проверка значений и запись в память
+			if ((range0 = check_value(
+					RangeSet0.Text, 
+					"**ERROR** Incorrect RANGE_0!!!")) == -1)
+				range0 = 0;
+			if ((range1 = check_value(
+					RangeSet1.Text, 
+					"**ERROR** Incorrect RANGE_1!!!")) == -1)
+				range1 = 100;
+			if ((mps = check_value(
+					MesuresCountSet.Text, 
+					"**ERROR** Incorrect MesuresCount!!!")) == -1)
+				mps = 1;
+			if ((resolution = check_value(
+					ResolutionSet.Text, 
+					"**ERROR** Incorrect Resolution!!!")) == -1)
+				resolution = 1;
+
+
 			//mr SET Диапазон измерений/////////////////////////////////////
 			Thread.Sleep(50);
-			talker.send2bytes(29293);   //mr
-			//первое значение
-			if((buf = check_value(RangeSet0.Text, "**ERROR** Incorrect RANGE_0!!!")) == -1)
-				buf = 0;
-			SP_contaner.range0 = buf;
-			talker.send3bytes(buf);
-			Console.WriteLine($"range0 = {buf}");
-			//второе значение
-			if ((buf = check_value(RangeSet1.Text, "**ERROR** Incorrect RANGE_1!!!")) == -1)
-				buf = 100;
-			SP_contaner.range1 = buf;
-			talker.send3bytes(buf);
-			Console.WriteLine($"range1 = {buf}");
-			//подтверждение
-			talker.read_line();
-			SP_contaner.scale = (float)canvas.Width /
-				(float)(SP_contaner.range1 - SP_contaner.range0);
+			TALKER_send2bytes(29293);  //mr
+			TALKER_send3bytes(range0); //первое значение
+			TALKER_send3bytes(range1); //второе значение
+			LOG_Debug($"range0 = {range0}");
+			LOG_Debug($"range1 = {range1}");
+			TALKER_read_line(); //подтверждение
 
 			//mc SET Измерений за шаг///////////////////////////////////////
 			Thread.Sleep(50);
-			talker.send2bytes(25453);   //mc
-			//значение
-			if((buf = check_value(MesuresCountSet.Text, "**ERROR** Incorrect MesuresCount!!!")) == -1)
-				buf = 100;
-			SP_contaner.mps = buf;
-			talker.send2bytes(buf);
-			//подтверждение
-			talker.read_line();
+			TALKER_send2bytes(25453); //mc
+			TALKER_send2bytes(mps);
+			LOG_Debug($"mps = {mps}");
+			TALKER_read_line(); //подтверждение
 
-			//установка разрешения спектра
-			Console.WriteLine($"Scale: {SP_contaner.scale}");
-			try { resolution = Convert.ToInt32(ResolutionSet.Text); }
-			catch
-			{
-				resolution = 1;
-				SP_Log.Log($"**ERROR** Incorrect resolution!!!");
-			}
+			//вычисление масштаба горизонтальной шкалы
+			scale = canvas.Width / (float)(range1 - range0);
+			LOG_Debug($"Scale: {scale}");
 
 			//очистка и отправка команды начать
 			Thread.Sleep(200);
-			SP_contaner.Clear();
-			talker.FlushReadBuf();
-			SP_Log.Log($"ИЗМЕРЕНИЕ!");
-			talker.Receive = true;
-			talker.send2bytes(28002);   //bm
-		}
-
-		void Save_Click(object sender, EventArgs e)
-		{
-			SP_contaner.Save_on_disk();
-		}
-
-		void Close_Click(object sender, EventArgs e)
-		{
-			Close();
+			CONTAINER_Clear();
+			TALKER_FlushReadBuf();
+			LOG($"ИЗМЕРЕНИЕ!");
+			Receive = true;
+			TALKER_send2bytes(28002); //bm
 		}
 
 		void New_button_Click(object sender, EventArgs e)
@@ -241,24 +214,24 @@ namespace graph1
 			TabPage newTabPage = new TabPage("Спектр " + (TabControl1.TabCount + 1).ToString());
 			TabControl1.TabPages.Add(newTabPage);
 			TabControl1.SelectedIndex = TabControl1.TabPages.IndexOf(newTabPage);
-			SP_Log.Log($"Спектр создан");
+			LOG($"Спектр создан");
 		}
 
 		void Delete_button_Click(object sender, EventArgs e)
 		{
-			SP_contaner.Delete_from_RAM(TabControl1.SelectedIndex, TabControl1.TabCount);
+			CONTAINER_Delete_from_RAM(TabControl1.SelectedIndex, TabControl1.TabCount);
 			TabControl1.TabPages.Remove(TabControl1.SelectedTab);
-			SP_Log.Log($"Спектр удален");
+			LOG($"Спектр удален");
 		}
 
 		void TabControl1_Selecting(object sender, TabControlCancelEventArgs e)
 		{
 			tabgrfx = e.TabPage.CreateGraphics();
-			SP_contaner.Load_from_RAM(e.TabPageIndex);
+			CONTAINER_Load_from_RAM(e.TabPageIndex);
 
-			RangeSet0.Text = SP_contaner.range0.ToString();
-			RangeSet1.Text = SP_contaner.range1.ToString();
-			MesuresCountSet.Text = SP_contaner.mps.ToString();
+			RangeSet0.Text = range0.ToString();
+			RangeSet1.Text = range1.ToString();
+			MesuresCountSet.Text = mps.ToString();
 
 			if (TabControl1.TabCount == 1)
 				Delete_button.Enabled = false;
@@ -268,8 +241,17 @@ namespace graph1
 
 		void Graph_Form_Closing(object sender, FormClosingEventArgs e)
 		{
-			//Receiver.Abort();
-			talker.Dispose();
+			Dispose();
+		}
+
+		void Save_Click(object sender, EventArgs e)
+		{
+			CONTAINER_Save_on_disk();
+		}
+
+		void Close_Click(object sender, EventArgs e)
+		{
+			Close();
 		}
 
 		#endregion

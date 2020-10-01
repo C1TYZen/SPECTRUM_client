@@ -94,19 +94,17 @@ namespace graph1
 		void draw_to_buffer(Graphics g)
 		{
 			g.FillRectangle(SystemBrushes.Highlight, canvas);
-			for (int i = 0; i <= CONTAINER_cur; i += resolution)
+			int cur = 0;
+			for(int i = 0; i <= (range); i++)
 			{
-				if (dot[i + resolution].X != 0)
-				{
-					//сложные формулы
-					g.DrawLine(
-						pen,
-						dot[i].X,
-						canvas.Height - (dot[i].Y >> 2)-1,
-						dot[i + resolution].X,
-						canvas.Height - (dot[i + resolution].Y >> 2)-1
-					);
-				}
+				g.DrawLine(
+					pen,
+					(int)(i * scale),
+					canvas.Height - (graph[i] >> 2),
+					(int)((i+1) * scale),
+					canvas.Height - (graph[i+1] >> 2)
+				);
+				cur = (int)(cur + scale);
 			}
 		}
 
@@ -176,14 +174,14 @@ namespace graph1
 			Begin_Button.Text = "Измерение";
 
 			//проверка значений и запись в память
-			if ((range0 = check_value(
+			if ((x0 = check_value(
 					RangeSet0.Text, 
 					"**ОШИБКА** Incorrect RANGE_0!!!")) == -1)
-				range0 = 0;
-			if ((range1 = check_value(
+				x0 = 0;
+			if ((x1 = check_value(
 					RangeSet1.Text,
 					"**ОШИБКА** Incorrect RANGE_1!!!")) == -1)
-				range1 = 100;
+				x1 = 100;
 			if ((mps = check_value(
 					MesuresCountSet.Text,
 					"**ОШИБКА** Incorrect MesuresCount!!!")) == -1)
@@ -193,25 +191,25 @@ namespace graph1
 					"**ОШИБКА** Incorrect Resolution!!!")) == -1)
 				resolution = 1;
 
-
 			//mr SET Диапазон измерений/////////////////////////////////////
 			Thread.Sleep(50);
-			TALKER_send2bytes(CMD_MR);  //mr
-			TALKER_send3bytes(range0); //первое значение
-			TALKER_send3bytes(range1); //второе значение
-			LOG_Debug($"range0 = {range0}");
-			LOG_Debug($"range1 = {range1}");
+			TALKER_send2bytes(CMD_MR);
+			TALKER_send3bytes(x0); //первое значение
+			TALKER_send3bytes(x1); //второе значение
+			LOG_Debug($"range0 = {x0}");
+			LOG_Debug($"range1 = {x1}");
 			TALKER_read_line(); //подтверждение
 
 			//mc SET Измерений за шаг///////////////////////////////////////
 			Thread.Sleep(50);
-			TALKER_send2bytes(CMD_MC); //mc
+			TALKER_send2bytes(CMD_MC);
 			TALKER_send2bytes(mps);
 			LOG_Debug($"mps = {mps}");
 			TALKER_read_line(); //подтверждение
 
 			//вычисление масштаба горизонтальной шкалы
-			scale = canvas.Width / (float)(range1 - range0);
+			range = x1 - x0;
+			scale = canvas.Width / (float)range;
 			LOG_Debug($"Scale: {scale}");
 
 			Stop_Button.Enabled = true;
@@ -250,8 +248,8 @@ namespace graph1
 			grafx = context.Allocate(CreateGraphics(), canvas);
 			tabgrfx = e.TabPage.CreateGraphics();
 
-			RangeSet0.Text = range0.ToString();
-			RangeSet1.Text = range1.ToString();
+			RangeSet0.Text = x0.ToString();
+			RangeSet1.Text = x1.ToString();
 			MesuresCountSet.Text = mps.ToString();
 
 			if (TabControl1.TabCount == 1)
@@ -262,7 +260,7 @@ namespace graph1
 
 		void Stop_button_Click(object sender, EventArgs e)
 		{
-			TALKER_send2bytes(CMD_DI);  // di
+			TALKER_send2bytes(CMD_DI);
 		}
 
 		void Save_Click(object sender, EventArgs e)
@@ -285,6 +283,8 @@ namespace graph1
 			context.MaximumBuffer = new Size(canvas.Width + 1, canvas.Height + 1);
 			grafx = context.Allocate(CreateGraphics(), canvas);
 			tabgrfx = tabPage1.CreateGraphics();
+
+			scale = canvas.Width / (float)range;
 		}
 
 		void Close_Click(object sender, EventArgs e)

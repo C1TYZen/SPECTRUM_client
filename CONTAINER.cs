@@ -13,13 +13,14 @@ namespace graph1
 		int CONTAINER_cur = 0;
 		float scale;
 
-		Point[] dot = new Point[points_count];
-		int range0 = 0;
-		int range1 = 100;
+		int[] graph = new int[points_count];
+		int x0 = 0;
+		int x1 = 100;
+		int range = 100;
 		int mps = 1;
-		//int filter = 1;
+		int filter = 1;
 
-		Point[][] saved_points = new Point[plots_count][];
+		int[][] saved_graph = new int[plots_count][];
 		int[] saved_cur = new int[plots_count];
 		int[] saved_range0 = new int[plots_count];
 		int[] saved_range1 = new int[plots_count];
@@ -32,8 +33,7 @@ namespace graph1
 		/// <param name="bt"></param>
 		void CONTAINER_Add(int bt)
 		{
-			dot[CONTAINER_cur].X = (int)(scale * CONTAINER_cur);
-			dot[CONTAINER_cur].Y = bt;
+			graph[CONTAINER_cur] = bt;
 			CONTAINER_cur++;
 		}
 
@@ -54,7 +54,7 @@ namespace graph1
 			using (StreamWriter outputFile = new StreamWriter(path, true))
 			{
 				for (int r = 0; r < CONTAINER_cur; r++)
-					outputFile.WriteLine("{0}\t{1}", r + 1, dot[r].Y);
+					outputFile.WriteLine("{0}\t{1}", r + 1, graph[r]);
 				LOG($"Сохранено, {time}.txt");
 			}
 		}
@@ -65,10 +65,10 @@ namespace graph1
 		/// <param name="c"></param>
 		void CONTAINER_Save_on_RAM(int c)
 		{
-			saved_points[c] = dot;
+			saved_graph[c] = graph;
 			saved_cur[c] = CONTAINER_cur;
-			saved_range0[c] = range0;
-			saved_range1[c] = range1;
+			saved_range0[c] = x0;
+			saved_range1[c] = x1;
 			saved_mps[c] = mps;
 			LOG_Debug($"Спектр{c + 1} сохранен");
 		}
@@ -79,18 +79,18 @@ namespace graph1
 		/// <param name="c"></param>
 		void CONTAINER_Load_from_RAM(int c)
 		{
-			if (saved_points[c] != null)
+			if (saved_graph[c] != null)
 			{
-				dot = saved_points[c];
+				graph = saved_graph[c];
 				CONTAINER_cur = saved_cur[c];
-				range0 = saved_range0[c];
-				range1 = saved_range1[c];
+				x0 = saved_range0[c];
+				x1 = saved_range1[c];
 				mps = saved_mps[c];
 				LOG_Debug($"Спектр{c + 1} загружен");
 			}
 			else
 			{
-				dot = new Point[points_count];
+				graph = new int[points_count];
 				LOG_Debug($"Создан Спектр{c + 1}");
 				CONTAINER_Save_on_RAM(c);
 			}
@@ -103,12 +103,12 @@ namespace graph1
 		/// <param name="max"></param>
 		void CONTAINER_Delete_from_RAM(int c, int max)
 		{
-			saved_points[c] = null;
+			saved_graph[c] = null;
 			if (max > c)
 			{
 				while (c < max)
 				{
-					saved_points[c] = saved_points[c + 1];
+					saved_graph[c] = saved_graph[c + 1];
 					c++;
 				}
 			}
@@ -116,10 +116,9 @@ namespace graph1
 
 		void CONTAINER_Clear()
 		{
-			for (int i = 0; i < dot.Length; i++)
+			for (int i = 0; i < graph.Length; i++)
 			{
-				dot[i].X = 0;
-				dot[i].Y = 0;
+				graph[i] = 0;
 			}
 			CONTAINER_cur = 0;
 		}

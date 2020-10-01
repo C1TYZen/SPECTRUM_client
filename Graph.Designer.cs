@@ -54,6 +54,7 @@
 			this.New_button = new System.Windows.Forms.Button();
 			this.Delete_button = new System.Windows.Forms.Button();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.Stop_Button = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.TabControl1.SuspendLayout();
@@ -65,7 +66,8 @@
 			// 
 			// Begin_Button
 			// 
-			this.Begin_Button.Location = new System.Drawing.Point(182, 19);
+			this.Begin_Button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.Begin_Button.Location = new System.Drawing.Point(130, 16);
 			this.Begin_Button.Name = "Begin_Button";
 			this.Begin_Button.Size = new System.Drawing.Size(75, 23);
 			this.Begin_Button.TabIndex = 1;
@@ -85,7 +87,8 @@
 			// 
 			// Close_Button
 			// 
-			this.Close_Button.Location = new System.Drawing.Point(182, 48);
+			this.Close_Button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.Close_Button.Location = new System.Drawing.Point(130, 349);
 			this.Close_Button.Name = "Close_Button";
 			this.Close_Button.Size = new System.Drawing.Size(75, 23);
 			this.Close_Button.TabIndex = 3;
@@ -95,11 +98,14 @@
 			// 
 			// TabControl1
 			// 
+			this.TabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.TabControl1.Controls.Add(this.tabPage1);
 			this.TabControl1.Location = new System.Drawing.Point(3, 3);
 			this.TabControl1.Name = "TabControl1";
 			this.TabControl1.SelectedIndex = 0;
-			this.TabControl1.Size = new System.Drawing.Size(517, 295);
+			this.TabControl1.Size = new System.Drawing.Size(669, 378);
 			this.TabControl1.TabIndex = 8;
 			this.TabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.TabControl1_Selecting);
 			// 
@@ -108,7 +114,7 @@
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(509, 269);
+			this.tabPage1.Size = new System.Drawing.Size(661, 352);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Спектр1";
 			this.tabPage1.UseVisualStyleBackColor = true;
@@ -118,28 +124,33 @@
 			this.Text_console.AcceptsReturn = true;
 			this.Text_console.AcceptsTab = true;
 			this.Text_console.AllowDrop = true;
+			this.Text_console.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.Text_console.BackColor = System.Drawing.Color.Black;
 			this.Text_console.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.Text_console.ForeColor = System.Drawing.SystemColors.Window;
-			this.Text_console.Location = new System.Drawing.Point(3, 304);
+			this.Text_console.Location = new System.Drawing.Point(678, 387);
 			this.Text_console.Multiline = true;
 			this.Text_console.Name = "Text_console";
 			this.Text_console.ReadOnly = true;
 			this.Text_console.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.Text_console.Size = new System.Drawing.Size(517, 127);
+			this.Text_console.Size = new System.Drawing.Size(211, 144);
 			this.Text_console.TabIndex = 11;
 			// 
 			// ResolutionSet
 			// 
-			this.ResolutionSet.Location = new System.Drawing.Point(173, 103);
+			this.ResolutionSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.ResolutionSet.Location = new System.Drawing.Point(576, 118);
 			this.ResolutionSet.Name = "ResolutionSet";
 			this.ResolutionSet.Size = new System.Drawing.Size(80, 20);
 			this.ResolutionSet.TabIndex = 13;
 			// 
 			// label4
 			// 
+			this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(183, 87);
+			this.label4.Location = new System.Drawing.Point(586, 102);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(70, 13);
 			this.label4.TabIndex = 12;
@@ -211,17 +222,19 @@
 			// 
 			// Mesure_stat_label
 			// 
+			this.Mesure_stat_label.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.Mesure_stat_label.AutoSize = true;
-			this.Mesure_stat_label.Location = new System.Drawing.Point(4, 106);
+			this.Mesure_stat_label.Location = new System.Drawing.Point(6, 121);
 			this.Mesure_stat_label.Name = "Mesure_stat_label";
-			this.Mesure_stat_label.Size = new System.Drawing.Size(75, 13);
+			this.Mesure_stat_label.Size = new System.Drawing.Size(10, 13);
 			this.Mesure_stat_label.TabIndex = 22;
-			this.Mesure_stat_label.Text = "Mesure Status";
+			this.Mesure_stat_label.Text = "-";
 			// 
 			// label9
 			// 
+			this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label9.AutoSize = true;
-			this.label9.Location = new System.Drawing.Point(4, 88);
+			this.label9.Location = new System.Drawing.Point(6, 103);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(100, 13);
 			this.label9.TabIndex = 23;
@@ -234,7 +247,7 @@
             this.menustrip_Tools});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(792, 24);
+			this.menuStrip1.Size = new System.Drawing.Size(892, 24);
 			this.menuStrip1.TabIndex = 24;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -287,6 +300,10 @@
 			// 
 			// groupBox1
 			// 
+			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox1.Controls.Add(this.Stop_Button);
 			this.groupBox1.Controls.Add(this.Begin_Button);
 			this.groupBox1.Controls.Add(this.RangeSet1);
 			this.groupBox1.Controls.Add(this.Close_Button);
@@ -297,37 +314,54 @@
 			this.groupBox1.Controls.Add(this.label5);
 			this.groupBox1.Controls.Add(this.label6);
 			this.groupBox1.Controls.Add(this.RangeSet0);
-			this.groupBox1.Location = new System.Drawing.Point(527, 3);
+			this.groupBox1.Location = new System.Drawing.Point(678, 3);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(262, 291);
+			this.groupBox1.Size = new System.Drawing.Size(211, 378);
 			this.groupBox1.TabIndex = 25;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Параметры";
 			// 
+			// Stop_Button
+			// 
+			this.Stop_Button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.Stop_Button.Location = new System.Drawing.Point(130, 45);
+			this.Stop_Button.Name = "Stop_Button";
+			this.Stop_Button.Size = new System.Drawing.Size(75, 23);
+			this.Stop_Button.TabIndex = 23;
+			this.Stop_Button.Text = "Стоп";
+			this.Stop_Button.UseVisualStyleBackColor = true;
+			this.Stop_Button.Click += new System.EventHandler(this.Stop_button_Click);
+			// 
 			// tableLayoutPanel1
 			// 
+			this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.tableLayoutPanel1.ColumnCount = 2;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 66.16161F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.83838F));
-			this.tableLayoutPanel1.Controls.Add(this.groupBox2, 1, 1);
-			this.tableLayoutPanel1.Controls.Add(this.Text_console, 0, 1);
-			this.tableLayoutPanel1.Controls.Add(this.groupBox1, 1, 0);
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75.68534F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 24.31466F));
+			this.tableLayoutPanel1.Controls.Add(this.groupBox2, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this.TabControl1, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this.groupBox1, 1, 0);
+			this.tableLayoutPanel1.Controls.Add(this.Text_console, 1, 1);
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 27);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 2;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 69.58525F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30.41475F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 71.94861F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 28.05139F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(792, 434);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(892, 534);
 			this.tableLayoutPanel1.TabIndex = 28;
 			// 
 			// groupBox2
 			// 
+			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox2.Controls.Add(this.New_button);
 			this.groupBox2.Controls.Add(this.Save_Button);
 			this.groupBox2.Controls.Add(this.Mesure_stat_label);
@@ -335,9 +369,9 @@
 			this.groupBox2.Controls.Add(this.label9);
 			this.groupBox2.Controls.Add(this.label4);
 			this.groupBox2.Controls.Add(this.ResolutionSet);
-			this.groupBox2.Location = new System.Drawing.Point(527, 304);
+			this.groupBox2.Location = new System.Drawing.Point(3, 387);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(262, 127);
+			this.groupBox2.Size = new System.Drawing.Size(669, 144);
 			this.groupBox2.TabIndex = 29;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Спектр";
@@ -347,18 +381,18 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.Control;
-			this.ClientSize = new System.Drawing.Size(792, 473);
+			this.ClientSize = new System.Drawing.Size(892, 573);
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.Controls.Add(this.menuStrip1);
 			this.DoubleBuffered = true;
 			this.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.MainMenuStrip = this.menuStrip1;
-			this.MaximizeBox = false;
-			this.MinimizeBox = false;
 			this.Name = "Graph";
 			this.Text = "Graph_v0.5a";
+			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Graph_Form_Closing);
+			this.Load += new System.EventHandler(this.Graph_Load);
+			this.SizeChanged += new System.EventHandler(this.Graph_SizeChanged);
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.draw);
 			this.TabControl1.ResumeLayout(false);
 			this.menuStrip1.ResumeLayout(false);
@@ -403,6 +437,7 @@
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 		private System.Windows.Forms.GroupBox groupBox2;
+		private System.Windows.Forms.Button Stop_Button;
 	}
 }
 

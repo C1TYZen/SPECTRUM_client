@@ -2,7 +2,7 @@
 using System.IO.Ports;
 using System.Threading;
 
-// Библиотека для общения с ардуино по последовательному порту.
+// Библиотека для общения с сервером по последовательному порту.
 
 namespace graph1
 {
@@ -12,6 +12,7 @@ namespace graph1
 		bool Receive;
 		int _baudrate;
 		string _portname;
+		// Переменные для хранения сообщений
 		byte[] bmsg = new byte[3];
 		int imsg;
 
@@ -19,16 +20,13 @@ namespace graph1
 		/// Открывает порт с указанным именем и соростью.
 		/// Устанавливает дефолтные таймауты и очищает буферы.
 		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="speed"></param>
-		/// <returns></returns>
 		int TALKER_open()
 		{
 			if (_portname != null)
 				_serialPort.PortName = _portname;
 			else
 			{
-				LOG_Debug("Choose name of port");
+				LOG_Debug("**ОШИБКА** Выберите имя порта");
 				return -1;
 			}
 			_serialPort.BaudRate = _baudrate;
@@ -38,7 +36,7 @@ namespace graph1
 			try { _serialPort.Open(); }
 			catch(Exception ex)
 			{
-				LOG_Debug($"ERROR in <<open()>> {ex}");
+				LOG_Debug($"**ERROR** in <<open()>> {ex}");
 				return -1;
 			}
 
@@ -65,7 +63,7 @@ namespace graph1
 			//попытка открыть порт
 			if (TALKER_open() == -1)
 			{
-				LOG("**ERROR** Plug in and restart!");
+				LOG("**ОШИБКА** Подключите прибор!");
 				return;
 			}
 
@@ -74,24 +72,24 @@ namespace graph1
 				//прочитать строку проверки связи
 				attempt++;
 				Thread.Sleep(1000);
-				TALKER_send2bytes(25443);   //cc
+				TALKER_send2bytes(CMD_CC);   //cc
 				if (TALKER_read_line() == 0)
 				{
-					LOG_Debug($"Connected with {attempt} attempts");
+					LOG_Debug($"Попыток подключения: {attempt}");
 					break;
 				}
 			}
 
 			if (attempt > 3)
 			{
-				LOG("**ERROR** Can't connect");
+				LOG("**ОШИБКА** Не могу подключиться");
 				return;
 			}
 
 			LOG_Debug("************");
-			LOG_Debug("CONNECTED");
-			LOG_Debug($"PORT: {_portname}");
-			LOG_Debug($"SPEED: {_baudrate}");
+			LOG_Debug("ПОДКЛЮЧЕНО");
+			LOG_Debug($"ПОРТ: {_portname}");
+			LOG_Debug($"BAUDRATE: {_baudrate}");
 			LOG_Debug("************");
 
 			get_ready();
@@ -113,7 +111,7 @@ namespace graph1
 			try { _serialPort.Write(msg, offset, count); }
 			catch(Exception ex)
 			{
-				LOG_Debug($"ERROR in <<send()>> function\n**{ex}**");
+				LOG_Debug($"**ERROR** in <<TALKER_send()>>\n**{ex}**");
 			}
 		}
 
@@ -175,7 +173,7 @@ namespace graph1
 			try { _serialPort.Read(msg, offset, count); }
 			catch (Exception ex)
 			{
-				LOG_Debug($"Error in <<read()>> function\n{ex}");
+				LOG_Debug($"**ERROR** in <<TALKER_read()>>\n{ex}");
 			}
 		}
 
@@ -189,7 +187,7 @@ namespace graph1
 			try { LOG_Debug(_serialPort.ReadLine()); }
 			catch (Exception ex)
 			{
-				LOG_Debug($"ERROR in <<read_line()>> function\n **{ex}**");
+				LOG_Debug($"**ERROR** in <<TALKER_read_line()>>\n **{ex}**");
 				return -1;
 			}
 
@@ -216,7 +214,7 @@ namespace graph1
 			{
 				TALKER_read(bmsg, 0, 2);
 				imsg = bmsg[0] + (bmsg[1] << 8);
-				if (imsg != 28019)
+				if (imsg != CMD_MS)
 				{
 					LOG_Status(
 						String.Format($"Значение: {imsg} Шаг: {CONTAINER_cur+1}"));
@@ -237,7 +235,7 @@ namespace graph1
 		{
 			_serialPort.DiscardInBuffer();
 			string dummy = _serialPort.ReadExisting();
-			LOG_Debug($"Trash: {dummy}");
+			LOG_Debug($"Мусор: {dummy}");
 		}
 	}
 }

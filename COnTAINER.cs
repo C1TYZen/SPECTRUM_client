@@ -17,7 +17,7 @@ namespace graph1
 		int range0 = 0;
 		int range1 = 100;
 		int mps = 1;
-		int filter = 1;
+		//int filter = 1;
 
 		Point[][] saved_points = new Point[plots_count][];
 		int[] saved_cur = new int[plots_count];
@@ -55,7 +55,7 @@ namespace graph1
 			{
 				for(int r = 0; r < CONTAINER_cur; r++)
 					outputFile.WriteLine("{0}\t{1}", r+1, dot[r].Y);
-				LOG($"Saved, {time}.txt");
+				LOG($"Сохранено, {time}.txt");
 			}
 		}
 

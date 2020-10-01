@@ -7,6 +7,23 @@ namespace graph1
 {
 	partial class Graph : Form
 	{
+		//Команды сервера
+		const int CMD_MB = 25197;
+		const int CMD_MC = 25453;
+		const int CMD_MR = 29293;
+		const int CMD_MS = 29549;
+
+		const int CMD_DD = 25700;
+		const int CMD_DS = 29540;
+		const int CMD_DV = 30308;
+		const int CMD_DF = 26212;
+		const int CMD_DB = 25188;
+		const int CMD_DI = 26980;
+
+		const int CMD_CC = 25443;
+		const int CMD_ST = 29811;
+		const int CMD_TP = 28788;
+
 		//Использовал таймер из форм, потому что другой не работает...почему то...
 		System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
@@ -18,9 +35,7 @@ namespace graph1
 		Graphics tabgrfx;
 		int resolution = 1;
 
-		/// <summary>
-		/// Констркуктор
-		/// </summary>
+		// Констркуктор
 		public Graph()
 		{
 			InitializeComponent();
@@ -31,6 +46,7 @@ namespace graph1
 
 			//Настройка интерфейса
 			Begin_Button.Enabled = false;
+			Stop_Button.Enabled = false;
 			Save_Button.Enabled = false;
 			New_button.Enabled = false;
 			Delete_button.Enabled = false;
@@ -40,13 +56,7 @@ namespace graph1
 			timer.Enabled = true;
 			timer.Interval = 1;
 			timer.Tick += new EventHandler(timer_update);
-
-			//Настройка графики
-			canvas = new Rectangle(0, 0, tabPage1.Width, tabPage1.Height);
-			context.MaximumBuffer = new Size(canvas.Width + 1, canvas.Height + 1);
-			grafx = context.Allocate(CreateGraphics(), canvas);
-			tabgrfx = tabPage1.CreateGraphics();
-
+			
 			//Установка дефолтных значений
 			RangeSet0.Text = "0";
 			RangeSet1.Text = "100";
@@ -89,10 +99,13 @@ namespace graph1
 				if (dot[i + resolution].X != 0)
 				{
 					//сложные формулы
-					g.DrawLine(pen, dot[i].X,
-						canvas.Height - (dot[i].Y >> 2),
+					g.DrawLine(
+						pen,
+						dot[i].X,
+						canvas.Height - (dot[i].Y >> 2)-1,
 						dot[i + resolution].X,
-						canvas.Height - (dot[i + resolution].Y >> 2));
+						canvas.Height - (dot[i + resolution].Y >> 2)-1
+					);
 				}
 			}
 		}
@@ -116,6 +129,7 @@ namespace graph1
 			Begin_Button.Text = "Начать";
 
 			Begin_Button.Enabled = true;
+			Stop_Button.Enabled = false;
 			Save_Button.Enabled = true;
 			New_button.Enabled = true;
 			if (TabControl1.TabCount == 1)
@@ -164,25 +178,25 @@ namespace graph1
 			//проверка значений и запись в память
 			if ((range0 = check_value(
 					RangeSet0.Text, 
-					"**ERROR** Incorrect RANGE_0!!!")) == -1)
+					"**ОШИБКА** Incorrect RANGE_0!!!")) == -1)
 				range0 = 0;
 			if ((range1 = check_value(
-					RangeSet1.Text, 
-					"**ERROR** Incorrect RANGE_1!!!")) == -1)
+					RangeSet1.Text,
+					"**ОШИБКА** Incorrect RANGE_1!!!")) == -1)
 				range1 = 100;
 			if ((mps = check_value(
-					MesuresCountSet.Text, 
-					"**ERROR** Incorrect MesuresCount!!!")) == -1)
+					MesuresCountSet.Text,
+					"**ОШИБКА** Incorrect MesuresCount!!!")) == -1)
 				mps = 1;
 			if ((resolution = check_value(
-					ResolutionSet.Text, 
-					"**ERROR** Incorrect Resolution!!!")) == -1)
+					ResolutionSet.Text,
+					"**ОШИБКА** Incorrect Resolution!!!")) == -1)
 				resolution = 1;
 
 
 			//mr SET Диапазон измерений/////////////////////////////////////
 			Thread.Sleep(50);
-			TALKER_send2bytes(29293);  //mr
+			TALKER_send2bytes(CMD_MR);  //mr
 			TALKER_send3bytes(range0); //первое значение
 			TALKER_send3bytes(range1); //второе значение
 			LOG_Debug($"range0 = {range0}");
@@ -191,7 +205,7 @@ namespace graph1
 
 			//mc SET Измерений за шаг///////////////////////////////////////
 			Thread.Sleep(50);
-			TALKER_send2bytes(25453); //mc
+			TALKER_send2bytes(CMD_MC); //mc
 			TALKER_send2bytes(mps);
 			LOG_Debug($"mps = {mps}");
 			TALKER_read_line(); //подтверждение
@@ -200,13 +214,15 @@ namespace graph1
 			scale = canvas.Width / (float)(range1 - range0);
 			LOG_Debug($"Scale: {scale}");
 
+			Stop_Button.Enabled = true;
+
 			//очистка и отправка команды начать
 			Thread.Sleep(200);
 			CONTAINER_Clear();
 			TALKER_FlushReadBuf();
 			LOG($"ИЗМЕРЕНИЕ!");
 			Receive = true;
-			TALKER_send2bytes(28002); //bm
+			TALKER_send2bytes(CMD_MB);
 		}
 
 		void New_button_Click(object sender, EventArgs e)
@@ -228,6 +244,11 @@ namespace graph1
 		{
 			tabgrfx = e.TabPage.CreateGraphics();
 			CONTAINER_Load_from_RAM(e.TabPageIndex);
+			/////////
+			canvas = new Rectangle(0, 0, e.TabPage.Width, e.TabPage.Height);
+			context.MaximumBuffer = new Size(canvas.Width + 1, canvas.Height + 1);
+			grafx = context.Allocate(CreateGraphics(), canvas);
+			tabgrfx = e.TabPage.CreateGraphics();
 
 			RangeSet0.Text = range0.ToString();
 			RangeSet1.Text = range1.ToString();
@@ -239,9 +260,9 @@ namespace graph1
 				Delete_button.Enabled = true;
 		}
 
-		void Graph_Form_Closing(object sender, FormClosingEventArgs e)
+		void Stop_button_Click(object sender, EventArgs e)
 		{
-			Dispose();
+			TALKER_send2bytes(CMD_DI);  // di
 		}
 
 		void Save_Click(object sender, EventArgs e)
@@ -249,9 +270,31 @@ namespace graph1
 			CONTAINER_Save_on_disk();
 		}
 
+		void Graph_Load(object sender, EventArgs e)
+		{
+			//Настройка графики
+			canvas = new Rectangle(0, 0, tabPage1.Width, tabPage1.Height);
+			context.MaximumBuffer = new Size(canvas.Width + 1, canvas.Height + 1);
+			grafx = context.Allocate(CreateGraphics(), canvas);
+			tabgrfx = tabPage1.CreateGraphics();
+		}
+
+		void Graph_SizeChanged(object sender, EventArgs e)
+		{
+			canvas = new Rectangle(0, 0, tabPage1.Width, tabPage1.Height);
+			context.MaximumBuffer = new Size(canvas.Width + 1, canvas.Height + 1);
+			grafx = context.Allocate(CreateGraphics(), canvas);
+			tabgrfx = tabPage1.CreateGraphics();
+		}
+
 		void Close_Click(object sender, EventArgs e)
 		{
 			Close();
+		}
+
+		void Graph_Form_Closing(object sender, FormClosingEventArgs e)
+		{
+			Dispose();
 		}
 
 		#endregion

@@ -244,7 +244,7 @@ namespace graph1
 		{
 			tabgrfx = e.TabPage.CreateGraphics();
 			CONTAINER_Load_from_RAM(e.TabPageIndex);
-			/////////
+			
 			canvas = new Rectangle(0, 0, e.TabPage.Width, e.TabPage.Height);
 			context.MaximumBuffer = new Size(canvas.Width + 1, canvas.Height + 1);
 			grafx = context.Allocate(CreateGraphics(), canvas);

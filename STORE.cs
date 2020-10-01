@@ -48,13 +48,13 @@ namespace graph1
 				DateTime.Now.Minute, DateTime.Now.Second);
 			string path = String.Format("plots/{0}.txt", time);
 
-			if(!Directory.Exists("plots"))
+			if (!Directory.Exists("plots"))
 				Directory.CreateDirectory("plots");
 
 			using (StreamWriter outputFile = new StreamWriter(path, true))
 			{
-				for(int r = 0; r < CONTAINER_cur; r++)
-					outputFile.WriteLine("{0}\t{1}", r+1, dot[r].Y);
+				for (int r = 0; r < CONTAINER_cur; r++)
+					outputFile.WriteLine("{0}\t{1}", r + 1, dot[r].Y);
 				LOG($"Сохранено, {time}.txt");
 			}
 		}
@@ -79,7 +79,7 @@ namespace graph1
 		/// <param name="c"></param>
 		void CONTAINER_Load_from_RAM(int c)
 		{
-			if(saved_points[c] != null)
+			if (saved_points[c] != null)
 			{
 				dot = saved_points[c];
 				CONTAINER_cur = saved_cur[c];
@@ -104,9 +104,9 @@ namespace graph1
 		void CONTAINER_Delete_from_RAM(int c, int max)
 		{
 			saved_points[c] = null;
-			if(max > c)
+			if (max > c)
 			{
-				while(c < max)
+				while (c < max)
 				{
 					saved_points[c] = saved_points[c + 1];
 					c++;
@@ -116,7 +116,7 @@ namespace graph1
 
 		void CONTAINER_Clear()
 		{
-			for(int i = 0; i < dot.Length; i++)
+			for (int i = 0; i < dot.Length; i++)
 			{
 				dot[i].X = 0;
 				dot[i].Y = 0;

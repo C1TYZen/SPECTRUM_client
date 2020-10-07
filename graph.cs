@@ -24,6 +24,9 @@ namespace graph1
 		const int CMD_ST = 29811;
 		const int CMD_TP = 28788;
 
+		const int DRIVER_FWD = 1;
+		const int DRIVER_BCK = -1;
+
 		//Использовал таймер из форм, потому что другой не работает...почему то...
 		System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
@@ -34,6 +37,8 @@ namespace graph1
 		BufferedGraphics grafx;
 		Graphics tabgrfx;
 		int resolution = 1;
+		float scale;
+		float height_scale;
 
 		// Констркуктор
 		public Graph()
@@ -62,6 +67,8 @@ namespace graph1
 			RangeSet1.Text = "100";
 			MesuresCountSet.Text = "1";
 			ResolutionSet.Text = "1";
+			StepsSet.Text = "1";
+			DividerSet.Text = "1";
 
 			//Подключение к серверу
 			LOG_Debug("Talker here!\nAvailable Ports:");
@@ -95,16 +102,23 @@ namespace graph1
 		{
 			g.FillRectangle(SystemBrushes.Highlight, canvas);
 			int cur = 0;
-			for(int i = 0; i <= (range); i++)
+			g.DrawLine(
+				pen, 
+				CONTAINER_cur * scale, 
+				0, 
+				CONTAINER_cur * scale, 
+				canvas.Height
+			);
+			for (int i = 0; i <= CONTAINER_range; i += resolution)
 			{
 				g.DrawLine(
 					pen,
 					(int)(i * scale),
-					canvas.Height - (graph[i] >> 2),
-					(int)((i+1) * scale),
-					canvas.Height - (graph[i+1] >> 2)
+					canvas.Height - (CONTAINER_graph[i] >> 2),
+					(int)((i + resolution) * scale),
+					canvas.Height - (CONTAINER_graph[i + resolution] >> 2)
 				);
-				cur = (int)(cur + scale);
+				cur += (int)scale;
 			}
 		}
 
@@ -119,17 +133,34 @@ namespace graph1
 		}
 
 		/// <summary>
+		/// Подготовка интерфейса к измерению
+		/// </summary>
+		void get_armed()
+		{
+			//отключение кнопок, не нужных на момент измерения
+			Save_Button.Enabled = false;
+			Begin_Button.Enabled = false;
+			Begin_Button.Text = "Измерение";
+			New_button.Enabled = false;
+			Delete_button.Enabled = false;
+			Stop_Button.Enabled = true;
+			Forward_button.Enabled = false;
+			Back_button.Enabled = false;
+		}
+
+		/// <summary>
 		/// Возвращение интерфейса в активное состояние
 		/// </summary>
 		void get_ready()
 		{
 			Receive = false;
 			Begin_Button.Text = "Начать";
-
 			Begin_Button.Enabled = true;
 			Stop_Button.Enabled = false;
 			Save_Button.Enabled = true;
 			New_button.Enabled = true;
+			Forward_button.Enabled = true;
+			Back_button.Enabled = true;
 			if (TabControl1.TabCount == 1)
 				Delete_button.Enabled = false;
 			else
@@ -162,65 +193,135 @@ namespace graph1
 			return temp;
 		}
 
-		#region События   
-		
-		void Begin_Click(object sender, EventArgs e)
+		void set_canvas_scale()
 		{
-			//отключение кнопок, не нужных на момент измерения
-			Save_Button.Enabled = false;
-			Begin_Button.Enabled = false;
-			New_button.Enabled = false;
-			Delete_button.Enabled = false;
-			Begin_Button.Text = "Измерение";
+			//вычисление масштаба горизонтальной шкалы
+			CONTAINER_range = CONTAINER_x1 - CONTAINER_x0;
+			scale = canvas.Width / (float)CONTAINER_range;
+			//height_scale = canvas.Height / 1024;
+			LOG_Debug($"Scale: {scale}");
+		}
 
-			//проверка значений и запись в память
-			if ((x0 = check_value(
-					RangeSet0.Text, 
+		void search_setup(int dir)
+		{
+			int steps;
+			int div;
+			get_armed();
+
+			if ((steps = check_value(
+					StepsSet.Text,
+					"**ОШИБКА** Incorrect steps!!!")) == -1)
+				steps = 1;
+			if ((div = check_value(
+					DividerSet.Text,
+					"**ОШИБКА** Incorrect div!!!")) == -1)
+				div = 1;
+
+			//Установка количества шагов
+			Thread.Sleep(1);
+			TALKER_send2bytes(CMD_ST);
+			TALKER_send2bytes(steps);
+			TALKER_read_line(); //подтверждение
+
+			//Установка делителя
+			Thread.Sleep(1);
+			TALKER_send2bytes(CMD_DV);
+			TALKER_send2bytes(div);
+			TALKER_read_line(); //подтверждение
+
+			//Установка направления
+			if (dir == 1)
+			{
+				TALKER_send2bytes(CMD_DF);
+				TALKER_read_line(); //подтверждение
+			}
+
+			if (dir == -1)
+			{
+				TALKER_send2bytes(CMD_DB);
+				TALKER_read_line();
+			}
+
+			set_canvas_scale();
+			CONTAINER_curdir = dir;
+
+			//очистка и отправка команды начать
+			Thread.Sleep(1);
+			TALKER_FlushReadBuf();
+			LOG($"ПОИСК");
+			Receive = true;
+			TALKER_send2bytes(CMD_MB);
+		}
+
+		void mesure_setup()
+		{
+			get_armed();
+
+			//Проверка значений и запись в память
+			if ((CONTAINER_x0 = check_value(
+					RangeSet0.Text,
 					"**ОШИБКА** Incorrect RANGE_0!!!")) == -1)
-				x0 = 0;
-			if ((x1 = check_value(
+				CONTAINER_x0 = 0;
+			if ((CONTAINER_x1 = check_value(
 					RangeSet1.Text,
 					"**ОШИБКА** Incorrect RANGE_1!!!")) == -1)
-				x1 = 100;
-			if ((mps = check_value(
+				CONTAINER_x1 = 100;
+			if ((CONTAINER_mps = check_value(
 					MesuresCountSet.Text,
 					"**ОШИБКА** Incorrect MesuresCount!!!")) == -1)
-				mps = 1;
+				CONTAINER_mps = 1;
 			if ((resolution = check_value(
 					ResolutionSet.Text,
 					"**ОШИБКА** Incorrect Resolution!!!")) == -1)
 				resolution = 1;
 
-			//mr SET Диапазон измерений/////////////////////////////////////
-			Thread.Sleep(50);
+			//Диапазон измерений/////////////////////////////////////
+			Thread.Sleep(1);
 			TALKER_send2bytes(CMD_MR);
-			TALKER_send3bytes(x0); //первое значение
-			TALKER_send3bytes(x1); //второе значение
-			LOG_Debug($"range0 = {x0}");
-			LOG_Debug($"range1 = {x1}");
+			TALKER_send3bytes(CONTAINER_x0); //первое значение
+			TALKER_send3bytes(CONTAINER_x1); //второе значение
+			LOG_Debug($"range0 = {CONTAINER_x0}");
+			LOG_Debug($"range1 = {CONTAINER_x1}");
 			TALKER_read_line(); //подтверждение
 
-			//mc SET Измерений за шаг///////////////////////////////////////
-			Thread.Sleep(50);
+			//Измерений за шаг///////////////////////////////////////
+			Thread.Sleep(1);
 			TALKER_send2bytes(CMD_MC);
-			TALKER_send2bytes(mps);
-			LOG_Debug($"mps = {mps}");
+			TALKER_send2bytes(CONTAINER_mps);
+			LOG_Debug($"mps = {CONTAINER_mps}");
 			TALKER_read_line(); //подтверждение
 
-			//вычисление масштаба горизонтальной шкалы
-			range = x1 - x0;
-			scale = canvas.Width / (float)range;
-			LOG_Debug($"Scale: {scale}");
+			//Усновка направления
+			TALKER_send2bytes(CMD_DF);
+			TALKER_read_line();
 
-			Stop_Button.Enabled = true;
+			set_canvas_scale();
+			CONTAINER_curdir = 1;
 
 			//очистка и отправка команды начать
-			Thread.Sleep(200);
+			Thread.Sleep(1);
 			CONTAINER_Clear();
 			TALKER_FlushReadBuf();
 			LOG($"ИЗМЕРЕНИЕ!");
 			Receive = true;
 			TALKER_send2bytes(CMD_MB);
+		}
+
+		#region События   
+
+		void Begin_Click(object sender, EventArgs e)
+		{
+			mesure_setup();
+		}
+
+		void Forward_button_Click(object sender, EventArgs e)
+		{
+			search_setup(DRIVER_FWD);
+		}
+
+		void Back_button_Click(object sender, EventArgs e)
+		{
+			search_setup(DRIVER_BCK);
 		}
 
 		void New_button_Click(object sender, EventArgs e)
@@ -240,17 +341,17 @@ namespace graph1
 
 		void TabControl1_Selecting(object sender, TabControlCancelEventArgs e)
 		{
-			tabgrfx = e.TabPage.CreateGraphics();
 			CONTAINER_Load_from_RAM(e.TabPageIndex);
 			
 			canvas = new Rectangle(0, 0, e.TabPage.Width, e.TabPage.Height);
 			context.MaximumBuffer = new Size(canvas.Width + 1, canvas.Height + 1);
 			grafx = context.Allocate(CreateGraphics(), canvas);
 			tabgrfx = e.TabPage.CreateGraphics();
+			set_canvas_scale();
 
-			RangeSet0.Text = x0.ToString();
-			RangeSet1.Text = x1.ToString();
-			MesuresCountSet.Text = mps.ToString();
+			RangeSet0.Text = CONTAINER_x0.ToString();
+			RangeSet1.Text = CONTAINER_x1.ToString();
+			MesuresCountSet.Text = CONTAINER_mps.ToString();
 
 			if (TabControl1.TabCount == 1)
 				Delete_button.Enabled = false;
@@ -279,12 +380,10 @@ namespace graph1
 
 		void Graph_SizeChanged(object sender, EventArgs e)
 		{
+			//Изменение размеров и масштаба холста
 			canvas = new Rectangle(0, 0, tabPage1.Width, tabPage1.Height);
-			context.MaximumBuffer = new Size(canvas.Width + 1, canvas.Height + 1);
-			grafx = context.Allocate(CreateGraphics(), canvas);
-			tabgrfx = tabPage1.CreateGraphics();
-
-			scale = canvas.Width / (float)range;
+			//Здесь нужен только пересчет масштаба
+			scale = canvas.Width / (float)CONTAINER_range;
 		}
 
 		void Close_Click(object sender, EventArgs e)

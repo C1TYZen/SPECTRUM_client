@@ -56,12 +56,20 @@
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.Stop_Button = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.DividerSet = new System.Windows.Forms.TextBox();
+			this.StepsSet = new System.Windows.Forms.TextBox();
+			this.Forward_button = new System.Windows.Forms.Button();
+			this.Back_button = new System.Windows.Forms.Button();
 			this.TabControl1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
+			this.tableLayoutPanel2.SuspendLayout();
 			this.groupBox2.SuspendLayout();
+			this.groupBox3.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// Begin_Button
@@ -88,7 +96,7 @@
 			// Close_Button
 			// 
 			this.Close_Button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.Close_Button.Location = new System.Drawing.Point(130, 349);
+			this.Close_Button.Location = new System.Drawing.Point(130, 356);
 			this.Close_Button.Name = "Close_Button";
 			this.Close_Button.Size = new System.Drawing.Size(75, 23);
 			this.Close_Button.TabIndex = 3;
@@ -105,7 +113,7 @@
 			this.TabControl1.Location = new System.Drawing.Point(3, 3);
 			this.TabControl1.Name = "TabControl1";
 			this.TabControl1.SelectedIndex = 0;
-			this.TabControl1.Size = new System.Drawing.Size(669, 378);
+			this.TabControl1.Size = new System.Drawing.Size(669, 385);
 			this.TabControl1.TabIndex = 8;
 			this.TabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.TabControl1_Selecting);
 			// 
@@ -114,7 +122,7 @@
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(661, 352);
+			this.tabPage1.Size = new System.Drawing.Size(661, 359);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Спектр1";
 			this.tabPage1.UseVisualStyleBackColor = true;
@@ -130,18 +138,18 @@
 			this.Text_console.BackColor = System.Drawing.Color.Black;
 			this.Text_console.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.Text_console.ForeColor = System.Drawing.SystemColors.Window;
-			this.Text_console.Location = new System.Drawing.Point(678, 387);
+			this.Text_console.Location = new System.Drawing.Point(678, 394);
 			this.Text_console.Multiline = true;
 			this.Text_console.Name = "Text_console";
 			this.Text_console.ReadOnly = true;
 			this.Text_console.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.Text_console.Size = new System.Drawing.Size(211, 144);
+			this.Text_console.Size = new System.Drawing.Size(211, 147);
 			this.Text_console.TabIndex = 11;
 			// 
 			// ResolutionSet
 			// 
 			this.ResolutionSet.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.ResolutionSet.Location = new System.Drawing.Point(576, 118);
+			this.ResolutionSet.Location = new System.Drawing.Point(234, 115);
 			this.ResolutionSet.Name = "ResolutionSet";
 			this.ResolutionSet.Size = new System.Drawing.Size(80, 20);
 			this.ResolutionSet.TabIndex = 13;
@@ -150,7 +158,7 @@
 			// 
 			this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(586, 102);
+			this.label4.Location = new System.Drawing.Point(244, 99);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(70, 13);
 			this.label4.TabIndex = 12;
@@ -224,7 +232,7 @@
 			// 
 			this.Mesure_stat_label.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.Mesure_stat_label.AutoSize = true;
-			this.Mesure_stat_label.Location = new System.Drawing.Point(6, 121);
+			this.Mesure_stat_label.Location = new System.Drawing.Point(6, 118);
 			this.Mesure_stat_label.Name = "Mesure_stat_label";
 			this.Mesure_stat_label.Size = new System.Drawing.Size(10, 13);
 			this.Mesure_stat_label.TabIndex = 22;
@@ -234,7 +242,7 @@
 			// 
 			this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label9.AutoSize = true;
-			this.label9.Location = new System.Drawing.Point(6, 103);
+			this.label9.Location = new System.Drawing.Point(6, 100);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(100, 13);
 			this.label9.TabIndex = 23;
@@ -303,6 +311,7 @@
 			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox1.AutoSize = true;
 			this.groupBox1.Controls.Add(this.Stop_Button);
 			this.groupBox1.Controls.Add(this.Begin_Button);
 			this.groupBox1.Controls.Add(this.RangeSet1);
@@ -316,7 +325,7 @@
 			this.groupBox1.Controls.Add(this.RangeSet0);
 			this.groupBox1.Location = new System.Drawing.Point(678, 3);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(211, 378);
+			this.groupBox1.Size = new System.Drawing.Size(211, 385);
 			this.groupBox1.TabIndex = 25;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Параметры";
@@ -340,10 +349,10 @@
 			this.tableLayoutPanel1.ColumnCount = 2;
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75.68534F));
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 24.31466F));
-			this.tableLayoutPanel1.Controls.Add(this.groupBox2, 0, 1);
 			this.tableLayoutPanel1.Controls.Add(this.TabControl1, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this.groupBox1, 1, 0);
 			this.tableLayoutPanel1.Controls.Add(this.Text_console, 1, 1);
+			this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 1);
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 27);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 2;
@@ -354,14 +363,32 @@
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(892, 534);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(892, 544);
 			this.tableLayoutPanel1.TabIndex = 28;
+			// 
+			// tableLayoutPanel2
+			// 
+			this.tableLayoutPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.tableLayoutPanel2.ColumnCount = 2;
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 49.92526F));
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.07474F));
+			this.tableLayoutPanel2.Controls.Add(this.groupBox2, 0, 0);
+			this.tableLayoutPanel2.Controls.Add(this.groupBox3, 1, 0);
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 394);
+			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+			this.tableLayoutPanel2.RowCount = 1;
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 79.16666F));
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(669, 147);
+			this.tableLayoutPanel2.TabIndex = 26;
 			// 
 			// groupBox2
 			// 
 			this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox2.AutoSize = true;
 			this.groupBox2.Controls.Add(this.New_button);
 			this.groupBox2.Controls.Add(this.Save_Button);
 			this.groupBox2.Controls.Add(this.Mesure_stat_label);
@@ -369,12 +396,63 @@
 			this.groupBox2.Controls.Add(this.label9);
 			this.groupBox2.Controls.Add(this.label4);
 			this.groupBox2.Controls.Add(this.ResolutionSet);
-			this.groupBox2.Location = new System.Drawing.Point(3, 387);
+			this.groupBox2.Location = new System.Drawing.Point(3, 3);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(669, 144);
+			this.groupBox2.Size = new System.Drawing.Size(327, 141);
 			this.groupBox2.TabIndex = 29;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Спектр";
+			// 
+			// groupBox3
+			// 
+			this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.groupBox3.AutoSize = true;
+			this.groupBox3.Controls.Add(this.DividerSet);
+			this.groupBox3.Controls.Add(this.StepsSet);
+			this.groupBox3.Controls.Add(this.Forward_button);
+			this.groupBox3.Controls.Add(this.Back_button);
+			this.groupBox3.Location = new System.Drawing.Point(336, 3);
+			this.groupBox3.Name = "groupBox3";
+			this.groupBox3.Size = new System.Drawing.Size(330, 141);
+			this.groupBox3.TabIndex = 30;
+			this.groupBox3.TabStop = false;
+			this.groupBox3.Text = "Просмотр";
+			// 
+			// DividerSet
+			// 
+			this.DividerSet.Location = new System.Drawing.Point(87, 47);
+			this.DividerSet.Name = "DividerSet";
+			this.DividerSet.Size = new System.Drawing.Size(80, 20);
+			this.DividerSet.TabIndex = 3;
+			// 
+			// StepsSet
+			// 
+			this.StepsSet.Location = new System.Drawing.Point(87, 21);
+			this.StepsSet.Name = "StepsSet";
+			this.StepsSet.Size = new System.Drawing.Size(80, 20);
+			this.StepsSet.TabIndex = 2;
+			// 
+			// Forward_button
+			// 
+			this.Forward_button.Location = new System.Drawing.Point(173, 19);
+			this.Forward_button.Name = "Forward_button";
+			this.Forward_button.Size = new System.Drawing.Size(75, 23);
+			this.Forward_button.TabIndex = 1;
+			this.Forward_button.Text = "Вперед";
+			this.Forward_button.UseVisualStyleBackColor = true;
+			this.Forward_button.Click += new System.EventHandler(this.Forward_button_Click);
+			// 
+			// Back_button
+			// 
+			this.Back_button.Location = new System.Drawing.Point(6, 19);
+			this.Back_button.Name = "Back_button";
+			this.Back_button.Size = new System.Drawing.Size(75, 23);
+			this.Back_button.TabIndex = 0;
+			this.Back_button.Text = "Назад";
+			this.Back_button.UseVisualStyleBackColor = true;
+			this.Back_button.Click += new System.EventHandler(this.Back_button_Click);
 			// 
 			// Graph
 			// 
@@ -388,7 +466,7 @@
 			this.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "Graph";
-			this.Text = "Graph_v0.5a";
+			this.Text = "Graph_v0.6a";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Graph_Form_Closing);
 			this.Load += new System.EventHandler(this.Graph_Load);
@@ -401,8 +479,12 @@
 			this.groupBox1.PerformLayout();
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
+			this.tableLayoutPanel2.ResumeLayout(false);
+			this.tableLayoutPanel2.PerformLayout();
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
+			this.groupBox3.ResumeLayout(false);
+			this.groupBox3.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -438,6 +520,12 @@
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.Button Stop_Button;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+		private System.Windows.Forms.GroupBox groupBox3;
+		private System.Windows.Forms.TextBox StepsSet;
+		private System.Windows.Forms.Button Forward_button;
+		private System.Windows.Forms.Button Back_button;
+		private System.Windows.Forms.TextBox DividerSet;
 	}
 }
 

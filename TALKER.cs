@@ -12,7 +12,7 @@ namespace graph1
 		bool Receive;
 		int _baudrate;
 		string _portname;
-		// Переменные для хранения сообщений
+		//Переменные для хранения сообщений
 		byte[] bmsg = new byte[3];
 		int imsg;
 
@@ -216,6 +216,7 @@ namespace graph1
 				imsg = bmsg[0] + (bmsg[1] << 8);
 				if (imsg != CMD_MS)
 				{
+					CONTAINER_cur += CONTAINER_curdir;
 					LOG_Status(
 						String.Format($"Значение: {imsg} Шаг: {CONTAINER_cur+1}"));
 					CONTAINER_Add(imsg);

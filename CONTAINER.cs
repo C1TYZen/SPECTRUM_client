@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Drawing;
 
 // Контейнер для данных.
 
@@ -8,40 +7,38 @@ namespace graph1
 {
 	partial class Graph
 	{
+		struct plot
+		{
+			public int[] graph;
+			public int cur;
+			public int curdir;
+			public int x0;
+			public int x1;
+			public int mps;
+			public int filter;
+		}
+
 		const int points_count = 150000;
 		const int plots_count = 50;
-		int CONTAINER_cur = 0;
-		int CONTAINER_curdir = 1;
 
-		int[] CONTAINER_graph = new int[points_count];
-		int CONTAINER_x0 = 0;
-		int CONTAINER_x1 = 100;
-		int CONTAINER_range = 100;
-		int CONTAINER_mps = 1;
-		int filter = 1;
-
-		int[][] saved_graph = new int[plots_count][];
-		int[] saved_cur = new int[plots_count];
-		int[] saved_range0 = new int[plots_count];
-		int[] saved_range1 = new int[plots_count];
-		int[] saved_mps = new int[plots_count];
-		int[] saved_filter = new int[plots_count];
+		plot spectrum = new plot();
+		plot[] memory = new plot[plots_count];
 
 		/// <summary>
-		/// Добавление элемента таблицы.
+		/// Добавление элемента таблицы
 		/// </summary>
 		/// <param name="bt"></param>
 		void CONTAINER_Add(int bt)
 		{
-			if (CONTAINER_cur < 0)
-				CONTAINER_cur = 0;
-			if (CONTAINER_cur > points_count)
-				CONTAINER_cur = points_count;
-			CONTAINER_graph[CONTAINER_cur] = bt;
+			if (spectrum.cur < 0)
+				spectrum.cur = 0;
+			if (spectrum.cur > points_count)
+				spectrum.cur = points_count;
+			spectrum.graph[spectrum.cur] = bt;
 		}
 
 		/// <summary>
-		/// Сохранение спектра в файл в виде таблицы.
+		/// Сохранение спектра в файл в виде таблицы
 		/// </summary>
 		void CONTAINER_Save_on_disk()
 		{
@@ -56,44 +53,36 @@ namespace graph1
 
 			using (StreamWriter outputFile = new StreamWriter(path, true))
 			{
-				for (int r = 0; r < CONTAINER_cur; r++)
-					outputFile.WriteLine("{0}\t{1}", r + 1, CONTAINER_graph[r]);
+				for (int r = 0; r < spectrum.cur; r++)
+					outputFile.WriteLine("{0}\t{1}", r + 1, spectrum.graph[r]);
 				LOG($"Сохранено, {time}.txt");
 			}
 		}
 
 		/// <summary>
-		/// Сохраниение спектра в буфер.
+		/// Сохраниение спектра в буфер
 		/// </summary>
 		/// <param name="c"></param>
 		void CONTAINER_Save_on_RAM(int c)
 		{
-			saved_graph[c] = CONTAINER_graph;
-			saved_cur[c] = CONTAINER_cur;
-			saved_range0[c] = CONTAINER_x0;
-			saved_range1[c] = CONTAINER_x1;
-			saved_mps[c] = CONTAINER_mps;
+			memory[c] = spectrum;
 			LOG_Debug($"Спектр{c + 1} сохранен");
 		}
 
 		/// <summary>
-		/// Загрузка спектра из буфера.
+		/// Загрузка спектра из буфера
 		/// </summary>
 		/// <param name="c"></param>
 		void CONTAINER_Load_from_RAM(int c)
 		{
-			if (saved_graph[c] != null)
+			if (memory[c].graph != null)
 			{
-				CONTAINER_graph = saved_graph[c];
-				CONTAINER_cur = saved_cur[c];
-				CONTAINER_x0 = saved_range0[c];
-				CONTAINER_x1 = saved_range1[c];
-				CONTAINER_mps = saved_mps[c];
+				spectrum = memory[c];
 				LOG_Debug($"Спектр{c + 1} загружен");
 			}
 			else
 			{
-				CONTAINER_graph = new int[points_count];
+				spectrum.graph = new int[points_count];
 				LOG_Debug($"Создан Спектр{c + 1}");
 				CONTAINER_Save_on_RAM(c);
 			}
@@ -106,29 +95,35 @@ namespace graph1
 		/// <param name="max"></param>
 		void CONTAINER_Delete_from_RAM(int c, int max)
 		{
-			saved_graph[c] = null;
+			memory[c].graph = null;
 			if (max > c)
 			{
 				while (c < max)
 				{
-					saved_graph[c] = saved_graph[c + 1];
+					memory[c].graph = memory[c + 1].graph;
 					c++;
 				}
 			}
 		}
-
+		
+		/// <summary>
+		/// Очистка текущего спектра
+		/// </summary>
 		void CONTAINER_Clear()
 		{
-			for (int i = 0; i < CONTAINER_graph.Length; i++)
+			for (int i = 0; i < spectrum.graph.Length; i++)
 			{
-				CONTAINER_graph[i] = 0;
+				spectrum.graph[i] = 0;
 			}
-			CONTAINER_cur = 0;
+			spectrum.cur = 0;
 		}
 
+		/// <summary>
+		/// Возвращение курсора в начальное положение
+		/// </summary>
 		void CONTAINER_Reset()
 		{
-			CONTAINER_cur = 0;
+			spectrum.cur = 0;
 		}
 	}
 }

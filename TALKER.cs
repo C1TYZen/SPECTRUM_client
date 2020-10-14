@@ -9,12 +9,8 @@ namespace graph1
 	partial class Graph
 	{
 		SerialPort _serialPort = new SerialPort();
-		bool Receive;
 		int _baudrate;
 		string _portname;
-		//Переменные для хранения сообщений
-		byte[] bmsg = new byte[3];
-		int imsg;
 
 		/// <summary>
 		/// Открывает порт с указанным именем и соростью.
@@ -49,7 +45,7 @@ namespace graph1
 		/// <summary>
 		/// Функция осуществляет подключение к серверу ардуино, по порту _portname.
 		/// </summary>
-		void TALKER_connect()
+		int TALKER_connect()
 		{
 			foreach (string s in SerialPort.GetPortNames())
 			{
@@ -64,7 +60,7 @@ namespace graph1
 			if (TALKER_open() == -1)
 			{
 				LOG("**ОШИБКА** Подключите прибор!");
-				return;
+				return -1;
 			}
 
 			while (attempt <= 5)
@@ -72,7 +68,7 @@ namespace graph1
 				//прочитать строку проверки связи
 				attempt++;
 				Thread.Sleep(1000);
-				TALKER_send2bytes(CMD_CC);   //cc
+				TALKER_send2bytes(CMD_CC);
 				if (TALKER_read_line() == 0)
 				{
 					LOG_Debug($"Попыток подключения: {attempt}");
@@ -83,7 +79,7 @@ namespace graph1
 			if (attempt > 3)
 			{
 				LOG("**ОШИБКА** Не могу подключиться");
-				return;
+				return -1;
 			}
 
 			LOG_Debug("************");
@@ -92,7 +88,7 @@ namespace graph1
 			LOG_Debug($"BAUDRATE: {_baudrate}");
 			LOG_Debug("************");
 
-			get_ready();
+			return 0;
 		}
 
 		/************************
@@ -177,6 +173,12 @@ namespace graph1
 			}
 		}
 
+		int TALKER_read2bytes(byte[] msg)
+		{
+			TALKER_read(msg, 0, 2);
+			return msg[0] + (msg[1] << 8);
+		}
+
 		/// <summary>
 		/// Читает строку из последовательного порта и
 		/// выводит в консоль.
@@ -192,41 +194,6 @@ namespace graph1
 			}
 
 			return 0;
-		}
-
-		/// <summary>
-		/// Читает по 2 байта из
-		/// буфера и записывает в контейнер.
-		/// При получении команды стоп - опускается флаг.
-		/// </summary>
-
-		/// <remarks>
-		/// Цикл приема данных:
-		/// 1. Прочитать 2 байта из буфера;
-		///	2. Соеденить 2 байта и сохранить в переменную;
-		///	3. Если данные равны значению выхода - закончить прием измерений;
-		///	4. Вывод статуса измерения в строку в интерфейсе;
-		///	5. Добавить значение в контейнер.
-		/// </remarks>
-		void TALKER_receiver()
-		{
-			if (_serialPort.BytesToRead >= 2)
-			{
-				TALKER_read(bmsg, 0, 2);
-				imsg = bmsg[0] + (bmsg[1] << 8);
-				if (imsg != CMD_MS)
-				{
-					CONTAINER_cur += CONTAINER_curdir;
-					LOG_Status(
-						String.Format($"Значение: {imsg} Шаг: {CONTAINER_cur+1}"));
-					CONTAINER_Add(imsg);
-				}
-				else
-				{
-					LOG_Debug("");
-					get_ready();
-				}
-			}
 		}
 
 		/// <summary>

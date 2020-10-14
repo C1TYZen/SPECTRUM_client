@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 using System.Threading;
 
@@ -9,6 +8,7 @@ namespace graph1
 	{
 		//Команды сервера
 		const int CMD_MB = 25197;
+		const int CMD_MF = 26221;
 		const int CMD_MC = 25453;
 		const int CMD_MR = 29293;
 		const int CMD_MS = 29549;
@@ -30,15 +30,11 @@ namespace graph1
 		//Использовал таймер из форм, потому что другой не работает...почему то...
 		System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
-		//Настройка графики
-		Rectangle canvas;
-		Pen pen = new Pen(SystemColors.HighlightText);
-		BufferedGraphicsContext context = BufferedGraphicsManager.Current;
-		BufferedGraphics grafx;
-		Graphics tabgrfx;
-		int resolution = 1;
-		float scale;
-		float height_scale;
+		bool Receive;
+
+		// Переменные для хранения сообщений
+		byte[] bmsg = new byte[3];
+		int imsg;
 
 		// Констркуктор
 		public Graph()
@@ -50,18 +46,20 @@ namespace graph1
 			_baudrate = 76800;
 
 			//Настройка интерфейса
+			StartPosition = FormStartPosition.CenterScreen;
 			Begin_Button.Enabled = false;
 			Stop_Button.Enabled = false;
 			Save_Button.Enabled = false;
 			New_button.Enabled = false;
 			Delete_button.Enabled = false;
-			StartPosition = FormStartPosition.CenterScreen;
+			Forward_button.Enabled = false;
+			Back_button.Enabled = false;
 
 			//Настройка таймера
 			timer.Enabled = true;
 			timer.Interval = 1;
 			timer.Tick += new EventHandler(timer_update);
-			
+
 			//Установка дефолтных значений
 			RangeSet0.Text = "0";
 			RangeSet1.Text = "100";
@@ -72,7 +70,18 @@ namespace graph1
 
 			//Подключение к серверу
 			LOG_Debug("Talker here!\nAvailable Ports:");
-			TALKER_connect();
+			if (TALKER_connect() == 0)
+				get_ready();
+
+			spectrum.graph = new int[points_count];
+			spectrum.cur = 0;
+			spectrum.curdir = 1;
+			spectrum.x0 = 0;
+			spectrum.x1 = 100;
+			spectrum.mps = 1;
+			spectrum.filter = 1;
+
+			//DRAW_setup_canvas_scale();
 		}
 
 		/// <summary>
@@ -87,50 +96,55 @@ namespace graph1
 		{
 			if (Receive)
 			{
-				for(int i = 0; i < 1000; i++)
-					TALKER_receiver();
+				for (int i = 0; i < 1000; i++)
+					receiver();
 			}
-			draw_to_buffer(grafx.Graphics);
-			Invalidate(canvas);
+			DRAW_grid(grafx.Graphics);
+			DRAW_to_buffer(grafx.Graphics);
+			Invalidate();
 		}
 
 		/// <summary>
-		/// Отрисовка спектра в буфер
+		/// Читает по 2 байта из
+		/// буфера и записывает в контейнер.
+		/// При получении команды стоп - опускается флаг.
 		/// </summary>
-		/// <param name="g"></param>
-		void draw_to_buffer(Graphics g)
+
+		/// <remarks>
+		/// Цикл приема данных:
+		/// 1. Прочитать 2 байта из буфера;
+		///	2. Соеденить 2 байта и сохранить в переменную;
+		///	3. Если данные равны значению выхода - закончить прием измерений;
+		///	4. Вывод статуса измерения в строку в интерфейсе;
+		///	5. Добавить значение в контейнер.
+		/// </remarks>
+		void receiver()
 		{
-			g.FillRectangle(SystemBrushes.Highlight, canvas);
-			int cur = 0;
-			g.DrawLine(
-				pen, 
-				CONTAINER_cur * scale, 
-				0, 
-				CONTAINER_cur * scale, 
-				canvas.Height
-			);
-			for (int i = 0; i <= CONTAINER_range; i += resolution)
+			if (_serialPort.BytesToRead >= 2)
 			{
-				g.DrawLine(
-					pen,
-					(int)(i * scale),
-					canvas.Height - (CONTAINER_graph[i] >> 2),
-					(int)((i + resolution) * scale),
-					canvas.Height - (CONTAINER_graph[i + resolution] >> 2)
-				);
-				cur += (int)scale;
+				TALKER_read(bmsg, 0, 2);
+				imsg = bmsg[0] + (bmsg[1] << 8);
+				if (imsg != CMD_MS)
+				{
+					/* это здесь для того, что бы визуально показания 
+					   на курсоре совпадали с действительностью */
+					spectrum.cur += spectrum.curdir;
+					LOG_Status(
+						String.Format(
+							$"{(spectrum.cur + 1) * 0.0125:f3} нм    {imsg / 204.8:f3} В"
+						)
+					);
+					CONTAINER_Add(imsg);
+				}
+				else
+				{
+					LOG_Debug("");
+					get_ready();
+				}
 			}
 		}
 
-		/// <summary>
-		/// Вызывается при запросе "перерисовать" (Ivalidate) в функции таймера.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		void draw(object sender, PaintEventArgs e)
-		{
-			grafx.Render(tabgrfx);
-		}
+		#region Setup
 
 		/// <summary>
 		/// Подготовка интерфейса к измерению
@@ -172,36 +186,9 @@ namespace graph1
 		}
 
 		/// <summary>
-		/// Проверка значения из строки
+		/// Подготовка к поиску
 		/// </summary>
-		/// <param name="str"></param>
-		/// <param name="errmsg"></param>
-		/// <returns></returns>
-		int check_value(string str, string errmsg)
-		{
-			int temp;
-			try { temp = Convert.ToInt32(str); }
-			catch
-			{
-				LOG(errmsg);
-				return -1;
-			}
-
-			if (temp < 0)
-				return 0;
-
-			return temp;
-		}
-
-		void set_canvas_scale()
-		{
-			//вычисление масштаба горизонтальной шкалы
-			CONTAINER_range = CONTAINER_x1 - CONTAINER_x0;
-			scale = canvas.Width / (float)CONTAINER_range;
-			//height_scale = canvas.Height / 1024;
-			LOG_Debug($"Scale: {scale}");
-		}
-
+		/// <param name="dir"></param>
 		void search_setup(int dir)
 		{
 			int steps;
@@ -242,34 +229,37 @@ namespace graph1
 				TALKER_read_line();
 			}
 
-			set_canvas_scale();
-			CONTAINER_curdir = dir;
+			DRAW_setup_canvas_scale();
+			spectrum.curdir = dir;
 
 			//очистка и отправка команды начать
 			Thread.Sleep(1);
 			TALKER_FlushReadBuf();
 			LOG($"ПОИСК");
 			Receive = true;
-			TALKER_send2bytes(CMD_MB);
+			TALKER_send2bytes(CMD_MF);
 		}
 
+		/// <summary>
+		/// Подготовка к измерению
+		/// </summary>
 		void mesure_setup()
 		{
 			get_armed();
 
 			//Проверка значений и запись в память
-			if ((CONTAINER_x0 = check_value(
+			if ((spectrum.x0 = check_value(
 					RangeSet0.Text,
 					"**ОШИБКА** Incorrect RANGE_0!!!")) == -1)
-				CONTAINER_x0 = 0;
-			if ((CONTAINER_x1 = check_value(
+				spectrum.x0 = 0;
+			if ((spectrum.x1 = check_value(
 					RangeSet1.Text,
 					"**ОШИБКА** Incorrect RANGE_1!!!")) == -1)
-				CONTAINER_x1 = 100;
-			if ((CONTAINER_mps = check_value(
+				spectrum.x1 = 100;
+			if ((spectrum.mps = check_value(
 					MesuresCountSet.Text,
 					"**ОШИБКА** Incorrect MesuresCount!!!")) == -1)
-				CONTAINER_mps = 1;
+				spectrum.mps = 1;
 			if ((resolution = check_value(
 					ResolutionSet.Text,
 					"**ОШИБКА** Incorrect Resolution!!!")) == -1)
@@ -278,25 +268,25 @@ namespace graph1
 			//Диапазон измерений/////////////////////////////////////
 			Thread.Sleep(1);
 			TALKER_send2bytes(CMD_MR);
-			TALKER_send3bytes(CONTAINER_x0); //первое значение
-			TALKER_send3bytes(CONTAINER_x1); //второе значение
-			LOG_Debug($"range0 = {CONTAINER_x0}");
-			LOG_Debug($"range1 = {CONTAINER_x1}");
+			TALKER_send3bytes(spectrum.x0); //первое значение
+			TALKER_send3bytes(spectrum.x1); //второе значение
+			LOG_Debug($"range0 = {spectrum.x0}");
+			LOG_Debug($"range1 = {spectrum.x1}");
 			TALKER_read_line(); //подтверждение
 
 			//Измерений за шаг///////////////////////////////////////
 			Thread.Sleep(1);
 			TALKER_send2bytes(CMD_MC);
-			TALKER_send2bytes(CONTAINER_mps);
-			LOG_Debug($"mps = {CONTAINER_mps}");
+			TALKER_send2bytes(spectrum.mps);
+			LOG_Debug($"mps = {spectrum.mps}");
 			TALKER_read_line(); //подтверждение
 
 			//Усновка направления
 			TALKER_send2bytes(CMD_DF);
 			TALKER_read_line();
 
-			set_canvas_scale();
-			CONTAINER_curdir = 1;
+			DRAW_setup_canvas_scale();
+			spectrum.curdir = 1;
 
 			//очистка и отправка команды начать
 			Thread.Sleep(1);
@@ -307,7 +297,31 @@ namespace graph1
 			TALKER_send2bytes(CMD_MB);
 		}
 
-		#region События   
+		/// <summary>
+		/// Проверка значения из строки
+		/// </summary>
+		/// <param name="str"></param>
+		/// <param name="errmsg"></param>
+		/// <returns></returns>
+		int check_value(string str, string errmsg)
+		{
+			int temp;
+			try { temp = Convert.ToInt32(str); }
+			catch
+			{
+				LOG(errmsg);
+				return -1;
+			}
+
+			if (temp < 0)
+				return 0;
+
+			return temp;
+		}
+
+		#endregion
+
+		#region Evenst   
 
 		void Begin_Click(object sender, EventArgs e)
 		{
@@ -342,16 +356,15 @@ namespace graph1
 		void TabControl1_Selecting(object sender, TabControlCancelEventArgs e)
 		{
 			CONTAINER_Load_from_RAM(e.TabPageIndex);
-			
-			canvas = new Rectangle(0, 0, e.TabPage.Width, e.TabPage.Height);
-			context.MaximumBuffer = new Size(canvas.Width + 1, canvas.Height + 1);
+
+			DRAW_setup_sizes();
 			grafx = context.Allocate(CreateGraphics(), canvas);
 			tabgrfx = e.TabPage.CreateGraphics();
-			set_canvas_scale();
+			DRAW_setup_canvas_scale();
 
-			RangeSet0.Text = CONTAINER_x0.ToString();
-			RangeSet1.Text = CONTAINER_x1.ToString();
-			MesuresCountSet.Text = CONTAINER_mps.ToString();
+			RangeSet0.Text = spectrum.x0.ToString();
+			RangeSet1.Text = spectrum.x1.ToString();
+			MesuresCountSet.Text = spectrum.mps.ToString();
 
 			if (TabControl1.TabCount == 1)
 				Delete_button.Enabled = false;
@@ -371,19 +384,17 @@ namespace graph1
 
 		void Graph_Load(object sender, EventArgs e)
 		{
-			//Настройка графики
-			canvas = new Rectangle(0, 0, tabPage1.Width, tabPage1.Height);
-			context.MaximumBuffer = new Size(canvas.Width + 1, canvas.Height + 1);
-			grafx = context.Allocate(CreateGraphics(), canvas);
+			DRAW_setup_sizes();
+			DRAW_setup_canvas_scale();
+			grafx = context.Allocate(CreateGraphics(), background);
 			tabgrfx = tabPage1.CreateGraphics();
 		}
 
 		void Graph_SizeChanged(object sender, EventArgs e)
 		{
 			//Изменение размеров и масштаба холста
-			canvas = new Rectangle(0, 0, tabPage1.Width, tabPage1.Height);
-			//Здесь нужен только пересчет масштаба
-			scale = canvas.Width / (float)CONTAINER_range;
+			DRAW_setup_sizes();
+			DRAW_setup_canvas_scale();
 		}
 
 		void Close_Click(object sender, EventArgs e)

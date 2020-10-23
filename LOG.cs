@@ -29,8 +29,11 @@ namespace graph1
 		/// <param name="str"></param>
 		void LOG_Status(string str)
 		{
+			//Text_console.AppendText(str + "\r");
+			Text_console.Clear();
+			Text_console.AppendText(str + "\r\n");
 			Mesure_stat_label.Text = str;
-			Console.Write(str + "\r");
+			//Console.Write(str + "\r");
 		}
 	}
 }

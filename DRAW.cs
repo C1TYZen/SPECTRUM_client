@@ -5,7 +5,6 @@ namespace graph1
 {
 	partial class Graph
 	{
-		//Настройка графики
 		Rectangle canvas;
 		Rectangle background;
 		Pen pen = new Pen(SystemColors.HighlightText);
@@ -13,10 +12,20 @@ namespace graph1
 		BufferedGraphics grafx;
 		Graphics tabgrfx;
 		int resolution = 1;
-		float scale;
-		float height_scale;
-		int range = 100;
+		float DRAW_scale;
+		float DRAW_height_scale;
+		int DRAW_range = 100;
+		int DRAW_range_scale = 10;
+		int DRAW_cur = 0;
 
+		void DRAW_line(Graphics g, Pen p, Rectangle rect, float x1, float y1, float x2, float y2)
+		{
+			g.DrawLine(p, rect.X + x1, rect.Y + y1, rect.X + x2, rect.Y + y2);
+		}
+
+		/// <summary>
+		/// Вычисление размеров элементов окна и самого окна
+		/// </summary>
 		void DRAW_setup_sizes()
 		{
 			background = new Rectangle(0, 0, tabPage1.Width, tabPage1.Height);
@@ -29,12 +38,10 @@ namespace graph1
 		/// </summary>
 		void DRAW_setup_canvas_scale()
 		{
-			//вычисление масштаба горизонтальной шкалы
-			range = spectrum.x1 - spectrum.x0;
-			scale = canvas.Width / (float)range;
-			height_scale = canvas.Height / (float)1024;
-			LOG_Debug($"Scale: {scale}");
-			LOG_Debug($"Height Scale: {height_scale}");
+			//вычисление масштаба горизонтальной и вертикальной шкал
+			DRAW_range = spectrum.x1 - spectrum.x0;
+			DRAW_scale = canvas.Width / (float)DRAW_range;
+			DRAW_height_scale = canvas.Height / (float)1021;
 		}
 
 		/// <summary>
@@ -53,49 +60,57 @@ namespace graph1
 			g.FillRectangle(SystemBrushes.Highlight, background);
 			g.FillRectangle(SystemBrushes.Highlight, canvas);
 			pen.Color = SystemColors.GrayText;
+			if (DRAW_range < 10)
+				DRAW_range_scale = DRAW_range;
+			else
+				DRAW_range_scale = 10;
 
-			for (int i = 0; i <= range; i += range / 10)
+			for (int i = 0; i <= DRAW_range; i += DRAW_range / DRAW_range_scale)
 			{
-				DRAW_line(g, pen, canvas, i * scale, 0, i * scale, canvas.Height);
+				DRAW_line(g, pen, canvas, 
+					i * DRAW_scale, 
+					0, 
+					i * DRAW_scale, 
+					canvas.Height
+				);
 			}
 
-			for (int i = 0; i <= canvas.Height; i += canvas.Height / 10)
+			for (int i = 0; i <= 1024; i += 1024 / 5)
 			{
-				DRAW_line(g, pen, canvas, 0, canvas.Height - i, canvas.Width, canvas.Height - i);
+				DRAW_line(g, pen, canvas, 
+					0, 
+					i * DRAW_height_scale, 
+					canvas.Width,
+					i * DRAW_height_scale
+				);
 			}
 		}
 
-		/// <summary>
-		/// Отрисовка спектра в буфер
-		/// </summary>
-		/// <param name="g"></param>
-		void DRAW_to_buffer(Graphics g)
+		void DRAW_spectrum(Graphics g)
 		{
+			// Курсор
 			pen.Color = Color.Red;
 			DRAW_line(g, pen, canvas,
-				spectrum.cur * scale,
+				spectrum.pos * DRAW_scale,
 				0,
-				spectrum.cur * scale,
+				spectrum.pos * DRAW_scale,
 				canvas.Height
 			);
+
+			// Отрисовка спектра
 			pen.Color = SystemColors.HighlightText;
-			for (int i = 0; i <= range; i += resolution)
+			for (int i = 0; i <= DRAW_range; i += resolution)
 			{
-				if ((i - resolution) >= 0)
+				if (((i - resolution) >= 0) && (i <= DRAW_cur))
 				{
 					DRAW_line(g, pen, canvas,
-						i * scale,
-						canvas.Height - (spectrum.graph[i] * height_scale),
-						(i - resolution) * scale,
-						canvas.Height - (spectrum.graph[i - resolution] * height_scale)
+						i * DRAW_scale,
+						canvas.Height - (spectrum.graph[i] * DRAW_height_scale),
+						(i - resolution) * DRAW_scale,
+						canvas.Height - (spectrum.graph[i - resolution] * DRAW_height_scale)
 					);
 				}
 			}
-		}
-
-		void DRAW_line(Graphics g, Pen p, Rectangle rect, float x1, float y1, float x2, float y2)
-		{
-			g.DrawLine(p, rect.X + x1, rect.Y + y1, rect.X + x2, rect.Y + y2);
 		}
 	}
 }

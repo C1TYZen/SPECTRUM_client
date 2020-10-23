@@ -13,30 +13,29 @@ namespace graph1
 		const int CMD_MR = 29293;
 		const int CMD_MS = 29549;
 
-		const int CMD_DD = 25700;
+		const int CMD_DC = 25444;
 		const int CMD_DS = 29540;
 		const int CMD_DV = 30308;
 		const int CMD_DF = 26212;
 		const int CMD_DB = 25188;
 		const int CMD_DI = 26980;
+		const int CMD_DM = 28004;
+		const int CMD_DD = 25700;
 
 		const int CMD_CC = 25443;
 		const int CMD_ST = 29811;
 		const int CMD_TP = 28788;
 
-		const int DRIVER_FWD = 1;
-		const int DRIVER_BCK = -1;
+		//Направления шагового двигателя
+		const int DRIVER_BCK = 1;
+		const int DRIVER_FWD = -1;
 
 		//Использовал таймер из форм, потому что другой не работает...почему то...
 		System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
+		//Флаги
 		bool Receive;
 
-		// Переменные для хранения сообщений
-		byte[] bmsg = new byte[3];
-		int imsg;
-
-		// Констркуктор
 		public Graph()
 		{
 			InitializeComponent();
@@ -68,20 +67,20 @@ namespace graph1
 			StepsSet.Text = "1";
 			DividerSet.Text = "1";
 
+			spectrum.graph = new int[points_count];
+			spectrum.cur = 0;
+			spectrum.dir = 1;
+			spectrum.x0 = 0;
+			spectrum.x1 = 100;
+			spectrum.pos = 0;
+			spectrum.mps = 1;
+			spectrum.filter = 1;
+			spectrum.div = 1;
+
 			//Подключение к серверу
 			LOG_Debug("Talker here!\nAvailable Ports:");
 			if (TALKER_connect() == 0)
 				get_ready();
-
-			spectrum.graph = new int[points_count];
-			spectrum.cur = 0;
-			spectrum.curdir = 1;
-			spectrum.x0 = 0;
-			spectrum.x1 = 100;
-			spectrum.mps = 1;
-			spectrum.filter = 1;
-
-			//DRAW_setup_canvas_scale();
 		}
 
 		/// <summary>
@@ -100,7 +99,7 @@ namespace graph1
 					receiver();
 			}
 			DRAW_grid(grafx.Graphics);
-			DRAW_to_buffer(grafx.Graphics);
+			DRAW_spectrum(grafx.Graphics);
 			Invalidate();
 		}
 
@@ -124,14 +123,19 @@ namespace graph1
 			{
 				TALKER_read(bmsg, 0, 2);
 				imsg = bmsg[0] + (bmsg[1] << 8);
+				//LOG_Debug($"{bmsg[1]} {bmsg[0]} {imsg}");
 				if (imsg != CMD_MS)
 				{
-					/* это здесь для того, что бы визуально показания 
-					   на курсоре совпадали с действительностью */
-					spectrum.cur += spectrum.curdir;
+					//spectrum.cur здесь для того, что бы визуально показания 
+					//на курсоре совпадали с действительностью
+					spectrum.cur += spectrum.dir;
+					if((DRAW_cur <= DRAW_range) && (DRAW_cur <= spectrum.cur))
+						DRAW_cur += 1;
+					spectrum.pos += (float)spectrum.dir / (float)spectrum.div;
+					LOG_Debug($"{spectrum.pos}");
 					LOG_Status(
 						String.Format(
-							$"{(spectrum.cur + 1) * 0.0125:f3} нм    {imsg / 204.8:f3} В"
+							$"{(spectrum.x0 + (spectrum.cur + 1)) * 0.0125:f3} нм    {imsg / 204.8:f3} В"
 						)
 					);
 					CONTAINER_Add(imsg);
@@ -151,7 +155,6 @@ namespace graph1
 		/// </summary>
 		void get_armed()
 		{
-			//отключение кнопок, не нужных на момент измерения
 			Save_Button.Enabled = false;
 			Begin_Button.Enabled = false;
 			Begin_Button.Text = "Измерение";
@@ -191,53 +194,47 @@ namespace graph1
 		/// <param name="dir"></param>
 		void search_setup(int dir)
 		{
-			int steps;
-			int div;
+			if(TALKER_FlushReadBuf() == -1) return;
 			get_armed();
+			int steps;
 
 			if ((steps = check_value(
-					StepsSet.Text,
+					StepsSet.Text, 
 					"**ОШИБКА** Incorrect steps!!!")) == -1)
 				steps = 1;
-			if ((div = check_value(
-					DividerSet.Text,
+			if ((spectrum.div = check_value(
+					DividerSet.Text, 
 					"**ОШИБКА** Incorrect div!!!")) == -1)
-				div = 1;
+				spectrum.div = 1;
 
-			//Установка количества шагов
-			Thread.Sleep(1);
-			TALKER_send2bytes(CMD_ST);
-			TALKER_send2bytes(steps);
-			TALKER_read_line(); //подтверждение
-
-			//Установка делителя
-			Thread.Sleep(1);
-			TALKER_send2bytes(CMD_DV);
-			TALKER_send2bytes(div);
-			TALKER_read_line(); //подтверждение
-
-			//Установка направления
-			if (dir == 1)
+			//steps = (x1 - x0) * div
+			//steps_remain = (x1 - pos) * div
+			if(((spectrum.cur  + ((dir * steps)) / spectrum.div)) > spectrum.x1)
+				steps = (spectrum.x1 * spectrum.div) - spectrum.cur;
+			else if (((spectrum.cur + ((dir * steps)) / spectrum.div)) < spectrum.x0)
+				steps = spectrum.cur - (spectrum.x0 * spectrum.div);
+			if (steps == 0)
 			{
-				TALKER_send2bytes(CMD_DF);
-				TALKER_read_line(); //подтверждение
+				get_ready();
+				return;
 			}
 
-			if (dir == -1)
-			{
-				TALKER_send2bytes(CMD_DB);
-				TALKER_read_line();
-			}
+			//Передача количества шагов
+			TALKER_command(CMD_ST, steps);
+			//Передача делителя шага
+			TALKER_command(CMD_DV, spectrum.div);
+			//Передача и установка направления
+			TALKER_command(CMD_DD, dir);
+			spectrum.dir = dir;
 
 			DRAW_setup_canvas_scale();
-			spectrum.curdir = dir;
+			LOG_Debug($"Scale: {DRAW_scale}");
+			LOG_Debug($"Height Scale: {DRAW_height_scale}");
 
-			//очистка и отправка команды начать
-			Thread.Sleep(1);
+			//Очистка и отправка команды начать
 			TALKER_FlushReadBuf();
-			LOG($"ПОИСК");
 			Receive = true;
-			TALKER_send2bytes(CMD_MF);
+			TALKER_send(CMD_MF, 2);
 		}
 
 		/// <summary>
@@ -245,6 +242,7 @@ namespace graph1
 		/// </summary>
 		void mesure_setup()
 		{
+			if(TALKER_FlushReadBuf() == -1) return;
 			get_armed();
 
 			//Проверка значений и запись в память
@@ -256,6 +254,12 @@ namespace graph1
 					RangeSet1.Text,
 					"**ОШИБКА** Incorrect RANGE_1!!!")) == -1)
 				spectrum.x1 = 100;
+			if (spectrum.x0 > spectrum.x1)
+			{
+				int buf = spectrum.x0;
+				spectrum.x0 = spectrum.x1;
+				spectrum.x1 = buf;
+			}
 			if ((spectrum.mps = check_value(
 					MesuresCountSet.Text,
 					"**ОШИБКА** Incorrect MesuresCount!!!")) == -1)
@@ -264,37 +268,37 @@ namespace graph1
 					ResolutionSet.Text,
 					"**ОШИБКА** Incorrect Resolution!!!")) == -1)
 				resolution = 1;
+			if ((spectrum.div = check_value(
+					DividerSet.Text, 
+					"**ОШИБКА** Incorrect div!!!")) == -1)
+				spectrum.div = 1;
 
-			//Диапазон измерений/////////////////////////////////////
-			Thread.Sleep(1);
-			TALKER_send2bytes(CMD_MR);
-			TALKER_send3bytes(spectrum.x0); //первое значение
-			TALKER_send3bytes(spectrum.x1); //второе значение
-			LOG_Debug($"range0 = {spectrum.x0}");
-			LOG_Debug($"range1 = {spectrum.x1}");
-			TALKER_read_line(); //подтверждение
+			//Передача команды перемещения к началу диапазона
+			TALKER_command(CMD_DM, spectrum.x0);
+			//Передача делителя шага
+			TALKER_command(CMD_DV, spectrum.div);
+			//Передача количества шагов
+			TALKER_command(CMD_ST, (spectrum.x1 - spectrum.x0) * spectrum.div);
+			//Передача числа измерений за один шаг двигателя
+			TALKER_command(CMD_MC, spectrum.mps);
 
-			//Измерений за шаг///////////////////////////////////////
-			Thread.Sleep(1);
-			TALKER_send2bytes(CMD_MC);
-			TALKER_send2bytes(spectrum.mps);
-			LOG_Debug($"mps = {spectrum.mps}");
-			TALKER_read_line(); //подтверждение
-
-			//Усновка направления
-			TALKER_send2bytes(CMD_DF);
-			TALKER_read_line();
-
+			//Настройка отрисовки
 			DRAW_setup_canvas_scale();
-			spectrum.curdir = 1;
-
-			//очистка и отправка команды начать
-			Thread.Sleep(1);
 			CONTAINER_Clear();
+			DRAW_cur = 0;
+			spectrum.dir = 1;
+			LOG_Debug($"Scale: {DRAW_scale}");
+			LOG_Debug($"Height Scale: {DRAW_height_scale}");
+			//Это нужно для того, что бы отрисовывался весь диапазон от х0 до х1,
+			//включая крайние точки
+			spectrum.cur = -1;
+			spectrum.pos = (float)-1 / (float)spectrum.div;
+
+			//Очистка буфера и отправка команды начать
 			TALKER_FlushReadBuf();
 			LOG($"ИЗМЕРЕНИЕ!");
 			Receive = true;
-			TALKER_send2bytes(CMD_MB);
+			TALKER_send(CMD_MB, 2);
 		}
 
 		/// <summary>
@@ -330,12 +334,33 @@ namespace graph1
 
 		void Forward_button_Click(object sender, EventArgs e)
 		{
-			search_setup(DRIVER_FWD);
+			search_setup(DRIVER_BCK);
 		}
 
 		void Back_button_Click(object sender, EventArgs e)
 		{
-			search_setup(DRIVER_BCK);
+			search_setup(DRIVER_FWD);
+		}
+
+		void button1_Click(object sender, EventArgs e)
+		{
+			TALKER_send(CMD_DC, 2);
+		}
+
+		void Goto_button_Click(object sender, EventArgs e)
+		{
+			if ((spectrum.x0 = check_value(
+					RangeSet0.Text,
+					"**ОШИБКА** Incorrect RANGE_0!!!")) == -1)
+				spectrum.x0 = 0;
+			if ((spectrum.div = check_value(DividerSet.Text, "**ОШИБКА** Incorrect div!!!")) == -1)
+				spectrum.div = 1;
+
+			TALKER_send(CMD_DM, 2);
+			TALKER_send(spectrum.x0, 3);
+			TALKER_read(bmsg, 0, 3);
+			imsg = bmsg[0] + (bmsg[1] << 8) + (bmsg[2] << 16);
+			LOG_Debug($"num {imsg}");
 		}
 
 		void New_button_Click(object sender, EventArgs e)
@@ -374,7 +399,7 @@ namespace graph1
 
 		void Stop_button_Click(object sender, EventArgs e)
 		{
-			TALKER_send2bytes(CMD_DI);
+			TALKER_send(CMD_DI, 2);
 		}
 
 		void Save_Click(object sender, EventArgs e)

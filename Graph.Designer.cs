@@ -54,6 +54,8 @@
 			this.New_button = new System.Windows.Forms.Button();
 			this.Delete_button = new System.Windows.Forms.Button();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.Goto_button = new System.Windows.Forms.Button();
+			this.Callibrate_button = new System.Windows.Forms.Button();
 			this.Stop_Button = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -63,6 +65,7 @@
 			this.StepsSet = new System.Windows.Forms.TextBox();
 			this.Forward_button = new System.Windows.Forms.Button();
 			this.Back_button = new System.Windows.Forms.Button();
+			this.label1 = new System.Windows.Forms.Label();
 			this.TabControl1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -312,6 +315,8 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox1.AutoSize = true;
+			this.groupBox1.Controls.Add(this.Goto_button);
+			this.groupBox1.Controls.Add(this.Callibrate_button);
 			this.groupBox1.Controls.Add(this.Stop_Button);
 			this.groupBox1.Controls.Add(this.Begin_Button);
 			this.groupBox1.Controls.Add(this.RangeSet1);
@@ -329,6 +334,28 @@
 			this.groupBox1.TabIndex = 25;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Параметры";
+			// 
+			// Goto_button
+			// 
+			this.Goto_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.Goto_button.Location = new System.Drawing.Point(130, 75);
+			this.Goto_button.Name = "Goto_button";
+			this.Goto_button.Size = new System.Drawing.Size(75, 23);
+			this.Goto_button.TabIndex = 25;
+			this.Goto_button.Text = "К началу";
+			this.Goto_button.UseVisualStyleBackColor = true;
+			this.Goto_button.Click += new System.EventHandler(this.Goto_button_Click);
+			// 
+			// Callibrate_button
+			// 
+			this.Callibrate_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.Callibrate_button.Location = new System.Drawing.Point(7, 356);
+			this.Callibrate_button.Name = "Callibrate_button";
+			this.Callibrate_button.Size = new System.Drawing.Size(89, 23);
+			this.Callibrate_button.TabIndex = 24;
+			this.Callibrate_button.Text = "Калибровка";
+			this.Callibrate_button.UseVisualStyleBackColor = true;
+			this.Callibrate_button.Click += new System.EventHandler(this.button1_Click);
 			// 
 			// Stop_Button
 			// 
@@ -409,6 +436,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox3.AutoSize = true;
+			this.groupBox3.Controls.Add(this.label1);
 			this.groupBox3.Controls.Add(this.DividerSet);
 			this.groupBox3.Controls.Add(this.StepsSet);
 			this.groupBox3.Controls.Add(this.Forward_button);
@@ -418,13 +446,13 @@
 			this.groupBox3.Size = new System.Drawing.Size(330, 141);
 			this.groupBox3.TabIndex = 30;
 			this.groupBox3.TabStop = false;
-			this.groupBox3.Text = "Просмотр";
+			this.groupBox3.Text = "Поиск";
 			// 
 			// DividerSet
 			// 
-			this.DividerSet.Location = new System.Drawing.Point(87, 47);
+			this.DividerSet.Location = new System.Drawing.Point(125, 47);
 			this.DividerSet.Name = "DividerSet";
-			this.DividerSet.Size = new System.Drawing.Size(80, 20);
+			this.DividerSet.Size = new System.Drawing.Size(20, 20);
 			this.DividerSet.TabIndex = 3;
 			// 
 			// StepsSet
@@ -453,6 +481,15 @@
 			this.Back_button.Text = "Назад";
 			this.Back_button.UseVisualStyleBackColor = true;
 			this.Back_button.Click += new System.EventHandler(this.Back_button_Click);
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(101, 50);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(18, 13);
+			this.label1.TabIndex = 4;
+			this.label1.Text = "1/";
 			// 
 			// Graph
 			// 
@@ -526,6 +563,9 @@
 		private System.Windows.Forms.Button Forward_button;
 		private System.Windows.Forms.Button Back_button;
 		private System.Windows.Forms.TextBox DividerSet;
+		private System.Windows.Forms.Button Callibrate_button;
+		private System.Windows.Forms.Button Goto_button;
+		private System.Windows.Forms.Label label1;
 	}
 }
 

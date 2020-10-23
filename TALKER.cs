@@ -12,6 +12,10 @@ namespace graph1
 		int _baudrate;
 		string _portname;
 
+		// Переменные для хранения сообщений
+		byte[] bmsg = new byte[4];
+		int imsg;
+
 		/// <summary>
 		/// Открывает порт с указанным именем и соростью.
 		/// Устанавливает дефолтные таймауты и очищает буферы.
@@ -67,8 +71,8 @@ namespace graph1
 			{
 				//прочитать строку проверки связи
 				attempt++;
-				Thread.Sleep(1000);
-				TALKER_send2bytes(CMD_CC);
+				Thread.Sleep(500);
+				TALKER_send(CMD_CC, 2);
 				if (TALKER_read_line() == 0)
 				{
 					LOG_Debug($"Попыток подключения: {attempt}");
@@ -102,7 +106,7 @@ namespace graph1
 		/// <param name="msg"></param>
 		/// <param name="offset"></param>
 		/// <param name="count"></param>
-		void TALKER_send(byte[] msg, int offset, int count)
+		void TALKER_write(byte[] msg, int offset, int count)
 		{
 			try { _serialPort.Write(msg, offset, count); }
 			catch(Exception ex)
@@ -112,45 +116,24 @@ namespace graph1
 		}
 
 		/// <summary>
-		/// Отправляет в последовательный порт 2 байта из
-		/// переменной buf.
+		/// Отправка пакета байт
 		/// </summary>
 		/// <param name="buf"></param>
-
-		/// <remarks>
-		/// 2 байта последовательно отправляются на ардуино,
-		/// где первый записываеся в переменную, а второй сдвигается
-		/// на 8 бит и тоже записывается.
-		/// </remarks>
-		void TALKER_send2bytes(int buf)
+		/// <param name="bytes"></param>
+		void TALKER_send(int buf, int bytes)
 		{
-			bmsg[0] = (byte)buf;
-			bmsg[1] = (byte)(buf >> 8);
-			TALKER_send(bmsg, 0, 2);
+			for (int i = 0; i < bytes; i++)
+			{
+				bmsg[i] = (byte)(buf>>(8 * i));
+			}
+			TALKER_write(bmsg, 0, bytes);
 		}
 
-		/// <summary>
-		/// Отправляет в последовательный порт 3 байта из
-		/// переменной buf.
-		/// </summary>
-		/// <param name="buf"></param>
-		 
-		/// <remarks>
-		/// В отличие от функции отправки 2х байт, здесь байты отправляются в обратном порядке.
-		/// Ардуино принимает байты в 8-битный регистр последовательного
-		/// порта, после чего эти данные можно записать в переменную.
-		/// При приеме 2х байт первый байт записывается в переменную,
-		/// а второй сперва сдвигается в регистре приема и только потом записывается.
-		/// При попытке сдвига третьего байта - байт отбрасывается.
-		/// Непонятно почему так происходит, так как регистр 8-битный.
-		/// То есть в регистре при сдвиге должен отбрасываться и второй байт тоже.
-		/// </remarks>
-		void TALKER_send3bytes(int buf)
+		void TALKER_command(int cmd, int val)
 		{
-			bmsg[0] = (byte)(buf >> 16);
-			bmsg[1] = (byte)(buf >> 8);
-			bmsg[2] = (byte)buf;
-			TALKER_send(bmsg, 0, 3);
+			TALKER_send(cmd, 2);
+			TALKER_send(val, 4);
+			TALKER_read_line();
 		}
 
 		/************************
@@ -173,12 +156,6 @@ namespace graph1
 			}
 		}
 
-		int TALKER_read2bytes(byte[] msg)
-		{
-			TALKER_read(msg, 0, 2);
-			return msg[0] + (msg[1] << 8);
-		}
-
 		/// <summary>
 		/// Читает строку из последовательного порта и
 		/// выводит в консоль.
@@ -199,11 +176,18 @@ namespace graph1
 		/// <summary>
 		/// Очистка входного порта.
 		/// </summary>
-		void TALKER_FlushReadBuf()
+		int TALKER_FlushReadBuf()
 		{
-			_serialPort.DiscardInBuffer();
+			try { _serialPort.DiscardInBuffer(); }
+			catch (Exception ex)
+			{
+				LOG("**ОШИБКА** Прибор отключен. Подключите прибор и перезагрузите программу.");
+				LOG_Debug($"**ОШИБКА** в функции <<flush()>> {ex}");
+				return -1;
+			}
 			string dummy = _serialPort.ReadExisting();
 			LOG_Debug($"Мусор: {dummy}");
+			return 0;
 		}
 	}
 }

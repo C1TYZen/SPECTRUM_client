@@ -11,15 +11,17 @@ namespace graph1
 		{
 			public int[] graph;
 			public int cur;
-			public int curdir;
+			public int dir;
 			public int x0;
 			public int x1;
+			public float pos;
 			public int mps;
 			public int filter;
+			public int div;
 		}
 
 		const int points_count = 150000;
-		const int plots_count = 50;
+		const int plots_count = 64;
 
 		plot spectrum = new plot();
 		plot[] memory = new plot[plots_count];
@@ -32,31 +34,11 @@ namespace graph1
 		{
 			if (spectrum.cur < 0)
 				spectrum.cur = 0;
+			if (spectrum.cur > DRAW_range)
+				spectrum.cur = DRAW_range;
 			if (spectrum.cur > points_count)
 				spectrum.cur = points_count;
 			spectrum.graph[spectrum.cur] = bt;
-		}
-
-		/// <summary>
-		/// Сохранение спектра в файл в виде таблицы
-		/// </summary>
-		void CONTAINER_Save_on_disk()
-		{
-			string time = String.Format("{0}-{1}-{2} {3}_{4}_{5}",
-				DateTime.Now.Day, DateTime.Now.Month,
-				DateTime.Now.Year, DateTime.Now.Hour,
-				DateTime.Now.Minute, DateTime.Now.Second);
-			string path = String.Format("plots/{0}.txt", time);
-
-			if (!Directory.Exists("plots"))
-				Directory.CreateDirectory("plots");
-
-			using (StreamWriter outputFile = new StreamWriter(path, true))
-			{
-				for (int r = 0; r < spectrum.cur; r++)
-					outputFile.WriteLine("{0}\t{1}", r + 1, spectrum.graph[r]);
-				LOG($"Сохранено, {time}.txt");
-			}
 		}
 
 		/// <summary>
@@ -105,7 +87,29 @@ namespace graph1
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Сохранение спектра в файл в виде таблицы
+		/// </summary>
+		void CONTAINER_Save_on_disk()
+		{
+			string time = String.Format("{0}-{1}-{2} {3}_{4}_{5}",
+				DateTime.Now.Day, DateTime.Now.Month,
+				DateTime.Now.Year, DateTime.Now.Hour,
+				DateTime.Now.Minute, DateTime.Now.Second);
+			string path = String.Format("plots/{0}.txt", time);
+
+			if (!Directory.Exists("plots"))
+				Directory.CreateDirectory("plots");
+
+			using (StreamWriter outputFile = new StreamWriter(path, true))
+			{
+				for (int r = 0; r <= spectrum.cur; r++)
+					outputFile.WriteLine("{0}\t{1}", r + spectrum.x0, spectrum.graph[r]);
+				LOG($"Сохранено, {time}.txt");
+			}
+		}
+
 		/// <summary>
 		/// Очистка текущего спектра
 		/// </summary>

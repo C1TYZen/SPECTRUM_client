@@ -18,11 +18,6 @@ namespace graph1
 		int DRAW_range_scale = 10;
 		int DRAW_cur = 0;
 
-		void DRAW_line(Graphics g, Pen p, Rectangle rect, float x1, float y1, float x2, float y2)
-		{
-			g.DrawLine(p, rect.X + x1, rect.Y + y1, rect.X + x2, rect.Y + y2);
-		}
-
 		/// <summary>
 		/// Вычисление размеров элементов окна и самого окна
 		/// </summary>
@@ -39,9 +34,14 @@ namespace graph1
 		void DRAW_setup_canvas_scale()
 		{
 			//вычисление масштаба горизонтальной и вертикальной шкал
-			DRAW_range = spectrum.x1 - spectrum.x0;
+			DRAW_range = (spectrum.x1 - spectrum.x0) * spectrum.div;
 			DRAW_scale = canvas.Width / (float)DRAW_range;
 			DRAW_height_scale = canvas.Height / (float)1021;
+		}
+
+		void DRAW_line(Graphics g, Pen p, Rectangle rect, float x1, float y1, float x2, float y2)
+		{
+			g.DrawLine(p, rect.X + x1, rect.Y + y1, rect.X + x2, rect.Y + y2);
 		}
 
 		/// <summary>
@@ -91,9 +91,9 @@ namespace graph1
 			// Курсор
 			pen.Color = Color.Red;
 			DRAW_line(g, pen, canvas,
-				spectrum.pos * DRAW_scale,
+				spectrum.cur * DRAW_scale,
 				0,
-				spectrum.pos * DRAW_scale,
+				spectrum.cur * DRAW_scale,
 				canvas.Height
 			);
 

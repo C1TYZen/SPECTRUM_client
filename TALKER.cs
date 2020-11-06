@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO.Ports;
-using System.Threading;
+//using System.Threading;
 
 // Библиотека для общения с сервером по последовательному порту.
 
@@ -71,7 +71,6 @@ namespace graph1
 			{
 				//прочитать строку проверки связи
 				attempt++;
-				Thread.Sleep(500);
 				TALKER_send(CMD_CC, 2);
 				if (TALKER_read_line() == 0)
 				{
@@ -92,6 +91,23 @@ namespace graph1
 			LOG_Debug($"BAUDRATE: {_baudrate}");
 			LOG_Debug("************");
 
+			return 0;
+		}
+
+		/// <summary>
+		/// Очистка входного порта.
+		/// </summary>
+		int TALKER_FlushReadBuf()
+		{
+			try { _serialPort.DiscardInBuffer(); }
+			catch (Exception ex)
+			{
+				LOG("**ОШИБКА** Прибор отключен. Подключите прибор и перезагрузите программу.");
+				LOG_Debug($"**ОШИБКА** в функции <<flush()>> {ex}");
+				return -1;
+			}
+			string dummy = _serialPort.ReadExisting();
+			LOG_Debug($"Мусор: {dummy}");
 			return 0;
 		}
 
@@ -129,7 +145,12 @@ namespace graph1
 			TALKER_write(bmsg, 0, bytes);
 		}
 
-		void TALKER_command(int cmd, int val)
+		/// <summary>
+		/// Отправка команды на сервер
+		/// </summary>
+		/// <param name="cmd"></param>
+		/// <param name="val"></param>
+		void TALKER_set(int cmd, int val)
 		{
 			TALKER_send(cmd, 2);
 			TALKER_send(val, 4);
@@ -170,23 +191,6 @@ namespace graph1
 				return -1;
 			}
 
-			return 0;
-		}
-
-		/// <summary>
-		/// Очистка входного порта.
-		/// </summary>
-		int TALKER_FlushReadBuf()
-		{
-			try { _serialPort.DiscardInBuffer(); }
-			catch (Exception ex)
-			{
-				LOG("**ОШИБКА** Прибор отключен. Подключите прибор и перезагрузите программу.");
-				LOG_Debug($"**ОШИБКА** в функции <<flush()>> {ex}");
-				return -1;
-			}
-			string dummy = _serialPort.ReadExisting();
-			LOG_Debug($"Мусор: {dummy}");
 			return 0;
 		}
 	}

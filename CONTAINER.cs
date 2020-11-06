@@ -11,16 +11,16 @@ namespace graph1
 		{
 			public int[] graph;
 			public int cur;
+			public float pos;
 			public int dir;
 			public int x0;
 			public int x1;
-			public float pos;
 			public int mps;
 			public int filter;
 			public int div;
 		}
 
-		const int points_count = 150000;
+		const int points_count = 532480;
 		const int plots_count = 64;
 
 		plot spectrum = new plot();

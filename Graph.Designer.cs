@@ -33,6 +33,7 @@
 			this.Close_Button = new System.Windows.Forms.Button();
 			this.TabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
+			this.MPosition_status_label = new System.Windows.Forms.Label();
 			this.Text_console = new System.Windows.Forms.TextBox();
 			this.ResolutionSet = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
@@ -61,12 +62,13 @@
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.label1 = new System.Windows.Forms.Label();
 			this.DividerSet = new System.Windows.Forms.TextBox();
 			this.StepsSet = new System.Windows.Forms.TextBox();
 			this.Forward_button = new System.Windows.Forms.Button();
 			this.Back_button = new System.Windows.Forms.Button();
-			this.label1 = new System.Windows.Forms.Label();
 			this.TabControl1.SuspendLayout();
+			this.tabPage1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
@@ -122,6 +124,8 @@
 			// 
 			// tabPage1
 			// 
+			this.tabPage1.Controls.Add(this.MPosition_status_label);
+			this.tabPage1.Cursor = System.Windows.Forms.Cursors.Cross;
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -129,6 +133,17 @@
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Спектр1";
 			this.tabPage1.UseVisualStyleBackColor = true;
+			this.tabPage1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tabPage1_MouseMove);
+			// 
+			// MPosition_status_label
+			// 
+			this.MPosition_status_label.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.MPosition_status_label.AutoSize = true;
+			this.MPosition_status_label.Location = new System.Drawing.Point(3, 343);
+			this.MPosition_status_label.Name = "MPosition_status_label";
+			this.MPosition_status_label.Size = new System.Drawing.Size(35, 13);
+			this.MPosition_status_label.TabIndex = 0;
+			this.MPosition_status_label.Text = "label2";
 			// 
 			// Text_console
 			// 
@@ -156,6 +171,7 @@
 			this.ResolutionSet.Name = "ResolutionSet";
 			this.ResolutionSet.Size = new System.Drawing.Size(80, 20);
 			this.ResolutionSet.TabIndex = 13;
+			this.ResolutionSet.TextChanged += new System.EventHandler(this.ResolutionSet_TextChanged);
 			// 
 			// label4
 			// 
@@ -265,7 +281,7 @@
 			// menustrip_File
 			// 
 			this.menustrip_File.Name = "menustrip_File";
-			this.menustrip_File.Size = new System.Drawing.Size(45, 20);
+			this.menustrip_File.Size = new System.Drawing.Size(48, 20);
 			this.menustrip_File.Text = "Файл";
 			// 
 			// menustrip_Tools
@@ -274,19 +290,19 @@
             this.menustrip_COM,
             this.menustrip_BaudRate});
 			this.menustrip_Tools.Name = "menustrip_Tools";
-			this.menustrip_Tools.Size = new System.Drawing.Size(87, 20);
+			this.menustrip_Tools.Size = new System.Drawing.Size(95, 20);
 			this.menustrip_Tools.Text = "Инструменты";
 			// 
 			// menustrip_COM
 			// 
 			this.menustrip_COM.Name = "menustrip_COM";
-			this.menustrip_COM.Size = new System.Drawing.Size(121, 22);
+			this.menustrip_COM.Size = new System.Drawing.Size(124, 22);
 			this.menustrip_COM.Text = "COM";
 			// 
 			// menustrip_BaudRate
 			// 
 			this.menustrip_BaudRate.Name = "menustrip_BaudRate";
-			this.menustrip_BaudRate.Size = new System.Drawing.Size(121, 22);
+			this.menustrip_BaudRate.Size = new System.Drawing.Size(124, 22);
 			this.menustrip_BaudRate.Text = "BaudRate";
 			// 
 			// New_button
@@ -448,6 +464,15 @@
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Поиск";
 			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(101, 50);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(18, 13);
+			this.label1.TabIndex = 4;
+			this.label1.Text = "1/";
+			// 
 			// DividerSet
 			// 
 			this.DividerSet.Location = new System.Drawing.Point(125, 47);
@@ -482,15 +507,6 @@
 			this.Back_button.UseVisualStyleBackColor = true;
 			this.Back_button.Click += new System.EventHandler(this.Back_button_Click);
 			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(101, 50);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(18, 13);
-			this.label1.TabIndex = 4;
-			this.label1.Text = "1/";
-			// 
 			// Graph
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -510,6 +526,8 @@
 			this.SizeChanged += new System.EventHandler(this.Graph_SizeChanged);
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.draw);
 			this.TabControl1.ResumeLayout(false);
+			this.tabPage1.ResumeLayout(false);
+			this.tabPage1.PerformLayout();
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.groupBox1.ResumeLayout(false);
@@ -566,6 +584,7 @@
 		private System.Windows.Forms.Button Callibrate_button;
 		private System.Windows.Forms.Button Goto_button;
 		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label MPosition_status_label;
 	}
 }
 

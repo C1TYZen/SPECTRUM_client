@@ -153,7 +153,7 @@ namespace graph1
 		void TALKER_set(int cmd, int val)
 		{
 			TALKER_send(cmd, 2);
-			TALKER_send(val, 4);
+			TALKER_send(val, 2);
 			TALKER_read_line();
 		}
 
@@ -173,7 +173,7 @@ namespace graph1
 			try { _serialPort.Read(msg, offset, count); }
 			catch (Exception ex)
 			{
-				LOG_Debug($"**ERROR** in <<TALKER_read()>>\n{ex}");
+				LOG_Debug($"**ERROR** in <<TALKER_read()>>");
 			}
 		}
 
@@ -187,7 +187,7 @@ namespace graph1
 			try { LOG_Debug(_serialPort.ReadLine()); }
 			catch (Exception ex)
 			{
-				LOG_Debug($"**ERROR** in <<TALKER_read_line()>>\n **{ex}**");
+				LOG_Debug($"**ERROR** in <<TALKER_read_line()>>");
 				return -1;
 			}
 

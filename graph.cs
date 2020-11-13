@@ -131,7 +131,7 @@ namespace graph1
 			{
 				TALKER_read(bmsg, 0, 2);
 				imsg = bmsg[0] + (bmsg[1] << 8);
-				//LOG_Debug($"{bmsg[1]} {bmsg[0]} {imsg}");
+				LOG_Debug($"{imsg}");
 				if (imsg != CMD_MS)
 				{
 					//spectrum.cur здесь для того, что бы визуально показания 
@@ -141,7 +141,7 @@ namespace graph1
 						DRAW_cur += 1;
 					spectrum.pos += (float)spectrum.dir / (float)spectrum.div;
 
-					LOG_Debug($"{spectrum.pos}    {spectrum.cur}");
+					//LOG_Debug($"{spectrum.pos}    {spectrum.cur}");
 					LOG_Status(
 						String.Format(
 							$"{(spectrum.x0 + spectrum.cur)}    {imsg}"
@@ -215,7 +215,7 @@ namespace graph1
 			if ((spectrum.div = check_value(DividerSet.Text, "divider")) == -1)
 				spectrum.div = 1;
 
-			if((spectrum.cur + dir * steps) > ((spectrum.x1 - spectrum.x0) / spectrum.div))
+			/*if((spectrum.cur + dir * steps) > ((spectrum.x1 - spectrum.x0) / spectrum.div))
 				steps = ((spectrum.x1 - spectrum.x0) / spectrum.div) - spectrum.cur;
 			else if ((spectrum.cur + dir * steps) < 0)
 				steps = spectrum.cur;
@@ -223,7 +223,7 @@ namespace graph1
 			{
 				get_ready();
 				return;
-			}
+			}*/
 
 			//Количество шагов
 			TALKER_set(CMD_ST, steps);
@@ -239,6 +239,7 @@ namespace graph1
 			TALKER_FlushReadBuf();
 			Receive = true;
 			TALKER_send(CMD_MF, 2);
+			TALKER_read_line();
 		}
 
 		/// <summary>
@@ -262,11 +263,10 @@ namespace graph1
 			}
 			if ((spectrum.mps = check_value(MesuresCountSet.Text, "Mesures Count")) == -1)
 				spectrum.mps = 1;
-			if ((resolution = check_value(ResolutionSet.Text, "Resolution")) == -1)
-				resolution = 1;
 			if ((spectrum.div = check_value(DividerSet.Text, "Divider")) == -1)
 				spectrum.div = 1;
 
+			//TALKER_set(CMD_DM, spectrum.x0);
 			//Делитель шага
 			TALKER_set(CMD_DV, spectrum.div);
 			//Количество шагов
@@ -291,7 +291,7 @@ namespace graph1
 			LOG($"ИЗМЕРЕНИЕ!");
 			Receive = true;
 			TALKER_send(CMD_MB, 2);
-			TALKER_send(spectrum.x0, 4);
+			TALKER_read_line();
 		}
 
 		/// <summary>
@@ -309,6 +309,8 @@ namespace graph1
 				LOG("**ОШИБКА** Incorrect " + errmsg + " !!!");
 				return -1;
 			}
+
+			//LOG_Debug($"{temp}");
 
 			if (temp < 0)
 				return 0;
@@ -347,8 +349,6 @@ namespace graph1
 					"**ОШИБКА** Incorrect RANGE_0!!!")) == -1)
 				spectrum.x0 = 0;
 
-			//Делитель шага 1
-			TALKER_set(CMD_DV, 1);
 			TALKER_set(CMD_DM, spectrum.x0);
 		}
 
@@ -372,7 +372,7 @@ namespace graph1
 			CONTAINER_Load_from_RAM(e.TabPageIndex);
 
 			DRAW_setup_sizes();
-			grafx = context.Allocate(CreateGraphics(), canvas);
+			grafx = context.Allocate(CreateGraphics(), DRAW_canvas);
 			tabgrfx = e.TabPage.CreateGraphics();
 			DRAW_setup_canvas_scale();
 
@@ -400,7 +400,7 @@ namespace graph1
 		{
 			DRAW_setup_sizes();
 			DRAW_setup_canvas_scale();
-			grafx = context.Allocate(CreateGraphics(), background);
+			grafx = context.Allocate(CreateGraphics(), DRAW_background);
 			tabgrfx = tabPage1.CreateGraphics();
 		}
 
@@ -409,6 +409,20 @@ namespace graph1
 			//Изменение размеров и масштаба холста
 			DRAW_setup_sizes();
 			DRAW_setup_canvas_scale();
+		}
+
+		void ResolutionSet_TextChanged(object sender, EventArgs e)
+		{
+			if ((DRAW_resolution = check_value(ResolutionSet.Text, "Resolution")) == -1)
+				DRAW_resolution = 1;
+			if (DRAW_resolution == 0)
+				DRAW_resolution = 1;
+		}
+
+		void tabPage1_MouseMove(object sender, MouseEventArgs e)
+		{
+			MPosition_status_label.Text =
+				$"{(e.Location.X - DRAW_canvas.X) / DRAW_scale}    {((DRAW_canvas.Height - (e.Location.Y - DRAW_canvas.Y)) / DRAW_height_scale) / 204.8f}";
 		}
 
 		void Close_Click(object sender, EventArgs e)

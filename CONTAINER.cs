@@ -28,16 +28,17 @@ namespace graph1
 		/// <summary>
 		/// Добавление элемента таблицы
 		/// </summary>
-		/// <param name="bt"></param>
-		void CONTAINER_Add(int bt)
+		/// <param name="element"></param>
+		/// <param name="table"></param>
+		void CONTAINER_Add(int element, plot table)
 		{
-			if (spectrum.end < 0)
-				spectrum.end = 0;
-			if (spectrum.end > DRAW_range)
-				spectrum.end = DRAW_range;
-			if (spectrum.end > points_count)
-				spectrum.end = points_count;
-			spectrum.graph[spectrum.end] = bt;
+			if (table.end < 0)
+				table.end = 0;
+			if (table.end > DRAW_range)
+				table.end = DRAW_range;
+			if (table.end > points_count)
+				table.end = points_count;
+			table.graph[table.end] = element;
 		}
 
 		/// <summary>
@@ -65,7 +66,6 @@ namespace graph1
 			{
 				spectrum.graph = new int[points_count];
 				LOG_Debug($"Создан Спектр{c + 1}");
-				CONTAINER_Save_on_RAM(c);
 			}
 		}
 

@@ -16,45 +16,28 @@ namespace graph1
 		float DRAW_height_scale;
 		int DRAW_range = 100;
 		int DRAW_range_scale = 10;
-		//int DRAW_end = 0;
 
 		int DRAW_startcur = 0;
 		int DRAW_endcur = 0;
 
 		/// <summary>
-		/// Вычисление размеров элементов окна и самого окна
+		/// Вызывается при запросе "перерисовать" (Ivalidate).
 		/// </summary>
-		void DRAW_setup_sizes()
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void DRAW(object sender, PaintEventArgs e)
 		{
-			DRAW_background = new Rectangle(0, 0, tabPage1.Width, tabPage1.Height);
-			DRAW_canvas = new Rectangle(10, 10, tabPage1.Width - 20, tabPage1.Height - 20);
-			context.MaximumBuffer = new Size(tabPage1.Width + 1, tabPage1.Height + 1);
-		}
-
-		/// <summary>
-		/// Вычисление масштаба холста
-		/// </summary>
-		void DRAW_setup_canvas_scale()
-		{
-			//вычисление масштаба горизонтальной и вертикальной шкал
-			DRAW_range = (spectrum.x1 - spectrum.x0) * spectrum.div;
-			DRAW_scale = DRAW_canvas.Width / (float)DRAW_range;
-			DRAW_height_scale = DRAW_canvas.Height / (float)1024;
+			grafx.Render(tabgrfx);
 		}
 
 		void DRAW_line(Graphics g, Pen p, Rectangle rect, float x1, float y1, float x2, float y2)
 		{
 			g.DrawLine(p, rect.X + x1, rect.Y + y1, rect.X + x2, rect.Y + y2);
 		}
-
-		/// <summary>
-		/// Вызывается при запросе "перерисовать" (Ivalidate) в функции таймера.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		void draw(object sender, PaintEventArgs e)
+		
+		void DRAW_point(Graphics g, Pen p, Rectangle rect, float x1, float y1)
 		{
-			grafx.Render(tabgrfx);
+			g.DrawRectangle(p, rect.X + x1, rect.Y + y1, 1, 1);
 		}
 
 		void DRAW_grid(Graphics g)
@@ -110,19 +93,35 @@ namespace graph1
 			);
 		}
 
-		void DRAW_spectrum(Graphics g)
+		void DRAW_spectrum_line(Graphics g, plot p)
 		{
 			// Отрисовка спектра
 			pen.Color = SystemColors.HighlightText;
 			for (int i = 0; i <= DRAW_range; i += DRAW_resolution)
 			{
-				if (((i - DRAW_resolution) >= 0) && (i <= spectrum.end))
+				if (((i - DRAW_resolution) >= 0) && (i <= p.end))
 				{
 					DRAW_line(g, pen, DRAW_canvas,
 						i * DRAW_scale,
-						DRAW_canvas.Height - (spectrum.graph[i] * DRAW_height_scale),
+						DRAW_canvas.Height - (p.graph[i] * DRAW_height_scale),
 						(i - DRAW_resolution) * DRAW_scale,
-						DRAW_canvas.Height - (spectrum.graph[i - DRAW_resolution] * DRAW_height_scale)
+						DRAW_canvas.Height - (p.graph[i - DRAW_resolution] * DRAW_height_scale)
+					);
+				}
+			}
+		}
+
+		void DRAW_spectrum_dot(Graphics g, plot p)
+		{
+			// Отрисовка спектра
+			pen.Color = SystemColors.HighlightText;
+			for (int i = 0; i <= DRAW_range; i += DRAW_resolution)
+			{
+				if (((i - DRAW_resolution) >= 0) && (i <= p.end))
+				{
+					DRAW_point(g, pen, DRAW_canvas,
+						i * DRAW_scale,
+						DRAW_canvas.Height - (p.graph[i] * DRAW_height_scale)
 					);
 				}
 			}

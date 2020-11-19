@@ -55,20 +55,17 @@
 			this.New_button = new System.Windows.Forms.Button();
 			this.Delete_button = new System.Windows.Forms.Button();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.label2 = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
 			this.Goto_button = new System.Windows.Forms.Button();
+			this.DividerSet = new System.Windows.Forms.TextBox();
 			this.Callibrate_button = new System.Windows.Forms.Button();
 			this.Stop_Button = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
-			this.label1 = new System.Windows.Forms.Label();
-			this.DividerSet = new System.Windows.Forms.TextBox();
-			this.StepsSet = new System.Windows.Forms.TextBox();
-			this.Forward_button = new System.Windows.Forms.Button();
-			this.Back_button = new System.Windows.Forms.Button();
 			this.TabControl1.SuspendLayout();
-			this.tabPage1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
@@ -86,7 +83,7 @@
 			this.Begin_Button.TabIndex = 1;
 			this.Begin_Button.Text = "Начать";
 			this.Begin_Button.UseVisualStyleBackColor = true;
-			this.Begin_Button.Click += new System.EventHandler(this.Begin_Click);
+			this.Begin_Button.Click += new System.EventHandler(this.BUTTON_Begin_click);
 			// 
 			// Save_Button
 			// 
@@ -96,7 +93,7 @@
 			this.Save_Button.TabIndex = 2;
 			this.Save_Button.Text = "Сохранить";
 			this.Save_Button.UseVisualStyleBackColor = true;
-			this.Save_Button.Click += new System.EventHandler(this.Save_Click);
+			this.Save_Button.Click += new System.EventHandler(this.BUTTON_Save_click);
 			// 
 			// Close_Button
 			// 
@@ -107,7 +104,7 @@
 			this.Close_Button.TabIndex = 3;
 			this.Close_Button.Text = "Закрыть";
 			this.Close_Button.UseVisualStyleBackColor = true;
-			this.Close_Button.Click += new System.EventHandler(this.Close_Click);
+			this.Close_Button.Click += new System.EventHandler(this.BUTTON_Close_click);
 			// 
 			// TabControl1
 			// 
@@ -115,6 +112,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.TabControl1.Controls.Add(this.tabPage1);
+			this.TabControl1.Cursor = System.Windows.Forms.Cursors.Cross;
 			this.TabControl1.Location = new System.Drawing.Point(3, 3);
 			this.TabControl1.Name = "TabControl1";
 			this.TabControl1.SelectedIndex = 0;
@@ -124,7 +122,6 @@
 			// 
 			// tabPage1
 			// 
-			this.tabPage1.Controls.Add(this.MPosition_status_label);
 			this.tabPage1.Cursor = System.Windows.Forms.Cursors.Cross;
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
@@ -133,13 +130,11 @@
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Спектр1";
 			this.tabPage1.UseVisualStyleBackColor = true;
-			this.tabPage1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tabPage1_MouseMove);
 			// 
 			// MPosition_status_label
 			// 
-			this.MPosition_status_label.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.MPosition_status_label.AutoSize = true;
-			this.MPosition_status_label.Location = new System.Drawing.Point(3, 343);
+			this.MPosition_status_label.Location = new System.Drawing.Point(6, 24);
 			this.MPosition_status_label.Name = "MPosition_status_label";
 			this.MPosition_status_label.Size = new System.Drawing.Size(35, 13);
 			this.MPosition_status_label.TabIndex = 0;
@@ -241,7 +236,7 @@
 			// label8
 			// 
 			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(4, 55);
+			this.label8.Location = new System.Drawing.Point(6, 55);
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(18, 13);
 			this.label8.TabIndex = 20;
@@ -313,7 +308,7 @@
 			this.New_button.TabIndex = 26;
 			this.New_button.Text = "Новый";
 			this.New_button.UseVisualStyleBackColor = true;
-			this.New_button.Click += new System.EventHandler(this.New_button_Click);
+			this.New_button.Click += new System.EventHandler(this.BUTTON_New_click);
 			// 
 			// Delete_button
 			// 
@@ -323,7 +318,7 @@
 			this.Delete_button.TabIndex = 27;
 			this.Delete_button.Text = "Удалить";
 			this.Delete_button.UseVisualStyleBackColor = true;
-			this.Delete_button.Click += new System.EventHandler(this.Delete_button_Click);
+			this.Delete_button.Click += new System.EventHandler(this.BUTTON_Delete_click);
 			// 
 			// groupBox1
 			// 
@@ -331,7 +326,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox1.AutoSize = true;
+			this.groupBox1.Controls.Add(this.label2);
+			this.groupBox1.Controls.Add(this.label1);
 			this.groupBox1.Controls.Add(this.Goto_button);
+			this.groupBox1.Controls.Add(this.DividerSet);
 			this.groupBox1.Controls.Add(this.Callibrate_button);
 			this.groupBox1.Controls.Add(this.Stop_Button);
 			this.groupBox1.Controls.Add(this.Begin_Button);
@@ -351,6 +349,24 @@
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Параметры";
 			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(6, 172);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(57, 13);
+			this.label2.TabIndex = 26;
+			this.label2.Text = "Делитель";
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(9, 191);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(18, 13);
+			this.label1.TabIndex = 4;
+			this.label1.Text = "1/";
+			// 
 			// Goto_button
 			// 
 			this.Goto_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -360,7 +376,14 @@
 			this.Goto_button.TabIndex = 25;
 			this.Goto_button.Text = "К началу";
 			this.Goto_button.UseVisualStyleBackColor = true;
-			this.Goto_button.Click += new System.EventHandler(this.Goto_button_Click);
+			this.Goto_button.Click += new System.EventHandler(this.BUTTON_Goto_click);
+			// 
+			// DividerSet
+			// 
+			this.DividerSet.Location = new System.Drawing.Point(33, 188);
+			this.DividerSet.Name = "DividerSet";
+			this.DividerSet.Size = new System.Drawing.Size(20, 20);
+			this.DividerSet.TabIndex = 3;
 			// 
 			// Callibrate_button
 			// 
@@ -371,7 +394,7 @@
 			this.Callibrate_button.TabIndex = 24;
 			this.Callibrate_button.Text = "Калибровка";
 			this.Callibrate_button.UseVisualStyleBackColor = true;
-			this.Callibrate_button.Click += new System.EventHandler(this.button1_Click);
+			this.Callibrate_button.Click += new System.EventHandler(this.BUTTON_button1_click);
 			// 
 			// Stop_Button
 			// 
@@ -382,7 +405,7 @@
 			this.Stop_Button.TabIndex = 23;
 			this.Stop_Button.Text = "Стоп";
 			this.Stop_Button.UseVisualStyleBackColor = true;
-			this.Stop_Button.Click += new System.EventHandler(this.Stop_button_Click);
+			this.Stop_Button.Click += new System.EventHandler(this.BUTTON_Stop_click);
 			// 
 			// tableLayoutPanel1
 			// 
@@ -452,60 +475,13 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox3.AutoSize = true;
-			this.groupBox3.Controls.Add(this.label1);
-			this.groupBox3.Controls.Add(this.DividerSet);
-			this.groupBox3.Controls.Add(this.StepsSet);
-			this.groupBox3.Controls.Add(this.Forward_button);
-			this.groupBox3.Controls.Add(this.Back_button);
+			this.groupBox3.Controls.Add(this.MPosition_status_label);
 			this.groupBox3.Location = new System.Drawing.Point(336, 3);
 			this.groupBox3.Name = "groupBox3";
 			this.groupBox3.Size = new System.Drawing.Size(330, 141);
 			this.groupBox3.TabIndex = 30;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Поиск";
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(101, 50);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(18, 13);
-			this.label1.TabIndex = 4;
-			this.label1.Text = "1/";
-			// 
-			// DividerSet
-			// 
-			this.DividerSet.Location = new System.Drawing.Point(125, 47);
-			this.DividerSet.Name = "DividerSet";
-			this.DividerSet.Size = new System.Drawing.Size(20, 20);
-			this.DividerSet.TabIndex = 3;
-			// 
-			// StepsSet
-			// 
-			this.StepsSet.Location = new System.Drawing.Point(87, 21);
-			this.StepsSet.Name = "StepsSet";
-			this.StepsSet.Size = new System.Drawing.Size(80, 20);
-			this.StepsSet.TabIndex = 2;
-			// 
-			// Forward_button
-			// 
-			this.Forward_button.Location = new System.Drawing.Point(173, 19);
-			this.Forward_button.Name = "Forward_button";
-			this.Forward_button.Size = new System.Drawing.Size(75, 23);
-			this.Forward_button.TabIndex = 1;
-			this.Forward_button.Text = "Вперед";
-			this.Forward_button.UseVisualStyleBackColor = true;
-			this.Forward_button.Click += new System.EventHandler(this.Forward_button_Click);
-			// 
-			// Back_button
-			// 
-			this.Back_button.Location = new System.Drawing.Point(6, 19);
-			this.Back_button.Name = "Back_button";
-			this.Back_button.Size = new System.Drawing.Size(75, 23);
-			this.Back_button.TabIndex = 0;
-			this.Back_button.Text = "Назад";
-			this.Back_button.UseVisualStyleBackColor = true;
-			this.Back_button.Click += new System.EventHandler(this.Back_button_Click);
 			// 
 			// Graph
 			// 
@@ -521,13 +497,11 @@
 			this.Name = "Graph";
 			this.Text = "Graph_v0.6a";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Graph_Form_Closing);
-			this.Load += new System.EventHandler(this.Graph_Load);
-			this.SizeChanged += new System.EventHandler(this.Graph_SizeChanged);
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Graph_form_closing);
+			this.Load += new System.EventHandler(this.Graph_load);
+			this.SizeChanged += new System.EventHandler(this.Graph_size_changed);
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.draw);
 			this.TabControl1.ResumeLayout(false);
-			this.tabPage1.ResumeLayout(false);
-			this.tabPage1.PerformLayout();
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.groupBox1.ResumeLayout(false);
@@ -577,14 +551,12 @@
 		private System.Windows.Forms.Button Stop_Button;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
 		private System.Windows.Forms.GroupBox groupBox3;
-		private System.Windows.Forms.TextBox StepsSet;
-		private System.Windows.Forms.Button Forward_button;
-		private System.Windows.Forms.Button Back_button;
 		private System.Windows.Forms.TextBox DividerSet;
 		private System.Windows.Forms.Button Callibrate_button;
 		private System.Windows.Forms.Button Goto_button;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label MPosition_status_label;
+		private System.Windows.Forms.Label label2;
 	}
 }
 

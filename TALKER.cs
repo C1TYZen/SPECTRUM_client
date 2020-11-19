@@ -71,7 +71,7 @@ namespace graph1
 			{
 				//прочитать строку проверки связи
 				attempt++;
-				TALKER_send(CMD_CC, 2);
+				TALKER_send(CMD_CC);
 				if (TALKER_read_line() == 0)
 				{
 					LOG_Debug($"Попыток подключения: {attempt}");
@@ -132,17 +132,16 @@ namespace graph1
 		}
 
 		/// <summary>
-		/// Отправка пакета байт
+		/// Отправка на сервер
 		/// </summary>
 		/// <param name="buf"></param>
-		/// <param name="bytes"></param>
-		void TALKER_send(int buf, int bytes)
+		void TALKER_send(int buf)
 		{
-			for (int i = 0; i < bytes; i++)
+			for (int i = 0; i < 2; i++)
 			{
 				bmsg[i] = (byte)(buf>>(8 * i));
 			}
-			TALKER_write(bmsg, 0, bytes);
+			TALKER_write(bmsg, 0, 2);
 		}
 
 		/// <summary>
@@ -152,8 +151,8 @@ namespace graph1
 		/// <param name="val"></param>
 		void TALKER_set(int cmd, int val)
 		{
-			TALKER_send(cmd, 2);
-			TALKER_send(val, 2);
+			TALKER_send(cmd);
+			TALKER_send(val);
 			TALKER_read_line();
 		}
 
@@ -171,7 +170,7 @@ namespace graph1
 		void TALKER_read(byte[] msg, int offset, int count)
 		{
 			try { _serialPort.Read(msg, offset, count); }
-			catch (Exception ex)
+			catch
 			{
 				LOG_Debug($"**ERROR** in <<TALKER_read()>>");
 			}
@@ -185,7 +184,7 @@ namespace graph1
 		int TALKER_read_line()
 		{
 			try { LOG_Debug(_serialPort.ReadLine()); }
-			catch (Exception ex)
+			catch
 			{
 				LOG_Debug($"**ERROR** in <<TALKER_read_line()>>");
 				return -1;

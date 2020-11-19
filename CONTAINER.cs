@@ -9,15 +9,14 @@ namespace graph1
 	{
 		struct plot
 		{
-			public int[] graph;
-			public int cur;
-			public float pos;
-			public int dir;
-			public int x0;
-			public int x1;
-			public int mps;
-			public int filter;
-			public int div;
+			public int[] graph; //Массив точек
+			public int end;		//Конец графика
+			public float pos;	//Положение двигателя
+			public int x0;		//Начало диапазона
+			public int x1;		//Конец диапазона
+			public int mps;		//Измерений за шаг
+			public int filter;	//Номер фильтра
+			public int div;		//Делитель шага
 		}
 
 		const int points_count = 532480;
@@ -32,13 +31,13 @@ namespace graph1
 		/// <param name="bt"></param>
 		void CONTAINER_Add(int bt)
 		{
-			if (spectrum.cur < 0)
-				spectrum.cur = 0;
-			if (spectrum.cur > DRAW_range)
-				spectrum.cur = DRAW_range;
-			if (spectrum.cur > points_count)
-				spectrum.cur = points_count;
-			spectrum.graph[spectrum.cur] = bt;
+			if (spectrum.end < 0)
+				spectrum.end = 0;
+			if (spectrum.end > DRAW_range)
+				spectrum.end = DRAW_range;
+			if (spectrum.end > points_count)
+				spectrum.end = points_count;
+			spectrum.graph[spectrum.end] = bt;
 		}
 
 		/// <summary>
@@ -104,7 +103,7 @@ namespace graph1
 
 			using (StreamWriter outputFile = new StreamWriter(path, true))
 			{
-				for (int r = 0; r <= spectrum.cur; r++)
+				for (int r = 0; r <= spectrum.end; r++)
 					outputFile.WriteLine("{0}\t{1}", r + spectrum.x0, spectrum.graph[r]);
 				LOG($"Сохранено, {time}.txt");
 			}
@@ -119,7 +118,7 @@ namespace graph1
 			{
 				spectrum.graph[i] = 0;
 			}
-			spectrum.cur = 0;
+			spectrum.end = 0;
 		}
 
 		/// <summary>
@@ -127,7 +126,7 @@ namespace graph1
 		/// </summary>
 		void CONTAINER_Reset()
 		{
-			spectrum.cur = 0;
+			spectrum.end = 0;
 		}
 	}
 }

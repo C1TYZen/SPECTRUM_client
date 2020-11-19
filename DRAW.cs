@@ -16,7 +16,10 @@ namespace graph1
 		float DRAW_height_scale;
 		int DRAW_range = 100;
 		int DRAW_range_scale = 10;
-		int DRAW_cur = 0;
+		//int DRAW_end = 0;
+
+		int DRAW_startcur = 0;
+		int DRAW_endcur = 0;
 
 		/// <summary>
 		/// Вычисление размеров элементов окна и самого окна
@@ -88,22 +91,32 @@ namespace graph1
 			}
 		}
 
-		void DRAW_spectrum(Graphics g)
+		void DRAW_curs(Graphics g)
 		{
-			// Курсор
-			pen.Color = Color.Red;
+			pen.Color = Color.GreenYellow;
 			DRAW_line(g, pen, DRAW_canvas,
-				spectrum.cur * DRAW_scale,
+				DRAW_startcur * DRAW_scale,
 				0,
-				spectrum.cur * DRAW_scale,
+				DRAW_startcur * DRAW_scale,
 				DRAW_canvas.Height
 			);
 
+			pen.Color = Color.Red;
+			DRAW_line(g, pen, DRAW_canvas,
+				DRAW_endcur * DRAW_scale,
+				0,
+				DRAW_endcur * DRAW_scale,
+				DRAW_canvas.Height
+			);
+		}
+
+		void DRAW_spectrum(Graphics g)
+		{
 			// Отрисовка спектра
 			pen.Color = SystemColors.HighlightText;
 			for (int i = 0; i <= DRAW_range; i += DRAW_resolution)
 			{
-				if (((i - DRAW_resolution) >= 0) && (i <= DRAW_cur))
+				if (((i - DRAW_resolution) >= 0) && (i <= spectrum.end))
 				{
 					DRAW_line(g, pen, DRAW_canvas,
 						i * DRAW_scale,

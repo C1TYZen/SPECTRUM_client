@@ -45,8 +45,6 @@
 			this.label7 = new System.Windows.Forms.Label();
 			this.RangeSet1 = new System.Windows.Forms.TextBox();
 			this.label8 = new System.Windows.Forms.Label();
-			this.Mesure_stat_label = new System.Windows.Forms.Label();
-			this.label9 = new System.Windows.Forms.Label();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.menustrip_File = new System.Windows.Forms.ToolStripMenuItem();
 			this.menustrip_Tools = new System.Windows.Forms.ToolStripMenuItem();
@@ -135,7 +133,7 @@
 			// 
 			this.MPosition_status_label.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.MPosition_status_label.AutoSize = true;
-			this.MPosition_status_label.Location = new System.Drawing.Point(6, 118);
+			this.MPosition_status_label.Location = new System.Drawing.Point(6, 125);
 			this.MPosition_status_label.Name = "MPosition_status_label";
 			this.MPosition_status_label.Size = new System.Drawing.Size(35, 13);
 			this.MPosition_status_label.TabIndex = 0;
@@ -240,26 +238,6 @@
 			this.label8.Size = new System.Drawing.Size(18, 13);
 			this.label8.TabIndex = 20;
 			this.label8.Text = "x1";
-			// 
-			// Mesure_stat_label
-			// 
-			this.Mesure_stat_label.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.Mesure_stat_label.AutoSize = true;
-			this.Mesure_stat_label.Location = new System.Drawing.Point(6, 118);
-			this.Mesure_stat_label.Name = "Mesure_stat_label";
-			this.Mesure_stat_label.Size = new System.Drawing.Size(10, 13);
-			this.Mesure_stat_label.TabIndex = 22;
-			this.Mesure_stat_label.Text = "-";
-			// 
-			// label9
-			// 
-			this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.label9.AutoSize = true;
-			this.label9.Location = new System.Drawing.Point(6, 100);
-			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(100, 13);
-			this.label9.TabIndex = 23;
-			this.label9.Text = "Статус измерения";
 			// 
 			// menuStrip1
 			// 
@@ -454,11 +432,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox2.AutoSize = true;
+			this.groupBox2.Controls.Add(this.MPosition_status_label);
 			this.groupBox2.Controls.Add(this.New_button);
 			this.groupBox2.Controls.Add(this.Save_button);
-			this.groupBox2.Controls.Add(this.Mesure_stat_label);
 			this.groupBox2.Controls.Add(this.Delete_button);
-			this.groupBox2.Controls.Add(this.label9);
 			this.groupBox2.Location = new System.Drawing.Point(3, 3);
 			this.groupBox2.Name = "groupBox2";
 			this.groupBox2.Size = new System.Drawing.Size(327, 141);
@@ -472,7 +449,6 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox3.AutoSize = true;
-			this.groupBox3.Controls.Add(this.MPosition_status_label);
 			this.groupBox3.Controls.Add(this.label4);
 			this.groupBox3.Controls.Add(this.resolution_set);
 			this.groupBox3.Location = new System.Drawing.Point(336, 3);
@@ -535,8 +511,6 @@
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.TextBox RangeSet1;
 		private System.Windows.Forms.Label label8;
-		private System.Windows.Forms.Label Mesure_stat_label;
-		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.MenuStrip menuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem menustrip_File;
 		private System.Windows.Forms.ToolStripMenuItem menustrip_Tools;

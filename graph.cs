@@ -363,13 +363,12 @@ namespace graph1
 
 		void tab_page_mouse_move(object sender, MouseEventArgs e)
 		{
-			int temp_value;
-			int temp_index = (int)((e.Location.X - DRAW_canvas.X) / (DRAW_scale * spectrum.div));
-			int temp_x = spectrum.x0 + temp_index;
+			int temp_index = (int)((e.Location.X - DRAW_canvas.X) / DRAW_scale);
+			int temp_x = (spectrum.x0 + temp_index) / spectrum.div;
 
 			if ((temp_index < 0) || (temp_index > points_count))
 				temp_index = 0;
-			temp_value = spectrum.graph[temp_index];
+			int temp_value = spectrum.graph[temp_index];
 
 			MPosition_status_label.Text = $"X: {temp_x}  Знач: {temp_value}";
 		}

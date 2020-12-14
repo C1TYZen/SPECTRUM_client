@@ -164,6 +164,8 @@ namespace graph1
 			CONTAINER_Save_on_RAM(tab_control1.SelectedIndex);
 			LOG("Готов");
 			LOG_Debug("*****");
+
+			LOG_Debug($"шаг: {spectrum.end}");
 		}
 
 		/// <summary>
@@ -227,7 +229,7 @@ namespace graph1
 			//Делитель шага
 			TALKER_set(CMD_DV, spectrum.div);
 			//Количество шагов
-			TALKER_set(CMD_ST, (spectrum.x1 - spectrum.x0) * spectrum.div);
+			TALKER_set(CMD_ST, spectrum.x1 - spectrum.x0);
 			//Число измерений за один шаг двигателя
 			TALKER_set(CMD_MC, spectrum.mps);
 
@@ -364,7 +366,7 @@ namespace graph1
 		void tab_page_mouse_move(object sender, MouseEventArgs e)
 		{
 			int temp_index = (int)((e.Location.X - DRAW_canvas.X) / DRAW_scale);
-			int temp_x = (spectrum.x0 + temp_index) / spectrum.div;
+			int temp_x = spectrum.x0 + temp_index / spectrum.div;
 
 			if ((temp_index < 0) || (temp_index > points_count))
 				temp_index = 0;
@@ -375,10 +377,20 @@ namespace graph1
 
 		void tab_page_mouse_click(object sender, MouseEventArgs e)
 		{
+			int temp_index = (int)((e.Location.X - DRAW_canvas.X) / DRAW_scale);
+			int temp_x = spectrum.x0 + temp_index / spectrum.div;
+			/*if (temp_x <= spectrum.x0)
+				temp_x = 0;
+			if (temp_x > spectrum.x1)
+				temp_x = spectrum.x1;*/
+
+			if ((temp_index < 0) || (temp_index > points_count))
+				temp_x = 0;
+
 			if (e.Button == MouseButtons.Left)
 			{
 				DRAW_startcur = (int)Math.Round((e.Location.X - DRAW_canvas.X) / DRAW_scale);
-				RangeSet0.Text = (DRAW_startcur + spectrum.x0).ToString();
+				RangeSet0.Text = temp_x.ToString();
 				LOG_Status(
 					String.Format(
 						$"{DRAW_startcur + spectrum.x0}    {spectrum.graph[DRAW_startcur]}"
@@ -389,7 +401,7 @@ namespace graph1
 			if (e.Button == MouseButtons.Right)
 			{
 				DRAW_endcur = (int)Math.Round((e.Location.X - DRAW_canvas.X) / DRAW_scale);
-				RangeSet1.Text = (DRAW_endcur + spectrum.x0).ToString();
+				RangeSet1.Text = temp_x.ToString();
 			}
 		}
 

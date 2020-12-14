@@ -135,9 +135,8 @@
 			this.MPosition_status_label.AutoSize = true;
 			this.MPosition_status_label.Location = new System.Drawing.Point(6, 125);
 			this.MPosition_status_label.Name = "MPosition_status_label";
-			this.MPosition_status_label.Size = new System.Drawing.Size(35, 13);
+			this.MPosition_status_label.Size = new System.Drawing.Size(0, 13);
 			this.MPosition_status_label.TabIndex = 0;
-			this.MPosition_status_label.Text = "label2";
 			// 
 			// Text_console
 			// 

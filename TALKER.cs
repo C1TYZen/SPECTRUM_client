@@ -67,7 +67,7 @@ namespace graph1
 				return -1;
 			}
 
-			while (attempt <= 5)
+			/*while (attempt <= 5)
 			{
 				//прочитать строку проверки связи
 				attempt++;
@@ -83,7 +83,7 @@ namespace graph1
 			{
 				LOG("**ОШИБКА** Не могу подключиться");
 				return -1;
-			}
+			}*/
 
 			LOG_Debug("************");
 			LOG_Debug("ПОДКЛЮЧЕНО");

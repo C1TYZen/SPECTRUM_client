@@ -30,8 +30,16 @@ namespace graph1
 				return -1;
 			}
 			_serialPort.BaudRate = _baudrate;
-			_serialPort.ReadTimeout = 1000;
-			_serialPort.WriteTimeout = 1000;
+			_serialPort.ReadTimeout = 5000;
+			_serialPort.WriteTimeout = 5000;
+			_serialPort.Parity = Parity.None;
+			_serialPort.DataBits = 8;
+			_serialPort.StopBits = StopBits.One;
+			_serialPort.Handshake = Handshake.None;
+
+			//https://stackoverflow.com/questions/21562055/serial-port-not-receiving-any-data
+			//Параметр должен иметь значение true
+			_serialPort.RtsEnable = true;
 
 			try { _serialPort.Open(); }
 			catch(Exception ex)
@@ -77,13 +85,13 @@ namespace graph1
 					LOG_Debug($"Попыток подключения: {attempt}");
 					break;
 				}
-			}
+			}*/
 
 			if (attempt > 3)
 			{
 				LOG("**ОШИБКА** Не могу подключиться");
 				return -1;
-			}*/
+			}
 
 			LOG_Debug("************");
 			LOG_Debug("ПОДКЛЮЧЕНО");

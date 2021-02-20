@@ -5,24 +5,42 @@ namespace graph1
 {
 	partial class Graph : Form
 	{
-		// Команды сервера
-		//set
-		const int CMD_MC = 25453; // установка количества измерений за шаг
-		//do
-		const int CMD_MB = 25197; // начать измерение
-		const int CMD_MS = 29549; // остановить измерение
+		/* ----------------
+		 * Основные команды
+		 * ---------------- */
+		const int CMD_MB = 0x626d; //начать измерение
+		const int CMD_MC = 0x636d; //установка количества измерений
+		const int CMD_MR = 0x726d;
+		const int CMD_MS = 0x736d; //остановить измерение
+		const int CMD_MF = 0x666d; //поиск
 
-		//set
-		const int CMD_DM = 28004; // установка начала измерения
-		const int CMD_DV = 30308; // установка делителя шага
-		//do
-		const int CMD_DI = 26980; // остановка двигателя
-		const int CMD_DC = 25444; // калибровка
+		const int CMD_DB = 0x6264; //движение двигателя назад
+		const int CMD_DC = 0x6364; //калибровка
+		const int CMD_DD = 0x6464; //установка направления
+		const int CMD_DF = 0x6664; //движение двигателя вперед
+		const int CMD_DI = 0x6964; //остановка двигателя
+		const int CMD_DS = 0x7364; //шаг двигателя
+		const int CMD_DV = 0x7664; //установка делителя шага
+		const int CMD_DP = 0x7064; //вывод информации о положении двигателя
+		const int CMD_DM = 0x6d64; //установка начала измерения
 
-		//set
-		const int CMD_ST = 29811; // установка количества шагов
-		//do
-		const int CMD_CC = 25443; // проверить соединение
+		/* ----------------
+		 * Команды фильтра
+		 * ---------------- */
+		const int CMD_FA = 0x6166; //фильтр 1
+		const int CMD_FB = 0x6266; //фильтр 2
+		const int CMD_FC = 0x6366; //фильтр 3
+		const int CMD_FD = 0x6466; //фильтр 4
+		const int CMD_FE = 0x6566; //фильтр 5
+		const int CMD_FF = 0x6666; //фильтр 6
+		const int CMD_FZ = 0x7a66; //нулевая позиция
+
+		/* ----------------
+		 * Дополнительные команды
+		 * ---------------- */
+		const int CMD_CC = 0x6363; //проверить соединение
+		const int CMD_ST = 0x7473; //установка количества шагов
+		const int CMD_TP = 0x7074; //тестирование пинов
 
 		//Разное
 		Timer timer = new Timer();
@@ -34,7 +52,7 @@ namespace graph1
 
 			//Настройка связи
 			Receive = false;
-			_baudrate = 76800;
+			_baudrate = 38400;
 
 			//Настройка интерфейса
 			StartPosition = FormStartPosition.CenterScreen;
@@ -286,14 +304,10 @@ namespace graph1
 			TALKER_send(CMD_DC);
 		}
 
-		void BUTTON_Goto_click(object sender, EventArgs e)
+		void BUTTON_check(object sender, EventArgs e)
 		{
-			if ((spectrum.x0 = check_value(
-					RangeSet0.Text,
-					"**ОШИБКА** Incorrect RANGE_0!!!")) == -1)
-				spectrum.x0 = 0;
-
-			TALKER_set(CMD_DM, spectrum.x0);
+			TALKER_send(CMD_CC);
+			TALKER_read_line();
 		}
 
 		void BUTTON_New_click(object sender, EventArgs e)

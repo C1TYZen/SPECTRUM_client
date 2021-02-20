@@ -53,9 +53,9 @@
 			this.New_button = new System.Windows.Forms.Button();
 			this.Delete_button = new System.Windows.Forms.Button();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.button1 = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
-			this.Goto_button = new System.Windows.Forms.Button();
 			this.DividerSet = new System.Windows.Forms.TextBox();
 			this.Callibrate_button = new System.Windows.Forms.Button();
 			this.Stop_button = new System.Windows.Forms.Button();
@@ -302,9 +302,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox1.AutoSize = true;
+			this.groupBox1.Controls.Add(this.button1);
 			this.groupBox1.Controls.Add(this.label2);
 			this.groupBox1.Controls.Add(this.label1);
-			this.groupBox1.Controls.Add(this.Goto_button);
 			this.groupBox1.Controls.Add(this.DividerSet);
 			this.groupBox1.Controls.Add(this.Callibrate_button);
 			this.groupBox1.Controls.Add(this.Stop_button);
@@ -325,6 +325,17 @@
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Параметры";
 			// 
+			// button1
+			// 
+			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.button1.Location = new System.Drawing.Point(130, 75);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(75, 23);
+			this.button1.TabIndex = 27;
+			this.button1.Text = "_проверка";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.BUTTON_check);
+			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
@@ -342,17 +353,6 @@
 			this.label1.Size = new System.Drawing.Size(18, 13);
 			this.label1.TabIndex = 4;
 			this.label1.Text = "1/";
-			// 
-			// Goto_button
-			// 
-			this.Goto_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.Goto_button.Location = new System.Drawing.Point(130, 75);
-			this.Goto_button.Name = "Goto_button";
-			this.Goto_button.Size = new System.Drawing.Size(75, 23);
-			this.Goto_button.TabIndex = 25;
-			this.Goto_button.Text = "К началу";
-			this.Goto_button.UseVisualStyleBackColor = true;
-			this.Goto_button.Click += new System.EventHandler(this.BUTTON_Goto_click);
 			// 
 			// DividerSet
 			// 
@@ -525,10 +525,10 @@
 		private System.Windows.Forms.GroupBox groupBox3;
 		private System.Windows.Forms.TextBox DividerSet;
 		private System.Windows.Forms.Button Callibrate_button;
-		private System.Windows.Forms.Button Goto_button;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label MPosition_status_label;
 		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Button button1;
 	}
 }
 

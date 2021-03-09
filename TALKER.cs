@@ -29,17 +29,20 @@ namespace graph1
 				LOG_Debug("**ОШИБКА** Выберите имя порта");
 				return -1;
 			}
-			_serialPort.BaudRate = _baudrate;
-			_serialPort.ReadTimeout = 5000;
-			_serialPort.WriteTimeout = 5000;
-			_serialPort.Parity = Parity.None;
-			_serialPort.DataBits = 8;
-			_serialPort.StopBits = StopBits.One;
-			_serialPort.Handshake = Handshake.None;
+			//Значения возможных скоростей указаны в документации.
+			//Если указать другое значение - порт перестает работать.
+			//Но не всегда...
+			_serialPort.BaudRate		= _baudrate;
+			_serialPort.ReadTimeout		= 5000;
+			_serialPort.WriteTimeout	= 5000;
+			_serialPort.Parity			= Parity.None;
+			_serialPort.DataBits		= 8;
+			_serialPort.StopBits		= StopBits.One;
+			_serialPort.Handshake		= Handshake.None;
 
 			//https://stackoverflow.com/questions/21562055/serial-port-not-receiving-any-data
 			//Параметр должен иметь значение true
-			_serialPort.RtsEnable = true;
+			_serialPort.RtsEnable		= true;
 
 			try { _serialPort.Open(); }
 			catch(Exception ex)
@@ -155,11 +158,12 @@ namespace graph1
 		/// <summary>
 		/// Отправка команды на сервер
 		/// </summary>
-		/// <param name="cmd"></param>
+		/// <param name="var"></param>
 		/// <param name="val"></param>
-		void TALKER_set(int cmd, int val)
+		void TALKER_set(int var, int val)
 		{
-			TALKER_send(cmd);
+			TALKER_send(CMD_CS);
+			TALKER_send(var);
 			TALKER_send(val);
 			TALKER_read_line();
 		}

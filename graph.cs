@@ -5,42 +5,25 @@ namespace graph1
 {
 	partial class Graph : Form
 	{
-		/* ----------------
-		 * Основные команды
-		 * ---------------- */
-		const int CMD_MB = 0x626d; //начать измерение
-		const int CMD_MC = 0x636d; //установка количества измерений
-		const int CMD_MR = 0x726d;
-		const int CMD_MS = 0x736d; //остановить измерение
-		const int CMD_MF = 0x666d; //поиск
+		//Функции
+		const int CMD_MB = 0x626d; // начать измерение
+		const int CMD_DZ = 0x7a64; // двигатель на ноль
+		const int CMD_CC = 0x6363; // проверить соединение
+		const int CMD_CS = 0x7363; // установка значения переменной
+		const int CMD_TP = 0x7074; // тестирование пинов
+		const int CMD_TF = 0x6674; // тестовая функция
 
-		const int CMD_DB = 0x6264; //движение двигателя назад
-		const int CMD_DC = 0x6364; //калибровка
-		const int CMD_DD = 0x6464; //установка направления
-		const int CMD_DF = 0x6664; //движение двигателя вперед
-		const int CMD_DI = 0x6964; //остановка двигателя
-		const int CMD_DS = 0x7364; //шаг двигателя
-		const int CMD_DV = 0x7664; //установка делителя шага
-		const int CMD_DP = 0x7064; //вывод информации о положении двигателя
-		const int CMD_DM = 0x6d64; //установка начала измерения
+		//Сообщения
+		const int CMD_MS = 0x736d; // остановить измерение
+		const int CMD_MI = 0x696d; // прервать измерение
 
-		/* ----------------
-		 * Команды фильтра
-		 * ---------------- */
-		const int CMD_FA = 0x6166; //фильтр 1
-		const int CMD_FB = 0x6266; //фильтр 2
-		const int CMD_FC = 0x6366; //фильтр 3
-		const int CMD_FD = 0x6466; //фильтр 4
-		const int CMD_FE = 0x6566; //фильтр 5
-		const int CMD_FF = 0x6666; //фильтр 6
-		const int CMD_FZ = 0x7a66; //нулевая позиция
-
-		/* ----------------
-		 * Дополнительные команды
-		 * ---------------- */
-		const int CMD_CC = 0x6363; //проверить соединение
-		const int CMD_ST = 0x7473; //установка количества шагов
-		const int CMD_TP = 0x7074; //тестирование пинов
+		//Переменные
+		const int CMD_MA = 0x616d; // начало измерения
+		const int CMD_MZ = 0x7a6d; // конец измерения
+		const int CMD_MC = 0x636d; // количество измерений
+		const int CMD_DS = 0x7364; // скорость двигателя
+		const int CMD_FN = 0x6e66; // номер фильтра
+		const int CMD_FS = 0x7366; // шаг установки фильтра
 
 		//Разное
 		Timer timer = new Timer();
@@ -56,12 +39,12 @@ namespace graph1
 
 			//Настройка интерфейса
 			StartPosition = FormStartPosition.CenterScreen;
-			Begin_button.Enabled = false;
-			Stop_button.Enabled = false;
-			Save_button.Enabled = false;
-			New_button.Enabled = false;
-			Delete_button.Enabled = false;
-			Callibrate_button.Enabled = false;
+			Begin_button.Enabled		= false;
+			Stop_button.Enabled			= false;
+			Save_button.Enabled			= false;
+			New_button.Enabled			= false;
+			Delete_button.Enabled		= false;
+			Callibrate_button.Enabled	= false;
 
 			//Настройка таймера
 			timer.Enabled = true;
@@ -76,13 +59,13 @@ namespace graph1
 			DividerSet.Text = "1";
 
 			spectrum.graph = new int[points_count];
-			spectrum.end = 0;
-			spectrum.x0 = 0;
-			spectrum.x1 = 100;
-			spectrum.pos = 0;
-			spectrum.mps = 1;
+			spectrum.end	= 0;
+			spectrum.x0		= 0;
+			spectrum.x1		= 100;
+			spectrum.pos	= 0;
+			spectrum.mps	= 1;
 			spectrum.filter = 1;
-			spectrum.div = 1;
+			spectrum.div	= 1;
 
 			//Подключение к серверу
 			LOG_Debug("Talker here!\nAvailable Ports:");
@@ -153,13 +136,13 @@ namespace graph1
 		/// </summary>
 		void get_armed()
 		{
-			Save_button.Enabled = false;
-			Begin_button.Enabled = false;
-			Begin_button.Text = "Измерение";
-			New_button.Enabled = false;
-			Delete_button.Enabled = false;
-			Stop_button.Enabled = true;
-			Callibrate_button.Enabled = false;
+			Save_button.Enabled			= false;
+			Begin_button.Enabled		= false;
+			Begin_button.Text			= "Измерение";
+			New_button.Enabled			= false;
+			Delete_button.Enabled		= false;
+			Stop_button.Enabled			= true;
+			Callibrate_button.Enabled	= false;
 		}
 
 		/// <summary>
@@ -167,13 +150,14 @@ namespace graph1
 		/// </summary>
 		void get_ready()
 		{
-			Receive = false;
-			Begin_button.Text = "Начать";
-			Begin_button.Enabled = true;
-			Stop_button.Enabled = false;
-			Save_button.Enabled = true;
-			New_button.Enabled = true;
-			Callibrate_button.Enabled = true;
+			Receive						= false;
+			Begin_button.Text			= "Начать";
+			Begin_button.Enabled		= true;
+			Stop_button.Enabled			= false;
+			Save_button.Enabled			= true;
+			New_button.Enabled			= true;
+			Callibrate_button.Enabled	= true;
+
 			if (tab_control1.TabCount == 1)
 				Delete_button.Enabled = false;
 			else
@@ -204,7 +188,7 @@ namespace graph1
 		/// </summary>
 		void setup_canvas_scale()
 		{
-			DRAW_range = (spectrum.x1 - spectrum.x0) * spectrum.div;
+			DRAW_range = (spectrum.x1 - spectrum.x0) * 8;
 			DRAW_scale = DRAW_canvas.Width / (float)DRAW_range;
 			DRAW_height_scale = DRAW_canvas.Height / (float)1024;
 		}
@@ -243,12 +227,12 @@ namespace graph1
 				spectrum.div = 1;
 
 			//Начало измерения
-			TALKER_set(CMD_DM, spectrum.x0);
-			//Делитель шага
-			TALKER_set(CMD_DV, spectrum.div);
-			//Количество шагов
-			TALKER_set(CMD_ST, spectrum.x1 - spectrum.x0);
-			//Число измерений за один шаг двигателя
+			TALKER_set(CMD_MA, spectrum.x0);
+			//Конец измерения
+			TALKER_set(CMD_MZ, spectrum.x1);
+			//Скорость
+			TALKER_set(CMD_DS, spectrum.div);
+			//Число измерений шаг
 			TALKER_set(CMD_MC, spectrum.mps);
 
 			//Настройка отрисовки
@@ -301,7 +285,7 @@ namespace graph1
 
 		void BUTTON_Callibrate_click(object sender, EventArgs e)
 		{
-			TALKER_send(CMD_DC);
+			TALKER_send(CMD_DZ);
 		}
 
 		void BUTTON_check(object sender, EventArgs e)
@@ -330,7 +314,7 @@ namespace graph1
 
 		void BUTTON_Stop_click(object sender, EventArgs e)
 		{
-			TALKER_send(CMD_DI);
+			TALKER_send(CMD_MI);
 		}
 
 		void BUTTON_Save_click(object sender, EventArgs e)
@@ -407,7 +391,7 @@ namespace graph1
 				RangeSet0.Text = temp_x.ToString();
 				LOG_Status(
 					String.Format(
-						$"{DRAW_startcur + spectrum.x0}    {spectrum.graph[DRAW_startcur]}"
+						$"{DRAW_startcur / 8 + spectrum.x0}    {spectrum.graph[DRAW_startcur]}"
 					)
 				);
 			}

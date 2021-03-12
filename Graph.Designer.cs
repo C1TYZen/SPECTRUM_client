@@ -28,41 +28,40 @@
         /// </summary>
         private void InitializeComponent()
         {
-			this.Begin_button = new System.Windows.Forms.Button();
-			this.Save_button = new System.Windows.Forms.Button();
-			this.Close_button = new System.Windows.Forms.Button();
+			this.begin_button = new System.Windows.Forms.Button();
+			this.save_button = new System.Windows.Forms.Button();
+			this.close_button = new System.Windows.Forms.Button();
 			this.tab_control1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.MPosition_status_label = new System.Windows.Forms.Label();
 			this.Text_console = new System.Windows.Forms.TextBox();
 			this.resolution_set = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
-			this.RangeSet0 = new System.Windows.Forms.TextBox();
+			this.mesure_start_set = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
-			this.FilterSet = new System.Windows.Forms.TextBox();
+			this.filter_num_set = new System.Windows.Forms.TextBox();
 			this.label6 = new System.Windows.Forms.Label();
-			this.MesuresCountSet = new System.Windows.Forms.TextBox();
+			this.mesure_count_set = new System.Windows.Forms.TextBox();
 			this.label7 = new System.Windows.Forms.Label();
-			this.RangeSet1 = new System.Windows.Forms.TextBox();
+			this.mesure_end_set = new System.Windows.Forms.TextBox();
 			this.label8 = new System.Windows.Forms.Label();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.menustrip_File = new System.Windows.Forms.ToolStripMenuItem();
-			this.menustrip_Tools = new System.Windows.Forms.ToolStripMenuItem();
-			this.menustrip_COM = new System.Windows.Forms.ToolStripMenuItem();
-			this.menustrip_BaudRate = new System.Windows.Forms.ToolStripMenuItem();
-			this.New_button = new System.Windows.Forms.Button();
-			this.Delete_button = new System.Windows.Forms.Button();
+			this.new_button = new System.Windows.Forms.Button();
+			this.delete_button = new System.Windows.Forms.Button();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.button1 = new System.Windows.Forms.Button();
+			this.cc_button = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
-			this.DividerSet = new System.Windows.Forms.TextBox();
-			this.Callibrate_button = new System.Windows.Forms.Button();
-			this.Stop_button = new System.Windows.Forms.Button();
+			this.speed_set = new System.Windows.Forms.TextBox();
+			this.callibrate_button = new System.Windows.Forms.Button();
+			this.stop_button = new System.Windows.Forms.Button();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.filter_step_set = new System.Windows.Forms.TextBox();
+			this.label3 = new System.Windows.Forms.Label();
 			this.tab_control1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -72,37 +71,37 @@
 			this.groupBox3.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// Begin_button
+			// begin_button
 			// 
-			this.Begin_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.Begin_button.Location = new System.Drawing.Point(130, 16);
-			this.Begin_button.Name = "Begin_button";
-			this.Begin_button.Size = new System.Drawing.Size(75, 23);
-			this.Begin_button.TabIndex = 1;
-			this.Begin_button.Text = "Начать";
-			this.Begin_button.UseVisualStyleBackColor = true;
-			this.Begin_button.Click += new System.EventHandler(this.BUTTON_Begin_click);
+			this.begin_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.begin_button.Location = new System.Drawing.Point(112, 16);
+			this.begin_button.Name = "begin_button";
+			this.begin_button.Size = new System.Drawing.Size(75, 23);
+			this.begin_button.TabIndex = 1;
+			this.begin_button.Text = "Начать";
+			this.begin_button.UseVisualStyleBackColor = true;
+			this.begin_button.Click += new System.EventHandler(this.BUTTON_Begin_click);
 			// 
-			// Save_button
+			// save_button
 			// 
-			this.Save_button.Location = new System.Drawing.Point(87, 19);
-			this.Save_button.Name = "Save_button";
-			this.Save_button.Size = new System.Drawing.Size(75, 23);
-			this.Save_button.TabIndex = 2;
-			this.Save_button.Text = "Сохранить";
-			this.Save_button.UseVisualStyleBackColor = true;
-			this.Save_button.Click += new System.EventHandler(this.BUTTON_Save_click);
+			this.save_button.Location = new System.Drawing.Point(87, 19);
+			this.save_button.Name = "save_button";
+			this.save_button.Size = new System.Drawing.Size(75, 23);
+			this.save_button.TabIndex = 2;
+			this.save_button.Text = "Сохранить";
+			this.save_button.UseVisualStyleBackColor = true;
+			this.save_button.Click += new System.EventHandler(this.BUTTON_Save_click);
 			// 
-			// Close_button
+			// close_button
 			// 
-			this.Close_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.Close_button.Location = new System.Drawing.Point(130, 356);
-			this.Close_button.Name = "Close_button";
-			this.Close_button.Size = new System.Drawing.Size(75, 23);
-			this.Close_button.TabIndex = 3;
-			this.Close_button.Text = "Закрыть";
-			this.Close_button.UseVisualStyleBackColor = true;
-			this.Close_button.Click += new System.EventHandler(this.BUTTON_Close_click);
+			this.close_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.close_button.Location = new System.Drawing.Point(112, 356);
+			this.close_button.Name = "close_button";
+			this.close_button.Size = new System.Drawing.Size(75, 23);
+			this.close_button.TabIndex = 3;
+			this.close_button.Text = "Закрыть";
+			this.close_button.UseVisualStyleBackColor = true;
+			this.close_button.Click += new System.EventHandler(this.BUTTON_Close_click);
 			// 
 			// tab_control1
 			// 
@@ -114,7 +113,7 @@
 			this.tab_control1.Location = new System.Drawing.Point(3, 3);
 			this.tab_control1.Name = "tab_control1";
 			this.tab_control1.SelectedIndex = 0;
-			this.tab_control1.Size = new System.Drawing.Size(669, 385);
+			this.tab_control1.Size = new System.Drawing.Size(687, 385);
 			this.tab_control1.TabIndex = 8;
 			this.tab_control1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tab_control1_selecting);
 			// 
@@ -124,7 +123,7 @@
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(661, 359);
+			this.tabPage1.Size = new System.Drawing.Size(679, 359);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Спектр1";
 			this.tabPage1.UseVisualStyleBackColor = true;
@@ -133,7 +132,7 @@
 			// 
 			this.MPosition_status_label.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.MPosition_status_label.AutoSize = true;
-			this.MPosition_status_label.Location = new System.Drawing.Point(6, 125);
+			this.MPosition_status_label.Location = new System.Drawing.Point(6, 147);
 			this.MPosition_status_label.Name = "MPosition_status_label";
 			this.MPosition_status_label.Size = new System.Drawing.Size(0, 13);
 			this.MPosition_status_label.TabIndex = 0;
@@ -149,12 +148,12 @@
 			this.Text_console.BackColor = System.Drawing.Color.Black;
 			this.Text_console.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.Text_console.ForeColor = System.Drawing.SystemColors.Window;
-			this.Text_console.Location = new System.Drawing.Point(678, 394);
+			this.Text_console.Location = new System.Drawing.Point(696, 394);
 			this.Text_console.Multiline = true;
 			this.Text_console.Name = "Text_console";
 			this.Text_console.ReadOnly = true;
 			this.Text_console.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.Text_console.Size = new System.Drawing.Size(211, 147);
+			this.Text_console.Size = new System.Drawing.Size(193, 147);
 			this.Text_console.TabIndex = 11;
 			// 
 			// resolution_set
@@ -174,12 +173,12 @@
 			this.label4.TabIndex = 12;
 			this.label4.Text = "Разрешение";
 			// 
-			// RangeSet0
+			// mesure_start_set
 			// 
-			this.RangeSet0.Location = new System.Drawing.Point(7, 32);
-			this.RangeSet0.Name = "RangeSet0";
-			this.RangeSet0.Size = new System.Drawing.Size(80, 20);
-			this.RangeSet0.TabIndex = 15;
+			this.mesure_start_set.Location = new System.Drawing.Point(7, 32);
+			this.mesure_start_set.Name = "mesure_start_set";
+			this.mesure_start_set.Size = new System.Drawing.Size(80, 20);
+			this.mesure_start_set.TabIndex = 15;
 			// 
 			// label5
 			// 
@@ -190,12 +189,12 @@
 			this.label5.TabIndex = 14;
 			this.label5.Text = "x0";
 			// 
-			// FilterSet
+			// filter_num_set
 			// 
-			this.FilterSet.Location = new System.Drawing.Point(7, 149);
-			this.FilterSet.Name = "FilterSet";
-			this.FilterSet.Size = new System.Drawing.Size(80, 20);
-			this.FilterSet.TabIndex = 17;
+			this.filter_num_set.Location = new System.Drawing.Point(7, 149);
+			this.filter_num_set.Name = "filter_num_set";
+			this.filter_num_set.Size = new System.Drawing.Size(80, 20);
+			this.filter_num_set.TabIndex = 17;
 			// 
 			// label6
 			// 
@@ -206,12 +205,12 @@
 			this.label6.TabIndex = 16;
 			this.label6.Text = "Номер фильтра";
 			// 
-			// MesuresCountSet
+			// mesure_count_set
 			// 
-			this.MesuresCountSet.Location = new System.Drawing.Point(7, 110);
-			this.MesuresCountSet.Name = "MesuresCountSet";
-			this.MesuresCountSet.Size = new System.Drawing.Size(80, 20);
-			this.MesuresCountSet.TabIndex = 19;
+			this.mesure_count_set.Location = new System.Drawing.Point(7, 110);
+			this.mesure_count_set.Name = "mesure_count_set";
+			this.mesure_count_set.Size = new System.Drawing.Size(80, 20);
+			this.mesure_count_set.TabIndex = 19;
 			// 
 			// label7
 			// 
@@ -222,12 +221,12 @@
 			this.label7.TabIndex = 18;
 			this.label7.Text = "Измерение/шаг";
 			// 
-			// RangeSet1
+			// mesure_end_set
 			// 
-			this.RangeSet1.Location = new System.Drawing.Point(7, 71);
-			this.RangeSet1.Name = "RangeSet1";
-			this.RangeSet1.Size = new System.Drawing.Size(80, 20);
-			this.RangeSet1.TabIndex = 21;
+			this.mesure_end_set.Location = new System.Drawing.Point(7, 71);
+			this.mesure_end_set.Name = "mesure_end_set";
+			this.mesure_end_set.Size = new System.Drawing.Size(80, 20);
+			this.mesure_end_set.TabIndex = 21;
 			// 
 			// label8
 			// 
@@ -241,8 +240,7 @@
 			// menuStrip1
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menustrip_File,
-            this.menustrip_Tools});
+            this.menustrip_File});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(892, 24);
@@ -255,46 +253,25 @@
 			this.menustrip_File.Size = new System.Drawing.Size(48, 20);
 			this.menustrip_File.Text = "Файл";
 			// 
-			// menustrip_Tools
+			// new_button
 			// 
-			this.menustrip_Tools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menustrip_COM,
-            this.menustrip_BaudRate});
-			this.menustrip_Tools.Name = "menustrip_Tools";
-			this.menustrip_Tools.Size = new System.Drawing.Size(95, 20);
-			this.menustrip_Tools.Text = "Инструменты";
+			this.new_button.Location = new System.Drawing.Point(6, 19);
+			this.new_button.Name = "new_button";
+			this.new_button.Size = new System.Drawing.Size(75, 23);
+			this.new_button.TabIndex = 26;
+			this.new_button.Text = "Новый";
+			this.new_button.UseVisualStyleBackColor = true;
+			this.new_button.Click += new System.EventHandler(this.BUTTON_New_click);
 			// 
-			// menustrip_COM
+			// delete_button
 			// 
-			this.menustrip_COM.Name = "menustrip_COM";
-			this.menustrip_COM.Size = new System.Drawing.Size(124, 22);
-			this.menustrip_COM.Text = "COM";
-			// 
-			// menustrip_BaudRate
-			// 
-			this.menustrip_BaudRate.Name = "menustrip_BaudRate";
-			this.menustrip_BaudRate.Size = new System.Drawing.Size(124, 22);
-			this.menustrip_BaudRate.Text = "BaudRate";
-			// 
-			// New_button
-			// 
-			this.New_button.Location = new System.Drawing.Point(6, 19);
-			this.New_button.Name = "New_button";
-			this.New_button.Size = new System.Drawing.Size(75, 23);
-			this.New_button.TabIndex = 26;
-			this.New_button.Text = "Новый";
-			this.New_button.UseVisualStyleBackColor = true;
-			this.New_button.Click += new System.EventHandler(this.BUTTON_New_click);
-			// 
-			// Delete_button
-			// 
-			this.Delete_button.Location = new System.Drawing.Point(6, 48);
-			this.Delete_button.Name = "Delete_button";
-			this.Delete_button.Size = new System.Drawing.Size(75, 23);
-			this.Delete_button.TabIndex = 27;
-			this.Delete_button.Text = "Удалить";
-			this.Delete_button.UseVisualStyleBackColor = true;
-			this.Delete_button.Click += new System.EventHandler(this.BUTTON_Delete_click);
+			this.delete_button.Location = new System.Drawing.Point(6, 48);
+			this.delete_button.Name = "delete_button";
+			this.delete_button.Size = new System.Drawing.Size(75, 23);
+			this.delete_button.TabIndex = 27;
+			this.delete_button.Text = "Удалить";
+			this.delete_button.UseVisualStyleBackColor = true;
+			this.delete_button.Click += new System.EventHandler(this.BUTTON_Delete_click);
 			// 
 			// groupBox1
 			// 
@@ -302,86 +279,88 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox1.AutoSize = true;
-			this.groupBox1.Controls.Add(this.button1);
+			this.groupBox1.Controls.Add(this.filter_step_set);
+			this.groupBox1.Controls.Add(this.label3);
+			this.groupBox1.Controls.Add(this.cc_button);
 			this.groupBox1.Controls.Add(this.label2);
 			this.groupBox1.Controls.Add(this.label1);
-			this.groupBox1.Controls.Add(this.DividerSet);
-			this.groupBox1.Controls.Add(this.Callibrate_button);
-			this.groupBox1.Controls.Add(this.Stop_button);
-			this.groupBox1.Controls.Add(this.Begin_button);
-			this.groupBox1.Controls.Add(this.RangeSet1);
-			this.groupBox1.Controls.Add(this.Close_button);
+			this.groupBox1.Controls.Add(this.speed_set);
+			this.groupBox1.Controls.Add(this.callibrate_button);
+			this.groupBox1.Controls.Add(this.stop_button);
+			this.groupBox1.Controls.Add(this.begin_button);
+			this.groupBox1.Controls.Add(this.mesure_end_set);
+			this.groupBox1.Controls.Add(this.close_button);
 			this.groupBox1.Controls.Add(this.label8);
-			this.groupBox1.Controls.Add(this.MesuresCountSet);
+			this.groupBox1.Controls.Add(this.mesure_count_set);
 			this.groupBox1.Controls.Add(this.label7);
-			this.groupBox1.Controls.Add(this.FilterSet);
+			this.groupBox1.Controls.Add(this.filter_num_set);
 			this.groupBox1.Controls.Add(this.label5);
 			this.groupBox1.Controls.Add(this.label6);
-			this.groupBox1.Controls.Add(this.RangeSet0);
-			this.groupBox1.Location = new System.Drawing.Point(678, 3);
+			this.groupBox1.Controls.Add(this.mesure_start_set);
+			this.groupBox1.Location = new System.Drawing.Point(696, 3);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(211, 385);
+			this.groupBox1.Size = new System.Drawing.Size(193, 385);
 			this.groupBox1.TabIndex = 25;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Параметры";
 			// 
-			// button1
+			// cc_button
 			// 
-			this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.button1.Location = new System.Drawing.Point(130, 75);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 27;
-			this.button1.Text = "_проверка";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.BUTTON_check);
+			this.cc_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.cc_button.Location = new System.Drawing.Point(112, 75);
+			this.cc_button.Name = "cc_button";
+			this.cc_button.Size = new System.Drawing.Size(75, 23);
+			this.cc_button.TabIndex = 27;
+			this.cc_button.Text = "_проверка";
+			this.cc_button.UseVisualStyleBackColor = true;
+			this.cc_button.Click += new System.EventHandler(this.BUTTON_check);
 			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(6, 172);
+			this.label2.Location = new System.Drawing.Point(6, 211);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(57, 13);
+			this.label2.Size = new System.Drawing.Size(55, 13);
 			this.label2.TabIndex = 26;
-			this.label2.Text = "Делитель";
+			this.label2.Text = "Скорость";
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(9, 191);
+			this.label1.Location = new System.Drawing.Point(67, 230);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(18, 13);
+			this.label1.Size = new System.Drawing.Size(26, 13);
 			this.label1.TabIndex = 4;
-			this.label1.Text = "1/";
+			this.label1.Text = "ш/с";
 			// 
-			// DividerSet
+			// speed_set
 			// 
-			this.DividerSet.Location = new System.Drawing.Point(33, 188);
-			this.DividerSet.Name = "DividerSet";
-			this.DividerSet.Size = new System.Drawing.Size(20, 20);
-			this.DividerSet.TabIndex = 3;
+			this.speed_set.Location = new System.Drawing.Point(9, 227);
+			this.speed_set.Name = "speed_set";
+			this.speed_set.Size = new System.Drawing.Size(52, 20);
+			this.speed_set.TabIndex = 3;
 			// 
-			// Callibrate_button
+			// callibrate_button
 			// 
-			this.Callibrate_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.Callibrate_button.Location = new System.Drawing.Point(7, 356);
-			this.Callibrate_button.Name = "Callibrate_button";
-			this.Callibrate_button.Size = new System.Drawing.Size(89, 23);
-			this.Callibrate_button.TabIndex = 24;
-			this.Callibrate_button.Text = "Калибровка";
-			this.Callibrate_button.UseVisualStyleBackColor = true;
-			this.Callibrate_button.Click += new System.EventHandler(this.BUTTON_Callibrate_click);
+			this.callibrate_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.callibrate_button.Location = new System.Drawing.Point(6, 356);
+			this.callibrate_button.Name = "callibrate_button";
+			this.callibrate_button.Size = new System.Drawing.Size(89, 23);
+			this.callibrate_button.TabIndex = 24;
+			this.callibrate_button.Text = "_на ноль";
+			this.callibrate_button.UseVisualStyleBackColor = true;
+			this.callibrate_button.Click += new System.EventHandler(this.BUTTON_Callibrate_click);
 			// 
-			// Stop_button
+			// stop_button
 			// 
-			this.Stop_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.Stop_button.Location = new System.Drawing.Point(130, 45);
-			this.Stop_button.Name = "Stop_button";
-			this.Stop_button.Size = new System.Drawing.Size(75, 23);
-			this.Stop_button.TabIndex = 23;
-			this.Stop_button.Text = "Стоп";
-			this.Stop_button.UseVisualStyleBackColor = true;
-			this.Stop_button.Click += new System.EventHandler(this.BUTTON_Stop_click);
+			this.stop_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.stop_button.Location = new System.Drawing.Point(112, 45);
+			this.stop_button.Name = "stop_button";
+			this.stop_button.Size = new System.Drawing.Size(75, 23);
+			this.stop_button.TabIndex = 23;
+			this.stop_button.Text = "Стоп";
+			this.stop_button.UseVisualStyleBackColor = true;
+			this.stop_button.Click += new System.EventHandler(this.BUTTON_Stop_click);
 			// 
 			// tableLayoutPanel1
 			// 
@@ -389,8 +368,8 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tableLayoutPanel1.ColumnCount = 2;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75.68534F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 24.31466F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 77.80269F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.19731F));
 			this.tableLayoutPanel1.Controls.Add(this.tab_control1, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this.groupBox1, 1, 0);
 			this.tableLayoutPanel1.Controls.Add(this.Text_console, 1, 1);
@@ -422,7 +401,7 @@
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
 			this.tableLayoutPanel2.RowCount = 1;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 79.16666F));
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(669, 147);
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(687, 147);
 			this.tableLayoutPanel2.TabIndex = 26;
 			// 
 			// groupBox2
@@ -432,12 +411,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox2.AutoSize = true;
 			this.groupBox2.Controls.Add(this.MPosition_status_label);
-			this.groupBox2.Controls.Add(this.New_button);
-			this.groupBox2.Controls.Add(this.Save_button);
-			this.groupBox2.Controls.Add(this.Delete_button);
+			this.groupBox2.Controls.Add(this.new_button);
+			this.groupBox2.Controls.Add(this.save_button);
+			this.groupBox2.Controls.Add(this.delete_button);
 			this.groupBox2.Location = new System.Drawing.Point(3, 3);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(327, 141);
+			this.groupBox2.Size = new System.Drawing.Size(336, 141);
 			this.groupBox2.TabIndex = 29;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Спектр";
@@ -450,12 +429,28 @@
 			this.groupBox3.AutoSize = true;
 			this.groupBox3.Controls.Add(this.label4);
 			this.groupBox3.Controls.Add(this.resolution_set);
-			this.groupBox3.Location = new System.Drawing.Point(336, 3);
+			this.groupBox3.Location = new System.Drawing.Point(345, 3);
 			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(330, 141);
+			this.groupBox3.Size = new System.Drawing.Size(339, 141);
 			this.groupBox3.TabIndex = 30;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Просмотр";
+			// 
+			// filter_step_set
+			// 
+			this.filter_step_set.Location = new System.Drawing.Point(9, 188);
+			this.filter_step_set.Name = "filter_step_set";
+			this.filter_step_set.Size = new System.Drawing.Size(80, 20);
+			this.filter_step_set.TabIndex = 29;
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(6, 172);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(97, 13);
+			this.label3.TabIndex = 28;
+			this.label3.Text = "Шаг выставления";
 			// 
 			// Graph
 			// 
@@ -494,41 +489,40 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button Begin_button;
-        private System.Windows.Forms.Button Save_button;
-        private System.Windows.Forms.Button Close_button;
+        private System.Windows.Forms.Button begin_button;
+        private System.Windows.Forms.Button save_button;
+        private System.Windows.Forms.Button close_button;
 		private System.Windows.Forms.TabControl tab_control1;
 		private System.Windows.Forms.TabPage tabPage1;
 		private System.Windows.Forms.TextBox Text_console;
 		private System.Windows.Forms.TextBox resolution_set;
 		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.TextBox RangeSet0;
+		private System.Windows.Forms.TextBox mesure_start_set;
 		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.TextBox FilterSet;
+		private System.Windows.Forms.TextBox filter_num_set;
 		private System.Windows.Forms.Label label6;
-		private System.Windows.Forms.TextBox MesuresCountSet;
+		private System.Windows.Forms.TextBox mesure_count_set;
 		private System.Windows.Forms.Label label7;
-		private System.Windows.Forms.TextBox RangeSet1;
+		private System.Windows.Forms.TextBox mesure_end_set;
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.MenuStrip menuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem menustrip_File;
-		private System.Windows.Forms.ToolStripMenuItem menustrip_Tools;
-		private System.Windows.Forms.ToolStripMenuItem menustrip_COM;
-		private System.Windows.Forms.ToolStripMenuItem menustrip_BaudRate;
-		private System.Windows.Forms.Button New_button;
-		private System.Windows.Forms.Button Delete_button;
+		private System.Windows.Forms.Button new_button;
+		private System.Windows.Forms.Button delete_button;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 		private System.Windows.Forms.GroupBox groupBox2;
-		private System.Windows.Forms.Button Stop_button;
+		private System.Windows.Forms.Button stop_button;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
 		private System.Windows.Forms.GroupBox groupBox3;
-		private System.Windows.Forms.TextBox DividerSet;
-		private System.Windows.Forms.Button Callibrate_button;
+		private System.Windows.Forms.TextBox speed_set;
+		private System.Windows.Forms.Button callibrate_button;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label MPosition_status_label;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button cc_button;
+		private System.Windows.Forms.TextBox filter_step_set;
+		private System.Windows.Forms.Label label3;
 	}
 }
 

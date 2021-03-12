@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO.Ports;
-//using System.Threading;
 
 // Библиотека для общения с сервером по последовательному порту.
 
@@ -9,7 +8,6 @@ namespace graph1
 	partial class Graph
 	{
 		SerialPort _serialPort = new SerialPort();
-		int _baudrate;
 		string _portname;
 
 		// Переменные для хранения сообщений
@@ -32,7 +30,7 @@ namespace graph1
 			//Значения возможных скоростей указаны в документации.
 			//Если указать другое значение - порт перестает работать.
 			//Но не всегда...
-			_serialPort.BaudRate		= _baudrate;
+			_serialPort.BaudRate		= 38400;
 			_serialPort.ReadTimeout		= 5000;
 			_serialPort.WriteTimeout	= 5000;
 			_serialPort.Parity			= Parity.None;
@@ -78,18 +76,6 @@ namespace graph1
 				return -1;
 			}
 
-			/*while (attempt <= 5)
-			{
-				//прочитать строку проверки связи
-				attempt++;
-				TALKER_send(CMD_CC);
-				if (TALKER_read_line() == 0)
-				{
-					LOG_Debug($"Попыток подключения: {attempt}");
-					break;
-				}
-			}*/
-
 			if (attempt > 3)
 			{
 				LOG("**ОШИБКА** Не могу подключиться");
@@ -99,7 +85,7 @@ namespace graph1
 			LOG_Debug("************");
 			LOG_Debug("ПОДКЛЮЧЕНО");
 			LOG_Debug($"ПОРТ: {_portname}");
-			LOG_Debug($"BAUDRATE: {_baudrate}");
+			LOG_Debug($"BAUDRATE: {_serialPort.BaudRate}");
 			LOG_Debug("************");
 
 			return 0;
@@ -108,7 +94,7 @@ namespace graph1
 		/// <summary>
 		/// Очистка входного порта.
 		/// </summary>
-		int TALKER_FlushReadBuf()
+		int TALKER_flush_read_buf()
 		{
 			try { _serialPort.DiscardInBuffer(); }
 			catch (Exception ex)
@@ -125,7 +111,6 @@ namespace graph1
 		/************************
 		 * SEND
 		 ************************/
-
 		/// <summary>
 		/// Отправляет в последовательный порт количество байт count
 		/// из массива msg с отступом offset.
@@ -171,7 +156,6 @@ namespace graph1
 		/************************
 		 * READ
 		 ************************/
-
 		/// <summary>
 		/// Читает из последовательного порта количество байт count
 		/// в массив msg с отступом offset.

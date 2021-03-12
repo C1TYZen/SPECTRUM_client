@@ -9,18 +9,20 @@ namespace graph1
 	{
 		struct plot
 		{
-			public int[] graph; //Массив точек
-			public int end;		//Конец графика
-			public float pos;	//Положение двигателя
-			public int x0;		//Начало диапазона
-			public int x1;		//Конец диапазона
-			public int mps;		//Измерений за шаг
-			public int filter;	//Номер фильтра
-			public int div;		//Делитель шага
+			public int[]	graph; //Массив точек
+			public int		end; //Конец графика
+			public int		x0; //Начало диапазона
+			public int		x1; //Конец диапазона
+			public int		mps; //Измерений за шаг
+			public int		filter_num; //Номер фильтра
+			public int		filter_step; //Шаг выставления
+			public int		speed; //Скорость двигателя
+
+			public int		amp; //Коэфицент усиления
 		}
 
-		const int points_count = 532480;
-		const int plots_count = 64;
+		const int points_count	= 524288;
+		const int plots_count	= 64;
 
 		plot spectrum = new plot();
 		plot[] memory = new plot[plots_count];
@@ -101,10 +103,18 @@ namespace graph1
 			if (!Directory.Exists("plots"))
 				Directory.CreateDirectory("plots");
 
-			using (StreamWriter outputFile = new StreamWriter(path, true))
+			using (StreamWriter file = new StreamWriter(path, true))
 			{
+				file.WriteLine("x0:\t{0}", spectrum.x0);
+				file.WriteLine("x1:\t{0}", spectrum.x1);
+				file.WriteLine("mps:\t{0}", spectrum.mps);
+				file.WriteLine("filter:\t{0}", spectrum.filter_num);
+				file.WriteLine("speed:\t{0}\ts/s", spectrum.speed);
+				file.WriteLine();
+				file.WriteLine("x\ty");
+				file.WriteLine();
 				for (int r = 0; r <= spectrum.end; r++)
-					outputFile.WriteLine("{0}\t{1}", r + spectrum.x0, spectrum.graph[r]);
+					file.WriteLine("{0}\t{1}", r + spectrum.x0, spectrum.graph[r]);
 				LOG($"Сохранено, {time}.txt");
 			}
 		}

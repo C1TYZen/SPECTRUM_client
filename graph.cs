@@ -18,12 +18,12 @@ namespace graph1
 		const int CMD_MI = 0x696d; // прервать измерение
 
 		//Переменные
-		const int CMD_MA = 0x616d; // начало измерения
-		const int CMD_MZ = 0x7a6d; // конец измерения
-		const int CMD_MC = 0x636d; // количество измерений
-		const int CMD_DS = 0x7364; // скорость двигателя
-		const int CMD_FN = 0x6e66; // номер фильтра
-		const int CMD_FS = 0x7366; // шаг установки фильтра
+		const int CVAR_MA = 0x616d; // начало измерения
+		const int CVAR_MZ = 0x7a6d; // конец измерения
+		const int CVAR_MC = 0x636d; // количество измерений
+		const int CVAR_DS = 0x7364; // скорость двигателя
+		const int CVAR_FN = 0x6e66; // номер фильтра
+		const int CVAR_FS = 0x7366; // шаг установки фильтра
 
 		//Разное
 		Timer timer = new Timer();
@@ -33,39 +33,68 @@ namespace graph1
 		{
 			InitializeComponent();
 
+			//Конфиг
+			cvar[] cfg =
+			{
+				new cvar("mesure_start", 0),
+				new cvar("mesure_end", 100),
+				new cvar("mesure_count", 1),
+
+				new cvar("driver_speed", 700),
+
+				new cvar("filter_num", 1),
+				new cvar("filter_step", 0),
+
+				new cvar("port_baudrate", 38400),
+				new cvar("port_read_timeout", 5000),
+				new cvar("port_write_timeout", 5000),
+				new cvar("port_parity", 0),
+				new cvar("port_data_bits", 8),
+				new cvar("port_stop_bits", 1),
+				new cvar("port_handshake", 0),
+
+				new cvar("spectrum_points", 524288),
+				new cvar("spectrum_count", 64),
+
+				new cvar("draw_resolution", 1),
+
+				new cvar("timer_tick_interval", 1)
+			};
+
 			//Настройка связи
 			Receive = false;
-			_baudrate = 38400;
 
 			//Настройка интерфейса
 			StartPosition = FormStartPosition.CenterScreen;
-			Begin_button.Enabled		= false;
-			Stop_button.Enabled			= false;
-			Save_button.Enabled			= false;
-			New_button.Enabled			= false;
-			Delete_button.Enabled		= false;
-			Callibrate_button.Enabled	= false;
+			begin_button.Enabled		= false;
+			stop_button.Enabled			= false;
+			save_button.Enabled			= false;
+			new_button.Enabled			= false;
+			delete_button.Enabled		= false;
+			callibrate_button.Enabled	= false;
 
 			//Настройка таймера
-			timer.Enabled = true;
-			timer.Interval = 1;
-			timer.Tick += new EventHandler(timer_update);
+			timer.Enabled	= true;
+			timer.Interval	= 1;
+			timer.Tick		+= new EventHandler(timer_update);
 
 			//Установка дефолтных значений
-			RangeSet0.Text = "0";
-			RangeSet1.Text = "100";
-			MesuresCountSet.Text = "1";
-			resolution_set.Text = "1";
-			DividerSet.Text = "1";
+			mesure_start_set.Text	= "0";
+			mesure_end_set.Text		= "100";
+			mesure_count_set.Text	= "1";
+			resolution_set.Text		= "1";
+			filter_num_set.Text		= "1";
+			filter_step_set.Text	= "0";
+			speed_set.Text			= "700";
 
-			spectrum.graph = new int[points_count];
+			spectrum.graph	= new int[points_count];
 			spectrum.end	= 0;
 			spectrum.x0		= 0;
 			spectrum.x1		= 100;
-			spectrum.pos	= 0;
 			spectrum.mps	= 1;
-			spectrum.filter = 1;
-			spectrum.div	= 1;
+			spectrum.filter_num = 1;
+			spectrum.filter_step = 0;
+			spectrum.speed	= 700;
 
 			//Подключение к серверу
 			LOG_Debug("Talker here!\nAvailable Ports:");
@@ -118,7 +147,6 @@ namespace graph1
 				if (imsg != CMD_MS)
 				{
 					spectrum.end += 1;
-					spectrum.pos += (float)1/ (float)spectrum.div;
 					CONTAINER_Add(imsg, spectrum);
 				}
 				else
@@ -136,13 +164,13 @@ namespace graph1
 		/// </summary>
 		void get_armed()
 		{
-			Save_button.Enabled			= false;
-			Begin_button.Enabled		= false;
-			Begin_button.Text			= "Измерение";
-			New_button.Enabled			= false;
-			Delete_button.Enabled		= false;
-			Stop_button.Enabled			= true;
-			Callibrate_button.Enabled	= false;
+			save_button.Enabled			= false;
+			begin_button.Enabled		= false;
+			begin_button.Text			= "Измерение";
+			new_button.Enabled			= false;
+			delete_button.Enabled		= false;
+			stop_button.Enabled			= true;
+			callibrate_button.Enabled	= false;
 		}
 
 		/// <summary>
@@ -151,17 +179,17 @@ namespace graph1
 		void get_ready()
 		{
 			Receive						= false;
-			Begin_button.Text			= "Начать";
-			Begin_button.Enabled		= true;
-			Stop_button.Enabled			= false;
-			Save_button.Enabled			= true;
-			New_button.Enabled			= true;
-			Callibrate_button.Enabled	= true;
+			begin_button.Text			= "Начать";
+			begin_button.Enabled		= true;
+			stop_button.Enabled			= false;
+			save_button.Enabled			= true;
+			new_button.Enabled			= true;
+			callibrate_button.Enabled	= true;
 
 			if (tab_control1.TabCount == 1)
-				Delete_button.Enabled = false;
+				delete_button.Enabled = false;
 			else
-				Delete_button.Enabled = true;
+				delete_button.Enabled = true;
 
 			CONTAINER_Save_on_RAM(tab_control1.SelectedIndex);
 			LOG("Готов");
@@ -178,7 +206,7 @@ namespace graph1
 			DRAW_background =
 				new System.Drawing.Rectangle(0, 0, tabPage1.Width, tabPage1.Height);
 			DRAW_canvas =
-				new System.Drawing.Rectangle(10, 10, tabPage1.Width - 20, tabPage1.Height - 20);
+				new System.Drawing.Rectangle(40, 10, tabPage1.Width - 50, tabPage1.Height - 40);
 			context.MaximumBuffer =
 				new System.Drawing.Size(tabPage1.Width + 1, tabPage1.Height + 1);
 		}
@@ -207,13 +235,13 @@ namespace graph1
 		/// </summary>
 		void mesure_setup()
 		{
-			if (TALKER_FlushReadBuf() == -1) return;
+			if (TALKER_flush_read_buf() == -1) return;
 			get_armed();
 
 			//Проверка значений и запись в память
-			if ((spectrum.x0 = check_value(RangeSet0.Text, "RANGE_0")) == -1)
+			if ((spectrum.x0 = check_value(mesure_start_set.Text, "RANGE_0")) == -1)
 				spectrum.x0 = 0;
-			if ((spectrum.x1 = check_value(RangeSet1.Text,"RANGE_1")) == -1)
+			if ((spectrum.x1 = check_value(mesure_end_set.Text,"RANGE_1")) == -1)
 				spectrum.x1 = 100;
 			if (spectrum.x0 > spectrum.x1)
 			{
@@ -221,19 +249,27 @@ namespace graph1
 				spectrum.x0 = spectrum.x1;
 				spectrum.x1 = buf;
 			}
-			if ((spectrum.mps = check_value(MesuresCountSet.Text, "Mesures Count")) == -1)
+			if ((spectrum.mps = check_value(mesure_count_set.Text, "Mesures Count")) == -1)
 				spectrum.mps = 1;
-			if ((spectrum.div = check_value(DividerSet.Text, "Divider")) == -1)
-				spectrum.div = 1;
+			if ((spectrum.filter_num = check_value(filter_num_set.Text, "Filter Number")) == -1)
+				spectrum.filter_num = 1;
+			if ((spectrum.filter_step = check_value(filter_step_set.Text, "Filter Step")) == -1)
+				spectrum.mps = 0;
+			if ((spectrum.speed = check_value(speed_set.Text, "Speed")) == -1)
+				spectrum.speed = 1;
 
-			//Начало измерения
-			TALKER_set(CMD_MA, spectrum.x0);
-			//Конец измерения
-			TALKER_set(CMD_MZ, spectrum.x1);
+			//Начало диапазона
+			TALKER_set(CVAR_MA, spectrum.x0);
+			//Конец диапазона
+			TALKER_set(CVAR_MZ, spectrum.x1);
+			//Измерений/шаг
+			TALKER_set(CVAR_MC, spectrum.mps);
+			//Номер фильтра
+			//TALKER_set(CVAR_FN, spectrum.filter_num);
+			//Шаг выставления фильтра
+			//TALKER_set(CVAR_FS, spectrum.filter_step);
 			//Скорость
-			TALKER_set(CMD_DS, spectrum.div);
-			//Число измерений шаг
-			TALKER_set(CMD_MC, spectrum.mps);
+			TALKER_set(CVAR_DS, spectrum.speed);
 
 			//Настройка отрисовки
 			setup_canvas_scale();
@@ -243,10 +279,9 @@ namespace graph1
 			//Это нужно для того, что бы отрисовывался весь диапазон от х0 до х1,
 			//включая крайние точки
 			spectrum.end = -1;
-			spectrum.pos = (float)spectrum.x0 - ((float)1 / (float)spectrum.div);
 
 			//Очистка буфера и отправка команды начать
-			TALKER_FlushReadBuf();
+			TALKER_flush_read_buf();
 			LOG($"ИЗМЕРЕНИЕ!");
 			Receive = true;
 			TALKER_send(CMD_MB);
@@ -296,12 +331,15 @@ namespace graph1
 
 		void BUTTON_New_click(object sender, EventArgs e)
 		{
-			TabPage newTabPage = new TabPage("Спектр " + (tab_control1.TabCount + 1).ToString());
+			TabPage newTabPage = 
+				new TabPage("Спектр " + (tab_control1.TabCount + 1).ToString());
 			tab_control1.TabPages.Add(newTabPage);
 			tab_control1.SelectedIndex = tab_control1.TabPages.IndexOf(newTabPage);
 
-			newTabPage.MouseClick += new System.Windows.Forms.MouseEventHandler(tab_page_mouse_click);
-			newTabPage.MouseMove += new System.Windows.Forms.MouseEventHandler(tab_page_mouse_move);
+			newTabPage.MouseClick += 
+				new System.Windows.Forms.MouseEventHandler(tab_page_mouse_click);
+			newTabPage.MouseMove += 
+				new System.Windows.Forms.MouseEventHandler(tab_page_mouse_move);
 			LOG($"Спектр создан");
 		}
 
@@ -331,8 +369,10 @@ namespace graph1
 		{
 			refresh_gfx(tabPage1);
 
-			tabPage1.MouseClick += new System.Windows.Forms.MouseEventHandler(tab_page_mouse_click);
-			tabPage1.MouseMove += new System.Windows.Forms.MouseEventHandler(tab_page_mouse_move);
+			tabPage1.MouseClick += 
+				new System.Windows.Forms.MouseEventHandler(tab_page_mouse_click);
+			tabPage1.MouseMove += 
+				new System.Windows.Forms.MouseEventHandler(tab_page_mouse_move);
 		}
 
 		void Graph_size_changed(object sender, EventArgs e)
@@ -351,20 +391,20 @@ namespace graph1
 
 			refresh_gfx(e.TabPage);
 
-			RangeSet0.Text = spectrum.x0.ToString();
-			RangeSet1.Text = spectrum.x1.ToString();
-			MesuresCountSet.Text = spectrum.mps.ToString();
+			mesure_start_set.Text = spectrum.x0.ToString();
+			mesure_end_set.Text = spectrum.x1.ToString();
+			mesure_count_set.Text = spectrum.mps.ToString();
 
 			if (tab_control1.TabCount == 1)
-				Delete_button.Enabled = false;
+				delete_button.Enabled = false;
 			else
-				Delete_button.Enabled = true;
+				delete_button.Enabled = true;
 		}
 
 		void tab_page_mouse_move(object sender, MouseEventArgs e)
 		{
 			int temp_index = (int)((e.Location.X - DRAW_canvas.X) / DRAW_scale);
-			int temp_x = spectrum.x0 + temp_index / spectrum.div;
+			int temp_x = spectrum.x0 + temp_index / 8;
 
 			if ((temp_index < 0) || (temp_index > points_count))
 				temp_index = 0;
@@ -376,11 +416,7 @@ namespace graph1
 		void tab_page_mouse_click(object sender, MouseEventArgs e)
 		{
 			int temp_index = (int)((e.Location.X - DRAW_canvas.X) / DRAW_scale);
-			int temp_x = spectrum.x0 + temp_index / spectrum.div;
-			/*if (temp_x <= spectrum.x0)
-				temp_x = 0;
-			if (temp_x > spectrum.x1)
-				temp_x = spectrum.x1;*/
+			int temp_x = spectrum.x0 + temp_index / 8;
 
 			if ((temp_index < 0) || (temp_index > points_count))
 				temp_x = 0;
@@ -388,7 +424,9 @@ namespace graph1
 			if (e.Button == MouseButtons.Left)
 			{
 				DRAW_startcur = (int)Math.Round((e.Location.X - DRAW_canvas.X) / DRAW_scale);
-				RangeSet0.Text = temp_x.ToString();
+				if (DRAW_startcur < 0)
+					DRAW_startcur = 0;
+				mesure_start_set.Text = temp_x.ToString();
 				LOG_Status(
 					String.Format(
 						$"{DRAW_startcur / 8 + spectrum.x0}    {spectrum.graph[DRAW_startcur]}"
@@ -399,7 +437,7 @@ namespace graph1
 			if (e.Button == MouseButtons.Right)
 			{
 				DRAW_endcur = (int)Math.Round((e.Location.X - DRAW_canvas.X) / DRAW_scale);
-				RangeSet1.Text = temp_x.ToString();
+				mesure_end_set.Text = temp_x.ToString();
 			}
 		}
 

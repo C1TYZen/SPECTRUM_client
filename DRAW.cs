@@ -11,14 +11,14 @@ namespace graph1
 		BufferedGraphicsContext context = BufferedGraphicsManager.Current;
 		BufferedGraphics grafx;
 		Graphics tabgrfx;
-		int DRAW_resolution = 1;
+		int DRAW_resolution			= 1;
 		float DRAW_scale;
 		float DRAW_height_scale;
-		int DRAW_range = 100;
-		int DRAW_range_scale = 10;
+		int DRAW_range				= 100;
+		int DRAW_range_scale		= 10;
 
-		int DRAW_startcur = 0;
-		int DRAW_endcur = 0;
+		int DRAW_startcur			= 0;
+		int DRAW_endcur				= 0;
 
 		/// <summary>
 		/// Вызывается при запросе "перерисовать" (Ivalidate).

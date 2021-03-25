@@ -147,18 +147,18 @@ class App
 	static void mesure_setup()
 	{
 		TALKER_flush_read_buf();
-		// int x0 = 0;
-		// int x1 = 100;
-		// int mps = 1;
-		// int speed = 700;
+		int x0 = 0;
+		int x1 = 100;
+		int mps = 1;
+		int speed = 700;
 
-		// TALKER_set(CVAR_MA, x0);
-		// TALKER_set(CVAR_MZ, x1);
-		// TALKER_set(CVAR_MC, mps);
-		// TALKER_set(CVAR_DS, speed);
+		TALKER_set(CVAR_MA, x0);
+		TALKER_set(CVAR_MZ, x1);
+		TALKER_set(CVAR_MC, mps);
+		TALKER_set(CVAR_DS, speed);
 
-		// Console.WriteLine($"Scale:");
-		// Console.WriteLine($"Height Scale:");
+		Console.WriteLine($"Scale:");
+		Console.WriteLine($"Height Scale:");
 		end = -1;
 
 		Console.WriteLine($"ИЗМЕРЕНИЕ!");

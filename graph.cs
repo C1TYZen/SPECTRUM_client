@@ -119,22 +119,17 @@ namespace graph1
 		/// </remarks>
 		void receiver()
 		{
-			//if (_serialport.BytesToRead >= 2)
-			//{
-				com_read(bmsg, 2);
-				imsg = bmsg[0] + (bmsg[1] << 8);
-				LOG_Debug($"{imsg}");
-				if (imsg != CMD_MS)
-				{
-					spectrum.end += 1;
-					CONTAINER_Add(imsg, spectrum);
-				}
-				else
-				{
-					LOG_Debug("");
-					get_ready();
-				}
-			//}
+			com_read(bmsg, 2);
+			imsg = bmsg[0] + (bmsg[1] << 8);
+			LOG_Debug($"{imsg}");
+
+			if (imsg == CMD_MS)
+			{
+				LOG_Debug("");
+				get_ready();
+			}
+			spectrum.end += 1;
+			CONTAINER_Add(imsg, spectrum);
 		}
 
 		#region Setup
@@ -158,6 +153,9 @@ namespace graph1
 		/// </summary>
 		void get_ready()
 		{
+			imsg = 0;
+			bmsg[0] = 0;
+			bmsg[1] = 0;
 			Receive						= false;
 			begin_button.Text			= "Начать";
 			begin_button.Enabled		= true;

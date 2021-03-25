@@ -110,6 +110,7 @@ namespace graph1
 				file.WriteLine("mps:\t{0}", spectrum.mps);
 				file.WriteLine("filter:\t{0}", spectrum.filter_num);
 				file.WriteLine("speed:\t{0}\ts/s", spectrum.speed);
+				file.WriteLine("amp:\t{0}\ts/s", spectrum.amp);
 				file.WriteLine();
 				file.WriteLine("x\ty");
 				file.WriteLine();

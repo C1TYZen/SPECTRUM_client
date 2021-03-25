@@ -1,0 +1,22 @@
+{
+	"configurations": [
+		{
+			"name": "Win32",
+			"includePath": [
+				"${workspaceFolder}/**",
+				"C:/MyProrgrams/MSYS2/mingw64/include",
+				"C:/MyProrgrams/MSYS2/mingw64/x86_64-w64-mingw32/include"
+			],
+			"defines": [
+				"_DEBUG",
+				"UNICODE",
+				"_UNICODE"
+			],
+			"compilerPath": "C:/MyProrgrams/MSYS2/mingw64/bin/gcc.exe",
+			"cStandard": "gnu99",
+			"cppStandard": "gnu++11",
+			"intelliSenseMode": "gcc-x64"
+		}
+	],
+	"version": 4
+}

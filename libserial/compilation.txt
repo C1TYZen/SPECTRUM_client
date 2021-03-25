@@ -1,0 +1,4 @@
+You need Visual Studio Developer Command Prompt
+
+Lib compilation: cl /LD libserial.c
+App compilation: csc /platform:x86 test_app.cs

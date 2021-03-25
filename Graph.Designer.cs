@@ -50,6 +50,10 @@
 			this.new_button = new System.Windows.Forms.Button();
 			this.delete_button = new System.Windows.Forms.Button();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.amp_coef_set = new System.Windows.Forms.TextBox();
+			this.label9 = new System.Windows.Forms.Label();
+			this.filter_step_set = new System.Windows.Forms.TextBox();
+			this.label3 = new System.Windows.Forms.Label();
 			this.cc_button = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
@@ -60,8 +64,6 @@
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
-			this.filter_step_set = new System.Windows.Forms.TextBox();
-			this.label3 = new System.Windows.Forms.Label();
 			this.tab_control1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
@@ -279,6 +281,8 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox1.AutoSize = true;
+			this.groupBox1.Controls.Add(this.amp_coef_set);
+			this.groupBox1.Controls.Add(this.label9);
 			this.groupBox1.Controls.Add(this.filter_step_set);
 			this.groupBox1.Controls.Add(this.label3);
 			this.groupBox1.Controls.Add(this.cc_button);
@@ -304,10 +308,42 @@
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Параметры";
 			// 
+			// amp_coef_set
+			// 
+			this.amp_coef_set.Location = new System.Drawing.Point(9, 266);
+			this.amp_coef_set.Name = "amp_coef_set";
+			this.amp_coef_set.Size = new System.Drawing.Size(80, 20);
+			this.amp_coef_set.TabIndex = 31;
+			// 
+			// label9
+			// 
+			this.label9.AutoSize = true;
+			this.label9.Location = new System.Drawing.Point(6, 250);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(57, 13);
+			this.label9.TabIndex = 30;
+			this.label9.Text = "Усиление";
+			// 
+			// filter_step_set
+			// 
+			this.filter_step_set.Location = new System.Drawing.Point(9, 188);
+			this.filter_step_set.Name = "filter_step_set";
+			this.filter_step_set.Size = new System.Drawing.Size(80, 20);
+			this.filter_step_set.TabIndex = 29;
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(6, 172);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(97, 13);
+			this.label3.TabIndex = 28;
+			this.label3.Text = "Шаг выставления";
+			// 
 			// cc_button
 			// 
 			this.cc_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.cc_button.Location = new System.Drawing.Point(112, 75);
+			this.cc_button.Location = new System.Drawing.Point(112, 74);
 			this.cc_button.Name = "cc_button";
 			this.cc_button.Size = new System.Drawing.Size(75, 23);
 			this.cc_button.TabIndex = 27;
@@ -342,10 +378,10 @@
 			// 
 			// callibrate_button
 			// 
-			this.callibrate_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.callibrate_button.Location = new System.Drawing.Point(6, 356);
+			this.callibrate_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.callibrate_button.Location = new System.Drawing.Point(112, 103);
 			this.callibrate_button.Name = "callibrate_button";
-			this.callibrate_button.Size = new System.Drawing.Size(89, 23);
+			this.callibrate_button.Size = new System.Drawing.Size(75, 23);
 			this.callibrate_button.TabIndex = 24;
 			this.callibrate_button.Text = "_на ноль";
 			this.callibrate_button.UseVisualStyleBackColor = true;
@@ -436,22 +472,6 @@
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Просмотр";
 			// 
-			// filter_step_set
-			// 
-			this.filter_step_set.Location = new System.Drawing.Point(9, 188);
-			this.filter_step_set.Name = "filter_step_set";
-			this.filter_step_set.Size = new System.Drawing.Size(80, 20);
-			this.filter_step_set.TabIndex = 29;
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(6, 172);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(97, 13);
-			this.label3.TabIndex = 28;
-			this.label3.Text = "Шаг выставления";
-			// 
 			// Graph
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -523,6 +543,8 @@
 		private System.Windows.Forms.Button cc_button;
 		private System.Windows.Forms.TextBox filter_step_set;
 		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.TextBox amp_coef_set;
+		private System.Windows.Forms.Label label9;
 	}
 }
 

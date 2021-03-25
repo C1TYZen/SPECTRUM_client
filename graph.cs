@@ -29,37 +29,15 @@ namespace graph1
 		Timer timer = new Timer();
 		bool Receive;
 
+		// Переменные для хранения сообщений
+		byte[] bmsg = new byte[4];
+		int imsg;
+
 		public Graph()
 		{
 			InitializeComponent();
 
-			//Конфиг
-			cvar[] cfg =
-			{
-				new cvar("mesure_start", 0),
-				new cvar("mesure_end", 100),
-				new cvar("mesure_count", 1),
-
-				new cvar("driver_speed", 700),
-
-				new cvar("filter_num", 1),
-				new cvar("filter_step", 0),
-
-				new cvar("port_baudrate", 38400),
-				new cvar("port_read_timeout", 5000),
-				new cvar("port_write_timeout", 5000),
-				new cvar("port_parity", 0),
-				new cvar("port_data_bits", 8),
-				new cvar("port_stop_bits", 1),
-				new cvar("port_handshake", 0),
-
-				new cvar("spectrum_points", 524288),
-				new cvar("spectrum_count", 64),
-
-				new cvar("draw_resolution", 1),
-
-				new cvar("timer_tick_interval", 1)
-			};
+			CFG_get_config(cfg);
 
 			//Настройка связи
 			Receive = false;
@@ -79,22 +57,24 @@ namespace graph1
 			timer.Tick		+= new EventHandler(timer_update);
 
 			//Установка дефолтных значений
-			mesure_start_set.Text	= "0";
-			mesure_end_set.Text		= "100";
-			mesure_count_set.Text	= "1";
-			resolution_set.Text		= "1";
-			filter_num_set.Text		= "1";
-			filter_step_set.Text	= "0";
-			speed_set.Text			= "700";
+			mesure_start_set.Text	= CFG_get_value(cfg, "mesure_start").ToString();
+			mesure_end_set.Text		= CFG_get_value(cfg, "mesure_end").ToString();
+			mesure_count_set.Text	= CFG_get_value(cfg, "mesure_count").ToString();
+			resolution_set.Text		= CFG_get_value(cfg, "draw_resolution").ToString();
+			filter_num_set.Text		= CFG_get_value(cfg, "filter_num").ToString();
+			filter_step_set.Text	= CFG_get_value(cfg, "filter_step").ToString();
+			speed_set.Text			= CFG_get_value(cfg, "driver_speed").ToString();
+			amp_coef_set.Text		= CFG_get_value(cfg, "amp").ToString();
 
-			spectrum.graph	= new int[points_count];
-			spectrum.end	= 0;
-			spectrum.x0		= 0;
-			spectrum.x1		= 100;
-			spectrum.mps	= 1;
-			spectrum.filter_num = 1;
-			spectrum.filter_step = 0;
-			spectrum.speed	= 700;
+			spectrum.graph			= new int[points_count];
+			spectrum.end			= 0;
+			spectrum.x0				= 0;
+			spectrum.x1				= 100;
+			spectrum.mps			= 1;
+			spectrum.filter_num		= 1;
+			spectrum.filter_step	= 0;
+			spectrum.speed			= 700;
+			spectrum.amp			= 1;
 
 			//Подключение к серверу
 			LOG_Debug("Talker here!\nAvailable Ports:");
@@ -114,7 +94,7 @@ namespace graph1
 		{
 			if (Receive)
 			{
-				for (int i = 0; i < 1000; i++)
+				//for (int i = 0; i < 5; i++)
 					receiver();
 			}
 			DRAW_grid(grafx.Graphics);
@@ -139,9 +119,9 @@ namespace graph1
 		/// </remarks>
 		void receiver()
 		{
-			if (_serialPort.BytesToRead >= 2)
-			{
-				TALKER_read(bmsg, 0, 2);
+			//if (_serialport.BytesToRead >= 2)
+			//{
+				com_read(bmsg, 2);
 				imsg = bmsg[0] + (bmsg[1] << 8);
 				LOG_Debug($"{imsg}");
 				if (imsg != CMD_MS)
@@ -154,7 +134,7 @@ namespace graph1
 					LOG_Debug("");
 					get_ready();
 				}
-			}
+			//}
 		}
 
 		#region Setup
@@ -257,6 +237,8 @@ namespace graph1
 				spectrum.mps = 0;
 			if ((spectrum.speed = check_value(speed_set.Text, "Speed")) == -1)
 				spectrum.speed = 1;
+			if ((spectrum.amp = check_value(amp_coef_set.Text, "Amp")) == -1)
+				spectrum.amp = 1;
 
 			//Начало диапазона
 			TALKER_set(CVAR_MA, spectrum.x0);

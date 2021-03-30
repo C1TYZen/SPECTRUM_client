@@ -94,7 +94,7 @@ namespace graph1
 		{
 			if (Receive)
 			{
-				//for (int i = 0; i < 5; i++)
+				for (int i = 0; i < 10; i++)
 					receiver();
 			}
 			DRAW_grid(grafx.Graphics);
@@ -119,17 +119,20 @@ namespace graph1
 		/// </remarks>
 		void receiver()
 		{
-			com_read(bmsg, 2);
-			imsg = bmsg[0] + (bmsg[1] << 8);
-			LOG_Debug($"{imsg}");
-
-			if (imsg == CMD_MS)
+			if (Receive)
 			{
-				LOG_Debug("");
-				get_ready();
+				com_read(bmsg, 2);
+				imsg = bmsg[0] + (bmsg[1] << 8);
+				LOG_Debug($"{imsg}");
+
+				if (imsg == CMD_MS)
+				{
+					LOG_Debug("");
+					get_ready();
+				}
+				spectrum.end += 1;
+				CONTAINER_Add(imsg, spectrum);
 			}
-			spectrum.end += 1;
-			CONTAINER_Add(imsg, spectrum);
 		}
 
 		#region Setup
@@ -245,9 +248,9 @@ namespace graph1
 			//Измерений/шаг
 			TALKER_set(CVAR_MC, spectrum.mps);
 			//Номер фильтра
-			//TALKER_set(CVAR_FN, spectrum.filter_num);
+			TALKER_set(CVAR_FN, spectrum.filter_num);
 			//Шаг выставления фильтра
-			//TALKER_set(CVAR_FS, spectrum.filter_step);
+			TALKER_set(CVAR_FS, spectrum.filter_step);
 			//Скорость
 			TALKER_set(CVAR_DS, spectrum.speed);
 

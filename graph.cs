@@ -27,10 +27,11 @@ namespace graph1
 
 		//Разное
 		Timer timer = new Timer();
-		bool Receive;
+		bool receive_flag;
+		bool to_spot_flag;
 
 		// Переменные для хранения сообщений
-		byte[] bmsg = new byte[4];
+		byte[] bmsg = new byte[2];
 		int imsg;
 
 		public Graph()
@@ -40,16 +41,21 @@ namespace graph1
 			CFG_get_config(cfg);
 
 			//Настройка связи
-			Receive = false;
+			receive_flag = false;
+			to_spot_flag = false;
 
 			//Настройка интерфейса
 			StartPosition = FormStartPosition.CenterScreen;
 			begin_button.Enabled		= false;
 			stop_button.Enabled			= false;
+			callibrate_button.Enabled	= false;
+
 			save_button.Enabled			= false;
 			new_button.Enabled			= false;
 			delete_button.Enabled		= false;
-			callibrate_button.Enabled	= false;
+
+			filter_num_set.Enabled		= false;
+			filter_step_set.Enabled		= false;
 
 			//Настройка таймера
 			timer.Enabled	= true;
@@ -92,11 +98,8 @@ namespace graph1
 		/// <param name="e"></param>
 		void timer_update(object sender, EventArgs e)
 		{
-			if (Receive)
-			{
-				for (int i = 0; i < 10; i++)
-					receiver();
-			}
+			receiver();
+			DRAW_backgr(grafx.Graphics);
 			DRAW_grid(grafx.Graphics);
 			DRAW_spectrum_line(grafx.Graphics, spectrum);
 			DRAW_curs(grafx.Graphics);
@@ -119,19 +122,31 @@ namespace graph1
 		/// </remarks>
 		void receiver()
 		{
-			if (Receive)
+			if(to_spot_flag)
 			{
-				com_read(bmsg, 2);
-				imsg = bmsg[0] + (bmsg[1] << 8);
-				LOG_Debug($"{imsg}");
-
-				if (imsg == CMD_MS)
+				if(TALKER_get() == CMD_MS)
 				{
-					LOG_Debug("");
-					get_ready();
+					to_spot_flag = false;
+					receive_flag = true;
 				}
-				spectrum.end += 1;
-				CONTAINER_Add(imsg, spectrum);
+			}
+			if (receive_flag)
+			{
+				for (int i = 0; i < 10; i++)
+				{
+					com_read(bmsg, 2);
+					imsg = bmsg[0] + (bmsg[1] << 8);
+					LOG_Debug($"{imsg}");
+
+					if (imsg == CMD_MS)
+					{
+						LOG_Debug("");
+						get_ready();
+						break;
+					}
+					spectrum.end += 1;
+					CONTAINER_Add(imsg, spectrum);
+				}
 			}
 		}
 
@@ -145,9 +160,8 @@ namespace graph1
 			save_button.Enabled			= false;
 			begin_button.Enabled		= false;
 			begin_button.Text			= "Измерение";
-			new_button.Enabled			= false;
-			delete_button.Enabled		= false;
 			stop_button.Enabled			= true;
+			cc_button.Enabled			= false;
 			callibrate_button.Enabled	= false;
 		}
 
@@ -159,18 +173,14 @@ namespace graph1
 			imsg = 0;
 			bmsg[0] = 0;
 			bmsg[1] = 0;
-			Receive						= false;
+			receive_flag				= false;
+			to_spot_flag				= false;
 			begin_button.Text			= "Начать";
 			begin_button.Enabled		= true;
 			stop_button.Enabled			= false;
 			save_button.Enabled			= true;
-			new_button.Enabled			= true;
+			cc_button.Enabled			= true;
 			callibrate_button.Enabled	= true;
-
-			if (tab_control1.TabCount == 1)
-				delete_button.Enabled = false;
-			else
-				delete_button.Enabled = true;
 
 			CONTAINER_Save_on_RAM(tab_control1.SelectedIndex);
 			LOG("Готов");
@@ -242,6 +252,8 @@ namespace graph1
 				spectrum.amp = 1;
 
 			//Начало диапазона
+			LOG_Debug($"A {spectrum.x0}");
+			LOG_Debug($"Z {spectrum.x1}");
 			TALKER_set(CVAR_MA, spectrum.x0);
 			//Конец диапазона
 			TALKER_set(CVAR_MZ, spectrum.x1);
@@ -262,11 +274,10 @@ namespace graph1
 			//Это нужно для того, что бы отрисовывался весь диапазон от х0 до х1,
 			//включая крайние точки
 			spectrum.end = -1;
-
 			//Очистка буфера и отправка команды начать
 			TALKER_flush_read_buf();
 			LOG($"ИЗМЕРЕНИЕ!");
-			Receive = true;
+			to_spot_flag = true;
 			TALKER_send(CMD_MB);
 		}
 

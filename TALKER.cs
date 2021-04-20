@@ -83,8 +83,7 @@ namespace graph1
 
 		void TALKER_sendln(byte[] buf)
 		{
-
-			for(int i = buf.Length; i > 0; i--)
+			for (int i = buf.Length; i > 0; i--)
 			{
 				com_write(buf[i]);
 			}
@@ -97,14 +96,22 @@ namespace graph1
 		/// <param name="val"></param>
 		void TALKER_set(int var, int val)
 		{
-			TALKER_send(var);
-			TALKER_send(val);
+			com_write((short)var);
+			com_write((short)val);
 			TALKER_read_line();
 		}
 
 		/***************
 		 * READ
 		 ***************/
+		int TALKER_get()
+		{
+			byte[] buf = new byte[2];
+			com_read(buf, 2);
+
+			return buf[0] + (buf[1] << 8);
+		}
+
 		/// <summary>
 		/// Читает строку из последовательного порта и
 		/// выводит в консоль.

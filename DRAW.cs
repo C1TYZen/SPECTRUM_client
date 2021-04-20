@@ -40,11 +40,15 @@ namespace graph1
 			g.DrawRectangle(p, rect.X + x1, rect.Y + y1, 1, 1);
 		}
 
-		void DRAW_grid(Graphics g)
+		void DRAW_backgr(Graphics g)
 		{
 			pen.Color = SystemColors.HighlightText;
 			g.FillRectangle(SystemBrushes.Highlight, DRAW_background);
 			g.FillRectangle(SystemBrushes.Highlight, DRAW_canvas);
+		}
+
+		void DRAW_grid(Graphics g)
+		{
 			pen.Color = SystemColors.GrayText;
 			if (DRAW_range < 10)
 				DRAW_range_scale = DRAW_range;

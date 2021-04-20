@@ -46,7 +46,6 @@
 			this.mesure_end_set = new System.Windows.Forms.TextBox();
 			this.label8 = new System.Windows.Forms.Label();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-			this.menustrip_File = new System.Windows.Forms.ToolStripMenuItem();
 			this.new_button = new System.Windows.Forms.Button();
 			this.delete_button = new System.Windows.Forms.Button();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -65,7 +64,6 @@
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.tab_control1.SuspendLayout();
-			this.menuStrip1.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
@@ -160,7 +158,7 @@
 			// 
 			// resolution_set
 			// 
-			this.resolution_set.Location = new System.Drawing.Point(9, 35);
+			this.resolution_set.Location = new System.Drawing.Point(7, 35);
 			this.resolution_set.Name = "resolution_set";
 			this.resolution_set.Size = new System.Drawing.Size(80, 20);
 			this.resolution_set.TabIndex = 13;
@@ -193,7 +191,7 @@
 			// 
 			// filter_num_set
 			// 
-			this.filter_num_set.Location = new System.Drawing.Point(7, 149);
+			this.filter_num_set.Location = new System.Drawing.Point(7, 188);
 			this.filter_num_set.Name = "filter_num_set";
 			this.filter_num_set.Size = new System.Drawing.Size(80, 20);
 			this.filter_num_set.TabIndex = 17;
@@ -201,7 +199,7 @@
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(6, 133);
+			this.label6.Location = new System.Drawing.Point(6, 172);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(87, 13);
 			this.label6.TabIndex = 16;
@@ -241,19 +239,11 @@
 			// 
 			// menuStrip1
 			// 
-			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menustrip_File});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(892, 24);
 			this.menuStrip1.TabIndex = 24;
 			this.menuStrip1.Text = "menuStrip1";
-			// 
-			// menustrip_File
-			// 
-			this.menustrip_File.Name = "menustrip_File";
-			this.menustrip_File.Size = new System.Drawing.Size(48, 20);
-			this.menustrip_File.Text = "Файл";
 			// 
 			// new_button
 			// 
@@ -310,7 +300,7 @@
 			// 
 			// amp_coef_set
 			// 
-			this.amp_coef_set.Location = new System.Drawing.Point(9, 266);
+			this.amp_coef_set.Location = new System.Drawing.Point(7, 266);
 			this.amp_coef_set.Name = "amp_coef_set";
 			this.amp_coef_set.Size = new System.Drawing.Size(80, 20);
 			this.amp_coef_set.TabIndex = 31;
@@ -326,7 +316,7 @@
 			// 
 			// filter_step_set
 			// 
-			this.filter_step_set.Location = new System.Drawing.Point(9, 188);
+			this.filter_step_set.Location = new System.Drawing.Point(7, 227);
 			this.filter_step_set.Name = "filter_step_set";
 			this.filter_step_set.Size = new System.Drawing.Size(80, 20);
 			this.filter_step_set.TabIndex = 29;
@@ -334,7 +324,7 @@
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(6, 172);
+			this.label3.Location = new System.Drawing.Point(6, 211);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(97, 13);
 			this.label3.TabIndex = 28;
@@ -354,7 +344,7 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(6, 211);
+			this.label2.Location = new System.Drawing.Point(6, 133);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(55, 13);
 			this.label2.TabIndex = 26;
@@ -363,7 +353,7 @@
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(67, 230);
+			this.label1.Location = new System.Drawing.Point(61, 152);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(26, 13);
 			this.label1.TabIndex = 4;
@@ -371,7 +361,7 @@
 			// 
 			// speed_set
 			// 
-			this.speed_set.Location = new System.Drawing.Point(9, 227);
+			this.speed_set.Location = new System.Drawing.Point(7, 149);
 			this.speed_set.Name = "speed_set";
 			this.speed_set.Size = new System.Drawing.Size(52, 20);
 			this.speed_set.TabIndex = 3;
@@ -383,7 +373,7 @@
 			this.callibrate_button.Name = "callibrate_button";
 			this.callibrate_button.Size = new System.Drawing.Size(75, 23);
 			this.callibrate_button.TabIndex = 24;
-			this.callibrate_button.Text = "_на ноль";
+			this.callibrate_button.Text = "На ноль";
 			this.callibrate_button.UseVisualStyleBackColor = true;
 			this.callibrate_button.Click += new System.EventHandler(this.BUTTON_Callibrate_click);
 			// 
@@ -491,8 +481,6 @@
 			this.SizeChanged += new System.EventHandler(this.Graph_size_changed);
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.DRAW);
 			this.tab_control1.ResumeLayout(false);
-			this.menuStrip1.ResumeLayout(false);
-			this.menuStrip1.PerformLayout();
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
 			this.tableLayoutPanel1.ResumeLayout(false);
@@ -526,7 +514,6 @@
 		private System.Windows.Forms.TextBox mesure_end_set;
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.MenuStrip menuStrip1;
-		private System.Windows.Forms.ToolStripMenuItem menustrip_File;
 		private System.Windows.Forms.Button new_button;
 		private System.Windows.Forms.Button delete_button;
 		private System.Windows.Forms.GroupBox groupBox1;

@@ -56,7 +56,7 @@ namespace graph1
 				DRAW_range_scale = 10;
 
 			//Вертикальные линии
-			for (int i = 0; i <= DRAW_range; i += DRAW_range / DRAW_range_scale)
+			for (int i = DRAW_range; i > 0; i -= DRAW_range / DRAW_range_scale)
 			{
 				DRAW_line(g, pen, DRAW_canvas, 
 					i * DRAW_scale, 
@@ -99,16 +99,16 @@ namespace graph1
 
 		void DRAW_spectrum_line(Graphics g, plot p)
 		{
-			// Отрисовка спектра
+			// Отрисовка спектра линиями
 			pen.Color = SystemColors.HighlightText;
 			for (int i = 0; i <= DRAW_range; i += DRAW_resolution)
 			{
 				if (((i - DRAW_resolution) >= 0) && (i <= p.end))
 				{
 					DRAW_line(g, pen, DRAW_canvas,
-						i * DRAW_scale,
+						DRAW_canvas.Width - (i * DRAW_scale),
 						DRAW_canvas.Height - (p.graph[i] * DRAW_height_scale),
-						(i - DRAW_resolution) * DRAW_scale,
+						DRAW_canvas.Width - ((i - DRAW_resolution) * DRAW_scale),
 						DRAW_canvas.Height - (p.graph[i - DRAW_resolution] * DRAW_height_scale)
 					);
 				}
@@ -117,7 +117,7 @@ namespace graph1
 
 		void DRAW_spectrum_dot(Graphics g, plot p)
 		{
-			// Отрисовка спектра
+			// Отрисовка спектра точками
 			pen.Color = SystemColors.HighlightText;
 			for (int i = 0; i <= DRAW_range; i += DRAW_resolution)
 			{

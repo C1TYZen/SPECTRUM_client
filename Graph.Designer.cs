@@ -46,14 +46,11 @@
 			this.mesure_end_set = new System.Windows.Forms.TextBox();
 			this.label8 = new System.Windows.Forms.Label();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-			this.new_button = new System.Windows.Forms.Button();
-			this.delete_button = new System.Windows.Forms.Button();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.amp_coef_set = new System.Windows.Forms.TextBox();
 			this.label9 = new System.Windows.Forms.Label();
 			this.filter_step_set = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
-			this.cc_button = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
 			this.speed_set = new System.Windows.Forms.TextBox();
@@ -73,8 +70,7 @@
 			// 
 			// begin_button
 			// 
-			this.begin_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.begin_button.Location = new System.Drawing.Point(112, 16);
+			this.begin_button.Location = new System.Drawing.Point(6, 19);
 			this.begin_button.Name = "begin_button";
 			this.begin_button.Size = new System.Drawing.Size(75, 23);
 			this.begin_button.TabIndex = 1;
@@ -84,7 +80,7 @@
 			// 
 			// save_button
 			// 
-			this.save_button.Location = new System.Drawing.Point(87, 19);
+			this.save_button.Location = new System.Drawing.Point(6, 77);
 			this.save_button.Name = "save_button";
 			this.save_button.Size = new System.Drawing.Size(75, 23);
 			this.save_button.TabIndex = 2;
@@ -95,7 +91,7 @@
 			// close_button
 			// 
 			this.close_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.close_button.Location = new System.Drawing.Point(112, 356);
+			this.close_button.Location = new System.Drawing.Point(267, 103);
 			this.close_button.Name = "close_button";
 			this.close_button.Size = new System.Drawing.Size(75, 23);
 			this.close_button.TabIndex = 3;
@@ -113,7 +109,7 @@
 			this.tab_control1.Location = new System.Drawing.Point(3, 3);
 			this.tab_control1.Name = "tab_control1";
 			this.tab_control1.SelectedIndex = 0;
-			this.tab_control1.Size = new System.Drawing.Size(687, 385);
+			this.tab_control1.Size = new System.Drawing.Size(711, 385);
 			this.tab_control1.TabIndex = 8;
 			this.tab_control1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tab_control1_selecting);
 			// 
@@ -123,7 +119,7 @@
 			this.tabPage1.Location = new System.Drawing.Point(4, 22);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(679, 359);
+			this.tabPage1.Size = new System.Drawing.Size(703, 359);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Спектр1";
 			this.tabPage1.UseVisualStyleBackColor = true;
@@ -148,12 +144,12 @@
 			this.Text_console.BackColor = System.Drawing.Color.Black;
 			this.Text_console.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.Text_console.ForeColor = System.Drawing.SystemColors.Window;
-			this.Text_console.Location = new System.Drawing.Point(696, 394);
+			this.Text_console.Location = new System.Drawing.Point(720, 394);
 			this.Text_console.Multiline = true;
 			this.Text_console.Name = "Text_console";
 			this.Text_console.ReadOnly = true;
 			this.Text_console.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.Text_console.Size = new System.Drawing.Size(193, 147);
+			this.Text_console.Size = new System.Drawing.Size(169, 147);
 			this.Text_console.TabIndex = 11;
 			// 
 			// resolution_set
@@ -245,26 +241,6 @@
 			this.menuStrip1.TabIndex = 24;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
-			// new_button
-			// 
-			this.new_button.Location = new System.Drawing.Point(6, 19);
-			this.new_button.Name = "new_button";
-			this.new_button.Size = new System.Drawing.Size(75, 23);
-			this.new_button.TabIndex = 26;
-			this.new_button.Text = "Новый";
-			this.new_button.UseVisualStyleBackColor = true;
-			this.new_button.Click += new System.EventHandler(this.BUTTON_New_click);
-			// 
-			// delete_button
-			// 
-			this.delete_button.Location = new System.Drawing.Point(6, 48);
-			this.delete_button.Name = "delete_button";
-			this.delete_button.Size = new System.Drawing.Size(75, 23);
-			this.delete_button.TabIndex = 27;
-			this.delete_button.Text = "Удалить";
-			this.delete_button.UseVisualStyleBackColor = true;
-			this.delete_button.Click += new System.EventHandler(this.BUTTON_Delete_click);
-			// 
 			// groupBox1
 			// 
 			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -275,15 +251,10 @@
 			this.groupBox1.Controls.Add(this.label9);
 			this.groupBox1.Controls.Add(this.filter_step_set);
 			this.groupBox1.Controls.Add(this.label3);
-			this.groupBox1.Controls.Add(this.cc_button);
 			this.groupBox1.Controls.Add(this.label2);
 			this.groupBox1.Controls.Add(this.label1);
 			this.groupBox1.Controls.Add(this.speed_set);
-			this.groupBox1.Controls.Add(this.callibrate_button);
-			this.groupBox1.Controls.Add(this.stop_button);
-			this.groupBox1.Controls.Add(this.begin_button);
 			this.groupBox1.Controls.Add(this.mesure_end_set);
-			this.groupBox1.Controls.Add(this.close_button);
 			this.groupBox1.Controls.Add(this.label8);
 			this.groupBox1.Controls.Add(this.mesure_count_set);
 			this.groupBox1.Controls.Add(this.label7);
@@ -291,9 +262,9 @@
 			this.groupBox1.Controls.Add(this.label5);
 			this.groupBox1.Controls.Add(this.label6);
 			this.groupBox1.Controls.Add(this.mesure_start_set);
-			this.groupBox1.Location = new System.Drawing.Point(696, 3);
+			this.groupBox1.Location = new System.Drawing.Point(720, 3);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(193, 385);
+			this.groupBox1.Size = new System.Drawing.Size(169, 385);
 			this.groupBox1.TabIndex = 25;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Параметры";
@@ -330,17 +301,6 @@
 			this.label3.TabIndex = 28;
 			this.label3.Text = "Шаг выставления";
 			// 
-			// cc_button
-			// 
-			this.cc_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.cc_button.Location = new System.Drawing.Point(112, 74);
-			this.cc_button.Name = "cc_button";
-			this.cc_button.Size = new System.Drawing.Size(75, 23);
-			this.cc_button.TabIndex = 27;
-			this.cc_button.Text = "_проверка";
-			this.cc_button.UseVisualStyleBackColor = true;
-			this.cc_button.Click += new System.EventHandler(this.BUTTON_check);
-			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
@@ -369,7 +329,7 @@
 			// callibrate_button
 			// 
 			this.callibrate_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.callibrate_button.Location = new System.Drawing.Point(112, 103);
+			this.callibrate_button.Location = new System.Drawing.Point(267, 19);
 			this.callibrate_button.Name = "callibrate_button";
 			this.callibrate_button.Size = new System.Drawing.Size(75, 23);
 			this.callibrate_button.TabIndex = 24;
@@ -379,8 +339,7 @@
 			// 
 			// stop_button
 			// 
-			this.stop_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.stop_button.Location = new System.Drawing.Point(112, 45);
+			this.stop_button.Location = new System.Drawing.Point(6, 48);
 			this.stop_button.Name = "stop_button";
 			this.stop_button.Size = new System.Drawing.Size(75, 23);
 			this.stop_button.TabIndex = 23;
@@ -394,8 +353,8 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tableLayoutPanel1.ColumnCount = 2;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 77.80269F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.19731F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80.49327F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 19.50673F));
 			this.tableLayoutPanel1.Controls.Add(this.tab_control1, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this.groupBox1, 1, 0);
 			this.tableLayoutPanel1.Controls.Add(this.Text_console, 1, 1);
@@ -427,7 +386,7 @@
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
 			this.tableLayoutPanel2.RowCount = 1;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 79.16666F));
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(687, 147);
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(711, 147);
 			this.tableLayoutPanel2.TabIndex = 26;
 			// 
 			// groupBox2
@@ -437,12 +396,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.groupBox2.AutoSize = true;
 			this.groupBox2.Controls.Add(this.MPosition_status_label);
-			this.groupBox2.Controls.Add(this.new_button);
 			this.groupBox2.Controls.Add(this.save_button);
-			this.groupBox2.Controls.Add(this.delete_button);
+			this.groupBox2.Controls.Add(this.begin_button);
+			this.groupBox2.Controls.Add(this.stop_button);
+			this.groupBox2.Controls.Add(this.callibrate_button);
+			this.groupBox2.Controls.Add(this.close_button);
 			this.groupBox2.Location = new System.Drawing.Point(3, 3);
 			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(336, 141);
+			this.groupBox2.Size = new System.Drawing.Size(348, 141);
 			this.groupBox2.TabIndex = 29;
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Спектр";
@@ -455,9 +416,9 @@
 			this.groupBox3.AutoSize = true;
 			this.groupBox3.Controls.Add(this.label4);
 			this.groupBox3.Controls.Add(this.resolution_set);
-			this.groupBox3.Location = new System.Drawing.Point(345, 3);
+			this.groupBox3.Location = new System.Drawing.Point(357, 3);
 			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(339, 141);
+			this.groupBox3.Size = new System.Drawing.Size(351, 141);
 			this.groupBox3.TabIndex = 30;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Просмотр";
@@ -514,8 +475,6 @@
 		private System.Windows.Forms.TextBox mesure_end_set;
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.MenuStrip menuStrip1;
-		private System.Windows.Forms.Button new_button;
-		private System.Windows.Forms.Button delete_button;
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 		private System.Windows.Forms.GroupBox groupBox2;
@@ -527,7 +486,6 @@
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label MPosition_status_label;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Button cc_button;
 		private System.Windows.Forms.TextBox filter_step_set;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.TextBox amp_coef_set;

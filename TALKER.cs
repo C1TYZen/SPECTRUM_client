@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO.Ports;
+﻿using System.IO.Ports;
 using System.Runtime.InteropServices; // DllImport
 
 // Библиотека для общения с сервером по последовательному порту.

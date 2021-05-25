@@ -51,8 +51,8 @@ namespace graph1
 			callibrate_button.Enabled	= false;
 
 			save_button.Enabled			= false;
-			new_button.Enabled			= false;
-			delete_button.Enabled		= false;
+			//new_button.Enabled		= false;
+			//delete_button.Enabled		= false;
 
 			filter_num_set.Enabled		= false;
 			filter_step_set.Enabled		= false;
@@ -161,7 +161,7 @@ namespace graph1
 			begin_button.Enabled		= false;
 			begin_button.Text			= "Измерение";
 			stop_button.Enabled			= true;
-			cc_button.Enabled			= false;
+			//cc_button.Enabled			= false;
 			callibrate_button.Enabled	= false;
 		}
 
@@ -173,13 +173,14 @@ namespace graph1
 			imsg = 0;
 			bmsg[0] = 0;
 			bmsg[1] = 0;
+
 			receive_flag				= false;
 			to_spot_flag				= false;
 			begin_button.Text			= "Начать";
 			begin_button.Enabled		= true;
 			stop_button.Enabled			= false;
 			save_button.Enabled			= true;
-			cc_button.Enabled			= true;
+			//cc_button.Enabled			= true;
 			callibrate_button.Enabled	= true;
 
 			CONTAINER_Save_on_RAM(tab_control1.SelectedIndex);
@@ -252,8 +253,6 @@ namespace graph1
 				spectrum.amp = 1;
 
 			//Начало диапазона
-			LOG_Debug($"A {spectrum.x0}");
-			LOG_Debug($"Z {spectrum.x1}");
 			TALKER_set(CVAR_MA, spectrum.x0);
 			//Конец диапазона
 			TALKER_set(CVAR_MZ, spectrum.x1);
@@ -389,10 +388,10 @@ namespace graph1
 			mesure_end_set.Text = spectrum.x1.ToString();
 			mesure_count_set.Text = spectrum.mps.ToString();
 
-			if (tab_control1.TabCount == 1)
+			/*if (tab_control1.TabCount == 1)
 				delete_button.Enabled = false;
 			else
-				delete_button.Enabled = true;
+				delete_button.Enabled = true;*/
 		}
 
 		void tab_page_mouse_move(object sender, MouseEventArgs e)
@@ -409,8 +408,10 @@ namespace graph1
 
 		void tab_page_mouse_click(object sender, MouseEventArgs e)
 		{
-			int temp_index = (int)((e.Location.X - DRAW_canvas.X) / DRAW_scale);
+			int temp_index = 
+				(int)((DRAW_canvas.Width - (e.Location.X - DRAW_canvas.X)) / DRAW_scale);
 			int temp_x = spectrum.x0 + temp_index / 8;
+			//temp_x -= DRAW_canvas.Width;
 
 			if ((temp_index < 0) || (temp_index > points_count))
 				temp_x = 0;

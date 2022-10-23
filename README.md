@@ -1,3 +1,3 @@
-# X-ray luminescence spectrometer desktop client
+# Программа-клиент для Рентгенолюминисцентного спектрометра.
 
-You need Visual Studio 2019
+Необходима Visual Studio 2019.
